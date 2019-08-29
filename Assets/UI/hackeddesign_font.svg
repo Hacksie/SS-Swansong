@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="315.64453"
+   height="67.650002"
+   id="svg3072"
+   version="1.1"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="hackeddesign_font.svg"
+   inkscape:export-filename="C:\Dropbox\workspace\hackeddesign\website\assets\images\hackeddesign_font.png"
+   inkscape:export-xdpi="623.45001"
+   inkscape:export-ydpi="623.45001">
+  <defs
+     id="defs3074" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="2.32"
+     inkscape:cx="-53.981233"
+     inkscape:cy="71.265206"
+     inkscape:current-layer="layer1"
+     inkscape:document-units="px"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="2992"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     fit-margin-top="10"
+     fit-margin-left="10"
+     fit-margin-right="10"
+     fit-margin-bottom="10" />
+  <metadata
+     id="metadata3077">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     id="layer1"
+     inkscape:label="logo"
+     inkscape:groupmode="layer"
+     transform="translate(-154.54636,-191.89108)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:300;font-stretch:normal;line-height:0%;font-family:Santana;-inkscape-font-specification:'Santana Light';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       x="160.14636"
+       y="238.29108"
+       id="text3096"
+       inkscape:export-filename="E:\workspace\Saga\images\hackeddesign.png"
+       inkscape:export-xdpi="90"
+       inkscape:export-ydpi="90"><tspan
+         sodipodi:role="line"
+         id="tspan3098"
+         x="160.14636"
+         y="238.29108"
+         style="font-size:50px;line-height:1.25"><tspan
+           style="fill:#0062a0;fill-opacity:1"
+           id="tspan3874">hacked</tspan><tspan
+           style="fill:#ffffff;fill-opacity:1"
+           id="tspan820">.</tspan><tspan
+           style="fill:#ffb400;fill-opacity:1"
+           id="tspan3870">design</tspan></tspan></text>
+    <flowRoot
+       xml:space="preserve"
+       id="flowRoot5097"
+       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
+       transform="translate(154.54636,191.89108)"><flowRegion
+         id="flowRegion5099"><rect
+           id="rect5101"
+           width="434.91379"
+           height="158.18965"
+           x="-25.431034"
+           y="-22.216305" /></flowRegion><flowPara
+         id="flowPara5103" /></flowRoot>  </g>
+</svg>
