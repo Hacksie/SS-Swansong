@@ -9,7 +9,7 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            if (Game.Instance.state == GameState.PLAYING)
+            if (Game.Instance.state == GameState.PLAYING  || Game.Instance.state == GameState.WARPZONE)
             {
                 this.gameObject.SetActive(false);
             }

@@ -21,10 +21,13 @@ namespace HackedDesign
 
         [Header("Limits")]
         [SerializeField]
+        public float worldBounds;
+
+        [SerializeField]
         public float minCrossSection;
 
         [SerializeField]
-        public float startingFuel;        
+        public float startingFuel;
 
         [SerializeField]
         public float startingMaxFuel;
@@ -33,7 +36,10 @@ namespace HackedDesign
         public float maxHeat;
 
         [SerializeField]
-        public float startingHeat;        
+        public float startingHeat;
+
+        [SerializeField]
+        public float fuelConsumptionPerSecond;
 
         [SerializeField]
         public float heatBleedPerSecond;
@@ -53,7 +59,8 @@ namespace HackedDesign
         public float maxFuelIncrease;
 
         [SerializeField]
-        public float Heat {
+        public float Heat
+        {
             get;
             private set;
         }
@@ -135,7 +142,7 @@ namespace HackedDesign
         public void ContinueGame()
         {
             state = GameState.PLAYING;
-            player.gameObject.SetActive(true);            
+            player.gameObject.SetActive(true);
         }
 
         public void ExitGame()
@@ -157,26 +164,51 @@ namespace HackedDesign
             Game.Instance.Heat -= Game.Instance.heatBleedPerSecond * Time.fixedDeltaTime;
             if (Game.Instance.Heat < 0)
             {
-                Game.Instance.Heat = 0;
+                Game.Instance.Heat = 0; // Move this into the property?
             }
+        }
+
+        public void ConsumeFuel()
+        {
+            Game.Instance.Fuel -= Game.Instance.fuelConsumptionPerSecond * Time.fixedDeltaTime;
+            if (Game.Instance.Fuel < 0)
+            {
+                Game.Instance.Fuel = 0;
+
+                // GameOver state?
+            }
+        }
+
+        public void GameOverCollision()
+        {
+            Game.Instance.state = GameState.GAMEOVERCOLLISION;
         }
 
         void Update()
         {
-             
+
             switch (state)
             {
                 case GameState.MENU:
                     Time.timeScale = 0;
                     break;
 
+                case GameState.WARPZONE:
+                    Time.timeScale = 1;
+                    break;                    
+
                 case GameState.PLAYING:
                     Time.timeScale = 1;
 
-                    if(Input.GetButtonUp("Start"))
+                    if (Input.GetButtonUp("Start"))
                     {
                         state = GameState.MENU;
                     }
+                    break;
+
+                case GameState.GAMEOVERCOLLISION:
+                    Time.timeScale = 0;
+                    Debug.Log(this.name + ": Game Over via Collision");
                     break;
             }
         }
@@ -188,6 +220,13 @@ namespace HackedDesign
             {
                 player.UpdateMovement();
                 BleedHeat();
+            }
+
+            if(state == GameState.WARPZONE)
+            {
+                player.transform.position = Vector2.zero;
+                player.transform.rotation = Quaternion.identity;
+                BleedHeat(); // Continue to bleed heat
             }
         }
 
@@ -201,6 +240,8 @@ namespace HackedDesign
     public enum GameState
     {
         MENU,
-        PLAYING
+        WARPZONE,
+        PLAYING,
+        GAMEOVERCOLLISION
     }
 }

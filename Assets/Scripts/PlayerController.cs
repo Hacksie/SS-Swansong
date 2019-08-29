@@ -48,13 +48,25 @@ namespace HackedDesign
 
             rigidBody.drag = force / maxThrust;
             rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
+
+            // Clamp within a circle of 0,0
+            this.transform.position = Vector2.ClampMagnitude(this.transform.position, Game.Instance.worldBounds);
+
+
             UpdateAnimations(force);
 
-            if(force != 0)
+            if (force != 0)
             {
                 Game.Instance.IncreaseHeat();
-
+                Game.Instance.ConsumeFuel();
             }
+        }
+
+        private void OnCollisionEnter2D(Collision2D other)
+        {
+            Debug.Log(this.name + ": collision");
+            Game.Instance.GameOverCollision();
+            
         }
 
         private void UpdateAnimations(float force)
