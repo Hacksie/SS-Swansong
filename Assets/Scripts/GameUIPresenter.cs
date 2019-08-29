@@ -44,7 +44,17 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            fuel.text = ((int)Game.Instance.fuel).ToString();
+            if (Game.Instance.state == GameState.PLAYING)
+            {
+                this.gameObject.SetActive(true);
+            }
+
+            if (Game.Instance.state == GameState.MENU)
+            {
+                this.gameObject.SetActive(false);
+            }
+
+            fuel.text = ((int)Game.Instance.Fuel).ToString();
             maxFuel.text = ((int)Game.Instance.MaxFuel).ToString();
             heat.text = ((int)Game.Instance.CrossSection).ToString();
             maxHeat.text = ((int)Game.Instance.maxHeat).ToString();

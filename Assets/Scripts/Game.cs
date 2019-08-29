@@ -14,11 +14,17 @@ namespace HackedDesign
         public PlayerController player;
 
         [SerializeField]
+        private MainMenuPresenter menuUI;
+
+        [SerializeField]
         private GameUIPresenter gameUI;
 
         [Header("Limits")]
         [SerializeField]
         public float minCrossSection;
+
+        [SerializeField]
+        public float startingFuel;        
 
         [SerializeField]
         public float startingMaxFuel;
@@ -27,26 +33,39 @@ namespace HackedDesign
         public float maxHeat;
 
         [SerializeField]
+        public float startingHeat;        
+
+        [SerializeField]
         public float heatBleedPerSecond;
 
         [SerializeField]
         public float heatGainPerSecond;
 
-        [Header("Current Player State")]
+        //[Header("Current Player State")]
         [SerializeField]
-        public float fuel;
+        public float Fuel
+        {
+            get;
+            private set;
+        }
 
         [SerializeField]
         public float maxFuelIncrease;
 
         [SerializeField]
-        public float heat;
+        public float Heat {
+            get;
+            private set;
+        }
 
         [SerializeField]
         public float minCrossSectionReduction;
 
         [SerializeField]
-        public bool bayDoorsOpen;
+        public bool BayDoorsOpen
+        {
+            get; private set;
+        }
 
         public int MaxFuel
         {
@@ -61,7 +80,7 @@ namespace HackedDesign
         {
             get
             {
-                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + heat + (bayDoorsOpen ? 40 : 0), 0, 100);
+                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + Heat + (BayDoorsOpen ? 40 : 0), 0, 100);
             }
         }
 
@@ -70,25 +89,6 @@ namespace HackedDesign
         {
             Instance = this;
         }
-
-        public void IncreaseHeat()
-        {
-            Game.Instance.heat += Game.Instance.heatGainPerSecond * Time.fixedDeltaTime;
-            if (Game.Instance.heat > Game.Instance.maxHeat)
-            {
-                Game.Instance.heat = Game.Instance.maxHeat;
-            }
-        }
-
-        public void BleedHeat()
-        {
-            Game.Instance.heat -= Game.Instance.heatBleedPerSecond * Time.fixedDeltaTime;
-            if (Game.Instance.heat < 0)
-            {
-                Game.Instance.heat = 0;
-            }            
-        }
-
 
 
         // Start is called before the first frame update
@@ -104,17 +104,96 @@ namespace HackedDesign
                 Debug.LogError(this.name + ": game ui not set");
             }
 
+            if (menuUI == null)
+            {
+                Debug.LogError(this.name + ": menu ui not set");
+            }
+
+            state = GameState.MENU;
+            player.gameObject.SetActive(false);
+        }
+
+        public void NewGame()
+        {
+            state = GameState.PLAYING;
+            player.gameObject.SetActive(true);
+            ResetState();
+        }
+
+        void ResetState()
+        {
+            Debug.Log(this.name + ": reset state");
+            player.transform.position = Vector2.zero;
+            player.transform.rotation = Quaternion.identity;
+            Fuel = startingFuel;
+            maxFuelIncrease = 0;
+            Heat = startingHeat;
+            minCrossSectionReduction = 0;
+            BayDoorsOpen = false;
+        }
+
+        public void ContinueGame()
+        {
+            state = GameState.PLAYING;
+            player.gameObject.SetActive(true);            
+        }
+
+        public void ExitGame()
+        {
+            Application.Quit();
+        }
+
+        public void IncreaseHeat()
+        {
+            Game.Instance.Heat += Game.Instance.heatGainPerSecond * Time.fixedDeltaTime;
+            if (Game.Instance.Heat > Game.Instance.maxHeat)
+            {
+                Game.Instance.Heat = Game.Instance.maxHeat;
+            }
+        }
+
+        public void BleedHeat()
+        {
+            Game.Instance.Heat -= Game.Instance.heatBleedPerSecond * Time.fixedDeltaTime;
+            if (Game.Instance.Heat < 0)
+            {
+                Game.Instance.Heat = 0;
+            }
+        }
+
+        void Update()
+        {
+             
+            switch (state)
+            {
+                case GameState.MENU:
+                    Time.timeScale = 0;
+                    break;
+
+                case GameState.PLAYING:
+                    Time.timeScale = 1;
+
+                    if(Input.GetButtonUp("Start"))
+                    {
+                        state = GameState.MENU;
+                    }
+                    break;
+            }
         }
 
 
         void FixedUpdate()
         {
-            player.UpdateMovement();
-            BleedHeat();
+            if (state == GameState.PLAYING)
+            {
+                player.UpdateMovement();
+                BleedHeat();
+            }
         }
 
         void LateUpdate()
         {
+            menuUI.UpdateUI();
             gameUI.UpdateUI();
         }
     }
