@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿
 using UnityEngine;
 
 namespace HackedDesign
@@ -16,13 +15,25 @@ namespace HackedDesign
         private Rigidbody2D rigidBody;
 
         [SerializeField]
-        private float maxThrust = 2.0f;
+        private float maxThrust = 5.0f;
 
-        [SerializeField]
-        private float currentThrust = 0.0f;
+        
+        public float Velocity {
+            get {
+                return rigidBody.velocity.magnitude;
+            }
+            set {
+                rigidBody.velocity = rigidBody.velocity.normalized * value;
+            }
+        }
 
-        // Start is called before the first frame update
-        void Start()
+        public float MaxThrust {
+            get {
+                return maxThrust;
+            }
+        }
+
+         void Start()
         {
             if (rigidBody == null)
             {
@@ -37,8 +48,8 @@ namespace HackedDesign
             }
 
             animator.SetBool("Thrust", false);
-
         }
+
 
         public void UpdateMovement()
         {
@@ -46,8 +57,13 @@ namespace HackedDesign
             this.transform.Rotate(new Vector3(0, 0, turn * Time.fixedDeltaTime));
             float force = UnityEngine.Input.GetAxis("Vertical") * maxThrust * Time.fixedDeltaTime;
 
-            rigidBody.drag = force / maxThrust;
+            
             rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
+            if(rigidBody.velocity.magnitude > maxThrust)
+            {
+                Velocity = maxThrust;
+                //rigidBody.velocity = rigidBody.velocity.normalized * maxThrust;
+            }
 
             // Clamp within a circle of 0,0
             this.transform.position = Vector2.ClampMagnitude(this.transform.position, Game.Instance.worldBounds);

@@ -14,6 +14,9 @@ TextureImporter:
   - first:
       213: -4402159209945842998
     second: SS Swansong 3
+  - first:
+      213: 5309948460084565824
+    second: Satellite
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -189,6 +192,27 @@ TextureImporter:
       bones: []
       spriteID: d7dd4f187c71612438e5c6037ac4b411
       internalID: -4402159209945842998
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Satellite
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ddcdedfe20b2cea46ab0e6a62cb431b0
+      internalID: 5309948460084565824
       vertices: []
       indices: 
       edges: []

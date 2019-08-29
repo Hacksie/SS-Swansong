@@ -8,16 +8,28 @@ namespace HackedDesign
     {
         public static Game Instance { get; private set; }
 
-        public GameState state;
-
-        [SerializeField]
-        public PlayerController player;
+        [Header("UI")]
 
         [SerializeField]
         private MainMenuPresenter menuUI;
 
         [SerializeField]
         private GameUIPresenter gameUI;
+
+        [Header("EntityPools")]
+        [SerializeField]
+        private SpriteRenderer targetingSquare;
+        [SerializeField]
+        private GameObject planetParent;
+
+        [Header("State")]
+        public GameState state;
+
+
+        [SerializeField]
+        public PlayerController player;
+
+
 
         [Header("Limits")]
         [SerializeField]
@@ -47,6 +59,9 @@ namespace HackedDesign
         [SerializeField]
         public float heatGainPerSecond;
 
+        [SerializeField]
+        public int maxCargo;
+
         //[Header("Current Player State")]
         [SerializeField]
         public float Fuel
@@ -66,6 +81,21 @@ namespace HackedDesign
         }
 
         [SerializeField]
+        public int Cargo
+        {
+            get;
+            private set;
+        }        
+
+        [SerializeField]
+        public int Credits
+        {
+            get;
+            private set;
+        }
+
+
+        [SerializeField]
         public float minCrossSectionReduction;
 
         [SerializeField]
@@ -79,6 +109,34 @@ namespace HackedDesign
             get
             {
                 return (int)(startingMaxFuel + maxFuelIncrease);
+            }
+        }
+
+        private GameObject currentTarget;
+
+        public GameObject CurrentTarget
+        {
+            get
+            {
+                return currentTarget;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    Debug.Log(this.name + ": set target to " + value.name);
+                    currentTarget = value;
+                    targetingSquare.transform.position = value.transform.position;
+                    Renderer r = value.gameObject.GetComponent<Renderer>();
+                    targetingSquare.size = r.bounds.size;
+                    targetingSquare.gameObject.SetActive(true);
+                }
+                else
+                {
+                    Debug.Log(this.name + ": clear target");
+                    currentTarget = null;
+                    targetingSquare.gameObject.SetActive(false);
+                }
             }
         }
 
@@ -116,8 +174,20 @@ namespace HackedDesign
                 Debug.LogError(this.name + ": menu ui not set");
             }
 
+            if (planetParent == null)
+            {
+                Debug.LogError(this.name + ": planet parent objects not set");
+            }
+            if (targetingSquare == null)
+            {
+                Debug.LogError(this.name + ": target square not set");
+            }
+
+
+
             state = GameState.MENU;
             player.gameObject.SetActive(false);
+            targetingSquare.gameObject.SetActive(false);
         }
 
         public void NewGame()
@@ -135,8 +205,28 @@ namespace HackedDesign
             Fuel = startingFuel;
             maxFuelIncrease = 0;
             Heat = startingHeat;
+            Credits = 0;
             minCrossSectionReduction = 0;
             BayDoorsOpen = false;
+            SpawnPlanets();
+        }
+
+        void SpawnPlanets()
+        {
+            int planets = planetParent.transform.childCount;
+
+            float angle = 360 / planets;
+
+            for (int i = 0; i < planets; i++)
+            {
+                float magnitude = Random.Range(100, 1000);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+                Debug.Log(position);
+                planetParent.transform.GetChild(i).transform.position = position;
+            }
+
+
+
         }
 
         public void ContinueGame()
@@ -193,9 +283,9 @@ namespace HackedDesign
                     Time.timeScale = 0;
                     break;
 
-                case GameState.WARPZONE:
-                    Time.timeScale = 1;
-                    break;                    
+                // case GameState.WARPZONE:
+                //     Time.timeScale = 1;
+                //     break;
 
                 case GameState.PLAYING:
                     Time.timeScale = 1;
@@ -222,12 +312,12 @@ namespace HackedDesign
                 BleedHeat();
             }
 
-            if(state == GameState.WARPZONE)
-            {
-                player.transform.position = Vector2.zero;
-                player.transform.rotation = Quaternion.identity;
-                BleedHeat(); // Continue to bleed heat
-            }
+            // if (state == GameState.WARPZONE)
+            // {
+            //     player.transform.position = Vector2.zero;
+            //     player.transform.rotation = Quaternion.identity;
+            //     BleedHeat(); // Continue to bleed heat
+            // }
         }
 
         void LateUpdate()
@@ -240,7 +330,6 @@ namespace HackedDesign
     public enum GameState
     {
         MENU,
-        WARPZONE,
         PLAYING,
         GAMEOVERCOLLISION
     }
