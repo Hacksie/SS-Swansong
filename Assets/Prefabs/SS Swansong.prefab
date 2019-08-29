@@ -97,6 +97,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   turnRate: 90
+  rb: {fileID: 2072357466699614619}
+  maxThrust: 1
+  currentThrust: 0
 --- !u!58 &2072357466699614618
 CircleCollider2D:
   m_ObjectHideFlags: 0
