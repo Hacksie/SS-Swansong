@@ -13,6 +13,9 @@ namespace HackedDesign
         [SerializeField]
         public PlayerController player;
 
+        [SerializeField]
+        private GameUIPresenter gameUI;
+
         [Header("Limits")]
         [SerializeField]
         public float minCrossSection;
@@ -45,14 +48,15 @@ namespace HackedDesign
         [SerializeField]
         public bool bayDoorsOpen;
 
-        public int MaxFuel {
-            get 
+        public int MaxFuel
+        {
+            get
             {
                 return (int)(startingMaxFuel + maxFuelIncrease);
             }
         }
 
-        
+
         public int CrossSection
         {
             get
@@ -62,28 +66,56 @@ namespace HackedDesign
         }
 
 
-
         Game()
         {
             Instance = this;
         }
 
+        public void IncreaseHeat()
+        {
+            Game.Instance.heat += Game.Instance.heatGainPerSecond * Time.fixedDeltaTime;
+            if (Game.Instance.heat > Game.Instance.maxHeat)
+            {
+                Game.Instance.heat = Game.Instance.maxHeat;
+            }
+        }
+
+        public void BleedHeat()
+        {
+            Game.Instance.heat -= Game.Instance.heatBleedPerSecond * Time.fixedDeltaTime;
+            if (Game.Instance.heat < 0)
+            {
+                Game.Instance.heat = 0;
+            }            
+        }
+
+
 
         // Start is called before the first frame update
         void Start()
         {
+            if (player == null)
+            {
+                Debug.LogError(this.name + ": player controller not set");
+            }
+
+            if (gameUI == null)
+            {
+                Debug.LogError(this.name + ": game ui not set");
+            }
 
         }
 
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
 
         void FixedUpdate()
         {
             player.UpdateMovement();
+            BleedHeat();
+        }
+
+        void LateUpdate()
+        {
+            gameUI.UpdateUI();
         }
     }
 

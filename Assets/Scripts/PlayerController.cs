@@ -49,6 +49,12 @@ namespace HackedDesign
             rigidBody.drag = force / maxThrust;
             rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
             UpdateAnimations(force);
+
+            if(force != 0)
+            {
+                Game.Instance.IncreaseHeat();
+
+            }
         }
 
         private void UpdateAnimations(float force)

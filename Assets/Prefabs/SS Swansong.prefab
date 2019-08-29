@@ -100,7 +100,7 @@ MonoBehaviour:
   animator: {fileID: 2242045565926691983}
   turnRate: 90
   rigidBody: {fileID: 2072357466699614619}
-  maxThrust: 1
+  maxThrust: 2
   currentThrust: 0
 --- !u!58 &2072357466699614618
 CircleCollider2D:

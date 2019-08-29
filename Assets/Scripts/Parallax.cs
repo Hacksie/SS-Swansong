@@ -2,8 +2,6 @@
 Built with help from: https://www.youtube.com/watch?v=zit45k6CUMk
 */
 
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Parallax : MonoBehaviour
