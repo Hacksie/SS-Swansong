@@ -6,7 +6,8 @@ namespace HackedDesign
 {
     public class PlayerController : MonoBehaviour
     {
-
+        [SerializeField]
+        private Animator animator;
 
         [SerializeField]
         private float turnRate = 90.0f;
@@ -23,16 +24,19 @@ namespace HackedDesign
         // Start is called before the first frame update
         void Start()
         {
-            if(rigidBody == null)
+            if (rigidBody == null)
             {
                 Debug.LogError(this.name + ": rigidbody not set");
             }
-            
-        }
 
-        // Update is called once per frame
-        void Update()
-        {
+            animator = GetComponent<Animator>();
+
+            if (animator == null)
+            {
+                Debug.LogError(this.name + ": animator not set");
+            }
+
+            animator.SetBool("Thrust", false);
 
         }
 
@@ -44,6 +48,20 @@ namespace HackedDesign
 
             rigidBody.drag = force / maxThrust;
             rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
+            UpdateAnimations(force);
+        }
+
+        private void UpdateAnimations(float force)
+        {
+            if (force != 0)
+            {
+
+                animator.SetBool("Thrust", true);
+            }
+            else
+            {
+                animator.SetBool("Thrust", false);
+            }
         }
     }
 }

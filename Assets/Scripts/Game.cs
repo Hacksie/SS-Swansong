@@ -11,24 +11,55 @@ namespace HackedDesign
         public GameState state;
 
         [SerializeField]
-        private PlayerController player;
+        public PlayerController player;
 
         [Header("Limits")]
         [SerializeField]
-        private float maxFuel;
+        public float minCrossSection;
 
         [SerializeField]
-        private float maxHeat;        
+        public float startingMaxFuel;
 
         [SerializeField]
-        private float heatBleed;  
+        public float maxHeat;
+
+        [SerializeField]
+        public float heatBleedPerSecond;
+
+        [SerializeField]
+        public float heatGainPerSecond;
 
         [Header("Current Player State")]
         [SerializeField]
-        private float fuel;
+        public float fuel;
 
         [SerializeField]
-        private float heat;
+        public float maxFuelIncrease;
+
+        [SerializeField]
+        public float heat;
+
+        [SerializeField]
+        public float minCrossSectionReduction;
+
+        [SerializeField]
+        public bool bayDoorsOpen;
+
+        public int MaxFuel {
+            get 
+            {
+                return (int)(startingMaxFuel + maxFuelIncrease);
+            }
+        }
+
+        
+        public int CrossSection
+        {
+            get
+            {
+                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + heat + (bayDoorsOpen ? 40 : 0), 0, 100);
+            }
+        }
 
 
 
