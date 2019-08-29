@@ -12,7 +12,7 @@ namespace HackedDesign
         private float turnRate = 90.0f;
 
         [SerializeField]
-        private Rigidbody2D rb;
+        private Rigidbody2D rigidBody;
 
         [SerializeField]
         private float maxThrust = 2.0f;
@@ -23,7 +23,11 @@ namespace HackedDesign
         // Start is called before the first frame update
         void Start()
         {
-            //rb = GetComponent<Rigidbody>();
+            if(rigidBody == null)
+            {
+                Debug.LogError(this.name + ": rigidbody not set");
+            }
+            
         }
 
         // Update is called once per frame
@@ -35,16 +39,11 @@ namespace HackedDesign
         public void UpdateMovement()
         {
             float turn = -1.0f * UnityEngine.Input.GetAxis("Horizontal") * turnRate;
-            this.transform.Rotate(new Vector3(0, 0, turn * Time.deltaTime));
-            float force = UnityEngine.Input.GetAxis("Vertical") * maxThrust * Time.deltaTime;
+            this.transform.Rotate(new Vector3(0, 0, turn * Time.fixedDeltaTime));
+            float force = UnityEngine.Input.GetAxis("Vertical") * maxThrust * Time.fixedDeltaTime;
 
-            rb.drag = (force / maxThrust);
-            rb.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
-
-            // if (rb.velocity.magnitude < maxThrust)
-            // {
-            //     rb.velocity = rb.velocity.normalized * maxThrust;
-            // }
+            rigidBody.drag = force / maxThrust;
+            rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
         }
     }
 }

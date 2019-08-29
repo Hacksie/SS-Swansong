@@ -8,8 +8,29 @@ namespace HackedDesign
     {
         public static Game Instance { get; private set; }
 
+        public GameState state;
+
         [SerializeField]
         private PlayerController player;
+
+        [Header("Limits")]
+        [SerializeField]
+        private float maxFuel;
+
+        [SerializeField]
+        private float maxHeat;        
+
+        [SerializeField]
+        private float heatBleed;  
+
+        [Header("Current Player State")]
+        [SerializeField]
+        private float fuel;
+
+        [SerializeField]
+        private float heat;
+
+
 
         Game()
         {
@@ -26,12 +47,18 @@ namespace HackedDesign
         // Update is called once per frame
         void Update()
         {
-            player.UpdateMovement();
+
         }
 
         void FixedUpdate()
         {
-            
-        }        
+            player.UpdateMovement();
+        }
+    }
+
+    public enum GameState
+    {
+        MENU,
+        PLAYING
     }
 }
