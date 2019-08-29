@@ -11,7 +11,7 @@ namespace HackedDesign
             {
                 return;
             }
-            Debug.Log("Trigger enter");
+            Debug.Log(this.name + ": trigger enter");
             Game.Instance.player.Velocity = 0;
         }
     }

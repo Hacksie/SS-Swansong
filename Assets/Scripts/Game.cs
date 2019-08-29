@@ -21,6 +21,8 @@ namespace HackedDesign
         private SpriteRenderer targetingSquare;
         [SerializeField]
         private GameObject planetParent;
+        [SerializeField]
+        private GameObject asteroidsParent;
 
         [Header("State")]
         public GameState state;
@@ -178,12 +180,14 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": planet parent objects not set");
             }
+            if(asteroidsParent == null)
+            {
+                Debug.LogError(this.name + ": asteroids parent not set");
+            }
             if (targetingSquare == null)
             {
                 Debug.LogError(this.name + ": target square not set");
             }
-
-
 
             state = GameState.MENU;
             player.gameObject.SetActive(false);
@@ -209,6 +213,7 @@ namespace HackedDesign
             minCrossSectionReduction = 0;
             BayDoorsOpen = false;
             SpawnPlanets();
+            SpawnAsteroids();
         }
 
         void SpawnPlanets()
@@ -224,9 +229,24 @@ namespace HackedDesign
                 Debug.Log(position);
                 planetParent.transform.GetChild(i).transform.position = position;
             }
+        }
 
+        void SpawnAsteroids()
+        {
+            int asteroids = asteroidsParent.transform.childCount;
 
+            float angle = 360 / asteroids;
 
+            for (int i = 0; i < asteroids; i++)
+            {
+                float magnitude = Random.Range(50, 1000);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+                Debug.Log(position);
+                float rotation = Random.Range(0, 360);
+                asteroidsParent.transform.GetChild(i).transform.position = position;
+                asteroidsParent.transform.GetChild(i).transform.Rotate(0,0,rotation, Space.World);
+                // Check if there is a planet there and move if need be
+            }            
         }
 
         public void ContinueGame()
