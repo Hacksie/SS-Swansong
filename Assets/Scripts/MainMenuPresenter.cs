@@ -25,9 +25,10 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            if (Game.Instance.state == GameState.PLAYING && this.gameObject.activeInHierarchy)
+            if (Game.Instance.state != GameState.MENU && this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(false);
+                return;
             }
 
             if (Game.Instance.state == GameState.MENU && !this.gameObject.activeInHierarchy)

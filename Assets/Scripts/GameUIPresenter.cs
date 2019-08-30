@@ -64,14 +64,14 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": maxFuel not set");
             }
-            if (heat == null)
-            {
-                Debug.LogError(this.name + ": heat not set");
-            }
-            if (maxHeat == null)
-            {
-                Debug.LogError(this.name + ": maxHeat not set");
-            }
+            // if (heat == null)
+            // {
+            //     Debug.LogError(this.name + ": heat not set");
+            // }
+            // if (maxHeat == null)
+            // {
+            //     Debug.LogError(this.name + ": maxHeat not set");
+            // }
             if (xcoord == null)
             {
                 Debug.LogError(this.name + ": xcoord not set");
@@ -134,10 +134,10 @@ namespace HackedDesign
             velocity.text = ((int)(Game.Instance.player.Velocity * 100.0f / Game.Instance.player.MaxThrust)).ToString() + "%";
             fuel.text = ((int)Game.Instance.Fuel).ToString();
             maxFuel.text = ((int)Game.Instance.MaxFuel).ToString();
-            heat.text = ((int)Game.Instance.CrossSection).ToString();
-            maxHeat.text = ((int)Game.Instance.maxHeat).ToString();
+            // heat.text = ((int)Game.Instance.CrossSection).ToString();
+            // maxHeat.text = ((int)Game.Instance.maxHeat).ToString();
             credits.text = "$" + Game.Instance.Credits.ToString();
-            cargo.text = Game.Instance.Cargo.ToString();
+            cargo.text = Game.Instance.cargo.ToString();
             maxCargo.text = Game.Instance.maxCargo.ToString();
             bayDoors.text = Game.Instance.bayDoorsOpen ? "OPEN" : "CLOSED";
 

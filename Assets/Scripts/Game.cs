@@ -19,6 +19,8 @@ namespace HackedDesign
         private GameUIPresenter gameUI;
         [SerializeField]
         private GameOverPresenter gameOverUI;
+        [SerializeField]
+        private IntroPresenter introUI;
 
         [SerializeField]
         private RadarArrow radarArrow;
@@ -101,7 +103,7 @@ namespace HackedDesign
         }
 
         [SerializeField]
-        public int Cargo
+        public int cargo
         {
             get;
             private set;
@@ -152,7 +154,7 @@ namespace HackedDesign
             {
                 if (value != null)
                 {
-                    Debug.Log(this.name + ": set target to " + value.name);
+                    //Debug.Log(this.name + ": set target to " + value.name);
                     currentTarget = value;
                     targetingSquare.transform.position = value.transform.position;
                     Renderer r = value.gameObject.GetComponent<Renderer>();
@@ -161,7 +163,7 @@ namespace HackedDesign
                 }
                 else
                 {
-                    Debug.Log(this.name + ": clear target");
+                    //Debug.Log(this.name + ": clear target");
                     currentTarget = null;
                     targetingSquare.gameObject.SetActive(false);
                 }
@@ -205,6 +207,10 @@ namespace HackedDesign
             if (menuUI == null)
             {
                 Debug.LogError(this.name + ": menu ui not set");
+            }
+            if (introUI == null)
+            {
+                Debug.LogError(this.name + ": intro ui not set");
             }
             if (gameOverUI == null)
             {
@@ -255,17 +261,17 @@ namespace HackedDesign
 
         public void NewGame()
         {
-            state = GameState.PLAYING;
-            player.gameObject.SetActive(true);
-            world.gameObject.SetActive(true);
+            //player.gameObject.SetActive(true);
             ResetState();
+            state = GameState.INTRO;
         }
 
         void ResetState()
         {
+
             Debug.Log(this.name + ": reset state");
             player.transform.position = Vector2.zero;
-            player.transform.rotation = Quaternion.identity;
+            player.transform.rotation = Quaternion.Euler(0, 0, 45.0f);
             Fuel = startingFuel;
             maxFuelIncrease = 0;
             Heat = startingHeat;
@@ -360,11 +366,20 @@ namespace HackedDesign
             }
         }
 
+        public void ShowTutorial()
+        {
+            state = GameState.TUTORIAL;
+            player.gameObject.SetActive(true);
+            world.gameObject.SetActive(true);
+        }
+
 
         public void ContinueGame()
         {
             state = GameState.PLAYING;
             player.gameObject.SetActive(true);
+            world.gameObject.SetActive(true);
+
         }
 
         public void ExitGame()
@@ -374,7 +389,7 @@ namespace HackedDesign
 
         public void IncreaseHeat()
         {
-            Heat += heatGainPerSecond * Time.fixedDeltaTime;
+            Heat += heatGainPerSecond * Time.deltaTime;
             if (Heat > maxHeat)
             {
                 Heat = maxHeat;
@@ -383,7 +398,7 @@ namespace HackedDesign
 
         public void BleedHeat()
         {
-            Heat -= heatBleedPerSecond * Time.fixedDeltaTime;
+            Heat -= heatBleedPerSecond * Time.deltaTime;
             if (Heat < 0)
             {
                 Heat = 0; // Move this into the property?
@@ -392,7 +407,7 @@ namespace HackedDesign
 
         public void ConsumeFuel()
         {
-            Fuel -= fuelConsumptionPerSecond * Time.fixedDeltaTime;
+            Fuel -= fuelConsumptionPerSecond * Time.deltaTime;
             if (Fuel <= 0)
             {
                 Fuel = 0;
@@ -404,11 +419,13 @@ namespace HackedDesign
 
         public void GameOverCollision()
         {
+            Debug.Log(this.name + ": Game Over via Collision");
             state = GameState.GAMEOVERCOLLISION;
         }
 
         public void GameOverMine()
         {
+            Debug.Log(this.name + ": Game Over via Proximity Mine");
             state = GameState.GAMEOVERMINE;
         }
 
@@ -416,61 +433,9 @@ namespace HackedDesign
 
         public void GameOverFuel()
         {
+            Debug.Log(this.name + ": Game Over via Fuel");
             state = GameState.GAMEOVERFUEL;
 
-        }
-
-        void Update()
-        {
-
-            switch (state)
-            {
-                case GameState.MENU:
-                    Time.timeScale = 0;
-                    break;
-
-                // case GameState.WARPZONE:
-                //     Time.timeScale = 1;
-                //     break;
-
-                case GameState.PLAYING:
-                    Time.timeScale = 1;
-
-                    player.UpdateActions();
-
-
-                    break;
-
-                case GameState.GAMEOVERCOLLISION:
-                    Time.timeScale = 0;
-                    Debug.Log(this.name + ": Game Over via Collision");
-                    //state = GameState.MENU;
-                    break;
-
-                case GameState.GAMEOVERMINE:
-                    Time.timeScale = 0;
-                    Debug.Log(this.name + ": Game Over via Proximity Mine");
-                    //state = GameState.MENU;
-                    break;
-
-                case GameState.GAMEOVERFUEL:
-                    Time.timeScale = 0;
-                    Debug.Log(this.name + ": Game Over via Fuel");
-                    //state = GameState.MENU;
-                    break;
-            }
-        }
-
-
-        void FixedUpdate()
-        {
-            if (state == GameState.PLAYING)
-            {
-                player.UpdateMovement();
-                BleedHeat();
-                UpdateRadars();
-                radarArrow.UpdatePosition();
-            }
         }
 
         void UpdateRadars()
@@ -478,7 +443,6 @@ namespace HackedDesign
             if ((Time.time - lastPulse) > 1)
             {
                 highestRadar = null;
-
             }
 
             if ((Time.time - lastPulse) > pulseSpeed)
@@ -514,11 +478,83 @@ namespace HackedDesign
             }
         }
 
+
+        void Update()
+        {
+
+            switch (state)
+            {
+                case GameState.PLAYING:
+                    Time.timeScale = 1;
+                    player.gameObject.SetActive(true);
+                    targetingSquare.gameObject.SetActive(true);
+                    radarArrow.gameObject.SetActive(true);
+                    world.gameObject.SetActive(true);
+                    player.UpdateActions();
+                    BleedHeat();
+                    UpdateRadars();
+                    radarArrow.UpdatePosition();
+
+
+                    break;
+                case GameState.MENU:
+                    Time.timeScale = 0;
+                    player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    world.gameObject.SetActive(false);
+                    break;
+
+                case GameState.INTRO:
+                    Time.timeScale = 0;
+                    player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    world.gameObject.SetActive(false);                    
+                    break;
+                case GameState.TUTORIAL:
+                    Time.timeScale = 0;
+                    player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    world.gameObject.SetActive(false);                    
+                    break;
+
+
+                case GameState.GAMEOVERCOLLISION:
+                    Time.timeScale = 0;
+                    break;
+
+                case GameState.GAMEOVERMINE:
+                    Time.timeScale = 0;
+                    break;
+
+                case GameState.GAMEOVERFUEL:
+                    Time.timeScale = 0;
+                    break;
+            }
+        }
+
+
+        void FixedUpdate()
+        {
+            switch (state)
+            {
+                case GameState.PLAYING:
+                    player.UpdateMovement();
+
+                    // Do ship updates in here too
+                    break;
+            }
+        }
+
         void LateUpdate()
         {
             menuUI.UpdateUI();
+            introUI.UpdateUI();
             gameUI.UpdateUI();
             gameOverUI.UpdateUI();
+
         }
     }
 

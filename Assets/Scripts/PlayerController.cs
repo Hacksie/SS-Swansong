@@ -67,11 +67,17 @@ namespace HackedDesign
             }
         }
 
-
-        public void UpdateMovement()
+        private void UpdateRotation()
         {
             float turn = -1.0f * Input.GetAxis("Horizontal") * turnRate;
             this.transform.Rotate(new Vector3(0, 0, turn * Time.fixedDeltaTime));
+        }
+
+
+        public void UpdateMovement()
+        {
+            UpdateRotation();
+
             float force = Input.GetAxis("Vertical") * maxThrust * Time.fixedDeltaTime;
 
 
