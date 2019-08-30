@@ -65,6 +65,55 @@ namespace HackedDesign
             {
                 Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
             }
+            if(Input.GetButtonUp("Next Weapon"))
+            {
+                Game.Instance.currentBay++;
+                if(Game.Instance.currentBay >= 4)
+                {
+                    Game.Instance.currentBay = 0;
+                }
+            }
+            if(Input.GetButtonUp("Previous Weapon"))
+            {
+                Game.Instance.currentBay--;
+                if(Game.Instance.currentBay < 0)
+                {
+                    Game.Instance.currentBay = 3;
+                }
+            }            
+
+            if (Input.GetButtonUp("Next Target"))
+            {
+                int count = Game.Instance.currentTargets.Count;
+                if (count > 0 && Game.Instance.CurrentTarget != null)
+                {
+                    int index = Game.Instance.currentTargets.IndexOf(Game.Instance.CurrentTarget);
+                    index++;
+                    if (index >= count)
+                    {
+                        index = 0;
+                    }
+
+                    Game.Instance.CurrentTarget = Game.Instance.currentTargets[index];
+                }
+                //Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
+            }
+            if (Input.GetButtonUp("Previous Target"))
+            {
+                int count = Game.Instance.currentTargets.Count;
+                if (count > 0 && Game.Instance.CurrentTarget != null)
+                {
+                    int index = Game.Instance.currentTargets.IndexOf(Game.Instance.CurrentTarget);
+                    index--;
+                    if (index < 0)
+                    {
+                        index = count - 1;
+                    }
+
+                    Game.Instance.CurrentTarget = Game.Instance.currentTargets[index];
+                }                
+                //Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
+            }
         }
 
         private void UpdateRotation()
@@ -91,9 +140,13 @@ namespace HackedDesign
             // Clamp within a circle of 0,0
             this.transform.position = Vector2.ClampMagnitude(this.transform.position, Game.Instance.worldBounds);
 
-            if (UnityEngine.Input.GetButtonUp("Fire3"))
+            if (UnityEngine.Input.GetButtonUp("Brake"))
             {
-                Velocity = 0;
+                Velocity -= 2;
+                // Take a penalty for using the brakes
+                // Fixme: remove hard coded            
+                Game.Instance.IncreaseHeat(20);
+                Game.Instance.ConsumeFuel(10);     
             }
 
 

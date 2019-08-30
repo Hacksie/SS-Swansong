@@ -8,38 +8,70 @@ namespace HackedDesign
     {
         public static Game Instance { get; private set; }
 
-        public new Camera camera;
+        public new Camera camera = null;
 
         [Header("UI")]
 
         [SerializeField]
-        private MainMenuPresenter menuUI;
+        private MainMenuPresenter menuUI = null;
 
         [SerializeField]
-        private GameUIPresenter gameUI;
+        private GameUIPresenter gameUI = null;
         [SerializeField]
-        private GameOverPresenter gameOverUI;
+        private GameOverPresenter gameOverUI = null;
         [SerializeField]
-        private IntroPresenter introUI;
+        private IntroPresenter introUI = null;
 
         [SerializeField]
-        private RadarArrow radarArrow;
+        private RadarArrow radarArrow = null;
 
         [Header("EntityPools")]
         [SerializeField]
-        private SpriteRenderer targetingSquare;
+        private SpriteRenderer targetingSquare = null;
         [SerializeField]
         private GameObject world = null;
         [SerializeField]
-        private GameObject planetParent;
+        private GameObject planetParent = null;
         [SerializeField]
-        private GameObject asteroidParent;
+        private GameObject asteroidParent = null;
         [SerializeField]
-        private GameObject radarParent;
+        private GameObject radarParent = null;
         [SerializeField]
-        private GameObject mineParent;
+        private GameObject mineParent = null;
         [SerializeField]
-        private GameObject cargoShipParent;
+        private GameObject cargoShipParent = null;
+        [SerializeField]
+        private GameObject fighterParent = null;
+        [SerializeField]
+        private GameObject missileParent = null;
+        [SerializeField]
+        private GameObject laserParent = null;
+
+        [Header("Limits")]
+        [SerializeField]
+        public float worldBounds;
+        [SerializeField]
+        public float minCrossSection;
+        [SerializeField]
+        public float startingFuel;
+        [SerializeField]
+        public float startingMaxFuel;
+        [SerializeField]
+        public float maxHeat;
+        [SerializeField]
+        public float startingHeat;
+        [SerializeField]
+        public float fuelConsumptionPerSecond;
+        [SerializeField]
+        public float heatBleedPerSecond;
+        [SerializeField]
+        public float heatGainPerSecond;
+        [SerializeField]
+        public float maxFuelIncrease;
+        [SerializeField]
+        public float minCrossSectionReduction;
+        [SerializeField]
+        public float bayDoorsCrossSection = 30.0f;
 
         [Header("State")]
         public GameState state;
@@ -47,6 +79,36 @@ namespace HackedDesign
 
         [SerializeField]
         public PlayerController player;
+
+        [SerializeField]
+        public bool bayDoorsOpen = false;
+
+        [SerializeField]
+        public string[] bay = new string[4];
+
+        [SerializeField]
+        public int currentBay = 0;
+
+        [SerializeField]
+        public float Fuel
+        {
+            get;
+            private set;
+        }
+
+        [SerializeField]
+        public float Heat
+        {
+            get;
+            private set;
+        }
+
+        [SerializeField]
+        public int Credits
+        {
+            get;
+            private set;
+        }
 
         public float highestRadarPulse;
         public Radar highestRadar;
@@ -79,86 +141,7 @@ namespace HackedDesign
                     targetingSquare.gameObject.SetActive(false);
                 }
             }
-        }        
-
-
-
-        [Header("Limits")]
-        [SerializeField]
-        public float worldBounds;
-
-        [SerializeField]
-        public float minCrossSection;
-
-        [SerializeField]
-        public float startingFuel;
-
-        [SerializeField]
-        public float startingMaxFuel;
-
-        [SerializeField]
-        public float maxHeat;
-
-        [SerializeField]
-        public float startingHeat;
-
-        [SerializeField]
-        public float fuelConsumptionPerSecond;
-
-        [SerializeField]
-        public float heatBleedPerSecond;
-
-        [SerializeField]
-        public float heatGainPerSecond;
-
-        [SerializeField]
-        public int maxCargo;
-
-        //[Header("Current Player State")]
-        [SerializeField]
-        public float Fuel
-        {
-            get;
-            private set;
         }
-
-        [SerializeField]
-        public float maxFuelIncrease;
-
-        [SerializeField]
-        public float Heat
-        {
-            get;
-            private set;
-        }
-
-        [SerializeField]
-        public int cargo
-        {
-            get;
-            private set;
-        }
-
-        [SerializeField]
-        public int Credits
-        {
-            get;
-            private set;
-        }
-
-
-        [SerializeField]
-        public float minCrossSectionReduction;
-
-        [SerializeField]
-        public bool bayDoorsOpen = false;
-
-        [SerializeField]
-        public float bayDoorsCrossSection = 30.0f;
-
-        public float lastPulse;
-        public float pulseSpeed;
-
 
 
 
@@ -169,9 +152,6 @@ namespace HackedDesign
                 return (int)(startingMaxFuel + maxFuelIncrease);
             }
         }
-
-
-
 
         public int CrossSection
         {
@@ -186,6 +166,11 @@ namespace HackedDesign
             get; private set;
 
         }
+
+
+
+        private float lastPulse = 0;
+        private float pulseSpeed = 3.0f;
 
 
         Game()
@@ -243,6 +228,18 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": cargo ship parent not set");
             }
+            if (fighterParent == null)
+            {
+                Debug.LogError(this.name + ": fighters parent not set");
+            }
+            if (missileParent == null)
+            {
+                Debug.LogError(this.name + ": missile parent not set");
+            }
+            if (laserParent == null)
+            {
+                Debug.LogError(this.name + ": laser parent not set");
+            }            
 
             if (targetingSquare == null)
             {
@@ -280,12 +277,20 @@ namespace HackedDesign
             Credits = 0;
             minCrossSectionReduction = 0;
             bayDoorsOpen = false;
+            bay[0] = "ML Charge";
+            bay[1] = "ML Charge";
+            //bay[2] = "ASM-34 EMP";
+            //bay[3] = "AIM-129";
+            bay[2] = "";
+            bay[3] = "";
+
             CurrentTarget = null;
             SpawnPlanets();
             SpawnAsteroids();
             SpawnRadarSatellites();
             SpawnProxMines();
             SpawnCargoShips();
+            SpawnFighterShips();
         }
 
         void SpawnPlanets()
@@ -343,6 +348,7 @@ namespace HackedDesign
             int mines = mineParent.transform.childCount;
 
             float angle = 360.0f / mines;
+            //float angle = 5.0f / mines;
 
             for (int i = 0; i < mines; i++)
             {
@@ -368,6 +374,23 @@ namespace HackedDesign
                 // Check if there is a planet there and move if need be
             }
         }
+
+        void SpawnFighterShips()
+        {
+            int ships = fighterParent.transform.childCount;
+
+            float angle = 360.0f / ships;
+            float offset = Random.Range(0, 360);
+
+            for (int i = 0; i < ships; i++)
+            {
+                float magnitude = Random.Range(40, 1000);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+                fighterParent.transform.GetChild(i).transform.position = position;
+                // Check if there is a planet there and move if need be
+            }
+        }
+
 
         public void ShowTutorial()
         {
@@ -419,6 +442,29 @@ namespace HackedDesign
                 // GameOver state?
             }
         }
+
+
+        public void ConsumeFuel(float amount)
+        {
+            Fuel -= amount;
+            if (Fuel <= 0)
+            {
+                Fuel = 0;
+                GameOverFuel();
+
+                // GameOver state?
+            }
+        }
+
+        public void IncreaseHeat(float amount)
+        {
+            Heat += amount * Time.deltaTime;
+            if (Heat > maxHeat)
+            {
+                Heat = maxHeat;
+            }
+        }        
+
 
         public void GameOverCollision()
         {
@@ -513,14 +559,14 @@ namespace HackedDesign
                     player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
-                    world.gameObject.SetActive(false);                    
+                    world.gameObject.SetActive(false);
                     break;
                 case GameState.TUTORIAL:
                     Time.timeScale = 0;
                     player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
-                    world.gameObject.SetActive(false);                    
+                    world.gameObject.SetActive(false);
                     break;
 
 

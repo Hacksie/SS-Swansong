@@ -47,6 +47,21 @@ TextureImporter:
   - first:
       213: 174311258017806148
     second: Fighter_5 0
+  - first:
+      213: 9193558704824911328
+    second: Missile 0
+  - first:
+      213: 687579539646125017
+    second: Missile 1
+  - first:
+      213: 4579980673372949437
+    second: Missile 2
+  - first:
+      213: -8201184993496397184
+    second: Missile 3
+  - first:
+      213: -6803327285147410748
+    second: Lazer 0
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -453,6 +468,111 @@ TextureImporter:
       bones: []
       spriteID: 0144cca39a2958c41bd75c15962262ed
       internalID: 174311258017806148
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Missile 0
+      rect:
+        serializedVersion: 2
+        x: 80
+        y: 10
+        width: 3
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 611beeffba83d294abb00e43077393c5
+      internalID: 9193558704824911328
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Missile 1
+      rect:
+        serializedVersion: 2
+        x: 83
+        y: 10
+        width: 3
+        height: 6
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: af77d65bb24cc0545bdae0f0a2b20099
+      internalID: 687579539646125017
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Missile 2
+      rect:
+        serializedVersion: 2
+        x: 86
+        y: 10
+        width: 3
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2e0b4123ab531f743bd5fd78919d74ad
+      internalID: 4579980673372949437
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Missile 3
+      rect:
+        serializedVersion: 2
+        x: 89
+        y: 10
+        width: 3
+        height: 6
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 4bc6e5ba02a1ad94db90292b8245c0e4
+      internalID: -8201184993496397184
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Lazer 0
+      rect:
+        serializedVersion: 2
+        x: 92
+        y: 0
+        width: 2
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: a1e39b24a675ed640aec089c66903d37
+      internalID: -6803327285147410748
       vertices: []
       indices: 
       edges: []

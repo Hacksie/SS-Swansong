@@ -18,34 +18,49 @@ namespace HackedDesign
         private Text maxFuel = null;
 
         [SerializeField]
-        private Text cargo = null;
-
-        [SerializeField]
-        private Text maxCargo = null;
-
-        [SerializeField]
         private Text credits = null;
 
         [SerializeField]
         private Text velocity = null;
 
         [SerializeField]
-        private RectTransform xsectionBar = null; 
+        private RectTransform xsectionBar = null;
 
         [SerializeField]
-        private RectTransform radarBar = null;         
+        private RectTransform radarBar = null;
 
         [SerializeField]
-        private Text tracked = null;      
+        private Text tracked = null;
 
         [SerializeField]
         private Color notTrackedColour = Color.gray;
 
         [SerializeField]
-        private Color trackedColour = Color.red;        
+        private Color trackedColour = Color.red;
 
         [SerializeField]
-        private Text bayDoors = null;        
+        private Text bayDoors = null;
+
+        [SerializeField]
+        private Text bay0 = null;
+
+        [SerializeField]
+        private Text bay1 = null;
+
+        [SerializeField]
+        private Text bay2 = null;
+
+        [SerializeField]
+        private Text bay3 = null;
+
+        [SerializeField]
+        private Text target = null;
+
+        [SerializeField]
+        private Color notCurrentBayColour = Color.white;
+
+        [SerializeField]
+        private Color currentBayColour = Color.red;
 
 
         public void Start()
@@ -70,50 +85,63 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": velocity not set");
             }
-            if (cargo == null)
-            {
-                Debug.LogError(this.name + ": cargo not set");
-            }
-            if(maxCargo == null)
-            {
-                Debug.LogError(this.name + ": max cargo not set");
-            }
-            if(credits == null)
+            if (credits == null)
             {
                 Debug.LogError(this.name + ": credits not set");
             }
 
-            if(xsectionBar == null)
+            if (xsectionBar == null)
             {
                 Debug.LogError(this.name + ": xsectionbar not set");
             }
-            if(radarBar == null)
+            if (radarBar == null)
             {
                 Debug.LogError(this.name + ": radarbar not set");
             }
-            if(tracked == null)
+            if (tracked == null)
             {
                 Debug.LogError(this.name + ": tracked not set");
             }
-            if(bayDoors == null)
+            if (bayDoors == null)
             {
                 Debug.LogError(this.name + ": baydoors not set");
+            }
+            if (bay0 == null)
+            {
+                Debug.LogError(this.name + ": bay1 not set");
+            }
+            if (bay1 == null)
+            {
+                Debug.LogError(this.name + ": bay2 not set");
+            }
+            if (bay2 == null)
+            {
+                Debug.LogError(this.name + ": bay3 not set");
+            }
+            if (bay3 == null)
+            {
+                Debug.LogError(this.name + ": bay4 not set");
+            }
+            if (target == null)
+            {
+                Debug.LogError(this.name = ": target not set");
             }
         }
 
 
         public void UpdateUI()
         {
+            if (Game.Instance.state != GameState.PLAYING)
+            {
+                this.gameObject.SetActive(false);
+                return;
+            }
+
             if (Game.Instance.state == GameState.PLAYING)
             {
                 this.gameObject.SetActive(true);
             }
 
-            if (Game.Instance.state == GameState.MENU)
-            {
-                this.gameObject.SetActive(false);
-                return;
-            }
 
             xcoord.text = ((int)Game.Instance.player.transform.position.x).ToString();
             ycoord.text = ((int)Game.Instance.player.transform.position.y).ToString();
@@ -123,13 +151,22 @@ namespace HackedDesign
             // heat.text = ((int)Game.Instance.CrossSection).ToString();
             // maxHeat.text = ((int)Game.Instance.maxHeat).ToString();
             credits.text = "$" + Game.Instance.Credits.ToString();
-            cargo.text = Game.Instance.cargo.ToString();
-            maxCargo.text = Game.Instance.maxCargo.ToString();
             bayDoors.text = Game.Instance.bayDoorsOpen ? "OPEN" : "CLOSED";
+            bay0.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[0]) ? Game.Instance.bay[0] : "empty";
+            bay0.color = Game.Instance.currentBay == 0 ? currentBayColour : notCurrentBayColour;
+            bay1.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[1]) ? Game.Instance.bay[1] : "empty";
+            bay1.color = Game.Instance.currentBay == 1 ? currentBayColour : notCurrentBayColour;
+            bay2.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[2]) ? Game.Instance.bay[2] : "empty"; ;
+            bay2.color = Game.Instance.currentBay == 2 ? currentBayColour : notCurrentBayColour;
+            bay3.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[3]) ? Game.Instance.bay[3] : "empty";
+            bay3.color = Game.Instance.currentBay == 3 ? currentBayColour : notCurrentBayColour;
+
+
+            target.text = (Game.Instance.CurrentTarget == null) ? "" : Game.Instance.CurrentTarget.name;
 
             xsectionBar.sizeDelta = new Vector2((int)(Game.Instance.CrossSection * 70 / 100), 10.0f);
 
-            if(Game.Instance.Track > 1)
+            if (Game.Instance.Track > 1)
             {
                 tracked.color = trackedColour;
             }
@@ -138,14 +175,15 @@ namespace HackedDesign
                 tracked.color = notTrackedColour;
             }
 
-            if(Game.Instance.highestRadar != null)
+            if (Game.Instance.highestRadar != null)
             {
                 //Debug.Log("set radar bar");
                 radarBar.gameObject.SetActive(true);
                 float distance = Mathf.Clamp(100 - (Game.Instance.highestRadar.transform.position - Game.Instance.player.transform.position).magnitude, 0, 100);
                 radarBar.sizeDelta = new Vector2((int)(distance * 70 / 100), 4.0f);
             }
-            else {
+            else
+            {
                 radarBar.gameObject.SetActive(false);
 
             }
