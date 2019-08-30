@@ -17,6 +17,9 @@ TextureImporter:
   - first:
       213: 5309948460084565824
     second: Satellite
+  - first:
+      213: -3286103865734421046
+    second: Proximity Mine
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -205,7 +208,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -213,6 +216,27 @@ TextureImporter:
       bones: []
       spriteID: ddcdedfe20b2cea46ab0e6a62cb431b0
       internalID: 5309948460084565824
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Proximity Mine
+      rect:
+        serializedVersion: 2
+        x: 96
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: ed3cfd6c1cd0f6a4eb1b2557699ceeaf
+      internalID: -3286103865734421046
       vertices: []
       indices: 
       edges: []

@@ -19,6 +19,12 @@ namespace HackedDesign
         private GameUIPresenter gameUI;
 
         [SerializeField]
+        private GameOverCollisionPresenter gameOverCollisionUI;
+
+        [SerializeField]
+        private GameOverMinePresenter gameOverMineUI;
+
+        [SerializeField]
         private RadarArrow radarArrow;
 
         [Header("EntityPools")]
@@ -30,6 +36,8 @@ namespace HackedDesign
         private GameObject asteroidParent;
         [SerializeField]
         private GameObject radarParent;
+        [SerializeField]
+        private GameObject mineParent;
 
         [Header("State")]
         public GameState state;
@@ -167,7 +175,7 @@ namespace HackedDesign
         public float Track
         {
             get; private set;
-            
+
         }
 
 
@@ -189,10 +197,17 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": game ui not set");
             }
-
             if (menuUI == null)
             {
                 Debug.LogError(this.name + ": menu ui not set");
+            }
+            if (gameOverCollisionUI == null)
+            {
+                Debug.LogError(this.name + ": game over collision ui not set");
+            }
+            if (gameOverMineUI == null)
+            {
+                Debug.LogError(this.name + ": game over mine ui not set");
             }
 
             if (planetParent == null)
@@ -207,12 +222,16 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": radar parent not set");
             }
+            if (mineParent == null)
+            {
+                Debug.LogError(this.name + ": mine parent not set");
+            }
             if (targetingSquare == null)
             {
                 Debug.LogError(this.name + ": target square not set");
             }
 
-            if(radarArrow == null)
+            if (radarArrow == null)
             {
                 Debug.LogError(this.name + ": radar arrow not set");
             }
@@ -243,16 +262,20 @@ namespace HackedDesign
             SpawnPlanets();
             SpawnAsteroids();
             SpawnRadarSatellites();
+            SpawnProxMines();
         }
 
         void SpawnPlanets()
         {
             int planets = planetParent.transform.childCount;
 
-            float angle = 360 / planets;
+            float angle = 360.0f / planets;
+            Debug.Log(angle);
+
 
             for (int i = 0; i < planets; i++)
             {
+                Debug.Log(i * angle);
                 float magnitude = Random.Range(100, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
 
@@ -264,7 +287,7 @@ namespace HackedDesign
         {
             int asteroids = asteroidParent.transform.childCount;
 
-            float angle = 360 / asteroids;
+            float angle = 360.0f / asteroids;
 
             for (int i = 0; i < asteroids; i++)
             {
@@ -282,11 +305,11 @@ namespace HackedDesign
         {
             int radars = radarParent.transform.childCount;
 
-            float angle = 360 / radars;
+            float angle = 360.0f / radars;
 
             for (int i = 0; i < radars; i++)
             {
-                float magnitude = Random.Range(20, 100);
+                float magnitude = Random.Range(50, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
 
                 //float rotation = Random.Range(0, 360);
@@ -295,6 +318,25 @@ namespace HackedDesign
                 // Check if there is a planet there and move if need be
             }
         }
+
+        void SpawnProxMines()
+        {
+            int mines = mineParent.transform.childCount;
+
+            float angle = 360.0f / mines;
+
+            for (int i = 0; i < mines; i++)
+            {
+                float magnitude = Random.Range(40, 1000);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+
+
+                mineParent.transform.GetChild(i).transform.position = position;
+                // Check if there is a planet there and move if need be
+            }
+
+        }
+
 
         public void ContinueGame()
         {
@@ -309,28 +351,28 @@ namespace HackedDesign
 
         public void IncreaseHeat()
         {
-            Game.Instance.Heat += Game.Instance.heatGainPerSecond * Time.fixedDeltaTime;
-            if (Game.Instance.Heat > Game.Instance.maxHeat)
+            Heat += heatGainPerSecond * Time.fixedDeltaTime;
+            if (Heat > maxHeat)
             {
-                Game.Instance.Heat = Game.Instance.maxHeat;
+                Heat = maxHeat;
             }
         }
 
         public void BleedHeat()
         {
-            Game.Instance.Heat -= Game.Instance.heatBleedPerSecond * Time.fixedDeltaTime;
-            if (Game.Instance.Heat < 0)
+            Heat -= heatBleedPerSecond * Time.fixedDeltaTime;
+            if (Heat < 0)
             {
-                Game.Instance.Heat = 0; // Move this into the property?
+                Heat = 0; // Move this into the property?
             }
         }
 
         public void ConsumeFuel()
         {
-            Game.Instance.Fuel -= Game.Instance.fuelConsumptionPerSecond * Time.fixedDeltaTime;
-            if (Game.Instance.Fuel < 0)
+            Fuel -= fuelConsumptionPerSecond * Time.fixedDeltaTime;
+            if (Fuel < 0)
             {
-                Game.Instance.Fuel = 0;
+                Fuel = 0;
 
                 // GameOver state?
             }
@@ -338,7 +380,12 @@ namespace HackedDesign
 
         public void GameOverCollision()
         {
-            Game.Instance.state = GameState.GAMEOVERCOLLISION;
+            state = GameState.GAMEOVERCOLLISION;
+        }
+
+        public void GameOverMine()
+        {
+            state = GameState.GAMEOVERMINE;
         }
 
         void Update()
@@ -366,6 +413,13 @@ namespace HackedDesign
                 case GameState.GAMEOVERCOLLISION:
                     Time.timeScale = 0;
                     Debug.Log(this.name + ": Game Over via Collision");
+                    //state = GameState.MENU;
+                    break;
+
+                case GameState.GAMEOVERMINE:
+                    Time.timeScale = 0;
+                    Debug.Log(this.name + ": Game Over via Proximity Mine");
+                    //state = GameState.MENU;
                     break;
             }
         }
@@ -380,17 +434,6 @@ namespace HackedDesign
                 UpdateRadars();
                 radarArrow.UpdatePosition();
             }
-
-
-
-
-
-            // if (state == GameState.WARPZONE)
-            // {
-            //     player.transform.position = Vector2.zero;
-            //     player.transform.rotation = Quaternion.identity;
-            //     BleedHeat(); // Continue to bleed heat
-            // }
         }
 
         void UpdateRadars()
@@ -426,11 +469,11 @@ namespace HackedDesign
                     }
                 }
 
-                
-                float distance = (highestRadar.transform.position - Game.Instance.player.transform.position).magnitude;
-                Track = highestRadarPulse * (Game.Instance.CrossSection * Game.Instance.CrossSection);
-                Debug.Log(this.name + ": " + highestRadarPulse);
-                Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + Track);  
+
+                float distance = (highestRadar.transform.position - player.transform.position).magnitude;
+                Track = highestRadarPulse * (CrossSection * CrossSection);
+                //Debug.Log(this.name + ": " + highestRadarPulse);
+                //Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + Track);
             }
         }
 
@@ -438,13 +481,18 @@ namespace HackedDesign
         {
             menuUI.UpdateUI();
             gameUI.UpdateUI();
+            gameOverCollisionUI.UpdateUI();
+            gameOverMineUI.UpdateUI();
         }
     }
 
     public enum GameState
     {
         MENU,
+        INTRO,
+        TUTORIAL,
         PLAYING,
-        GAMEOVERCOLLISION
+        GAMEOVERCOLLISION,
+        GAMEOVERMINE
     }
 }
