@@ -164,6 +164,12 @@ namespace HackedDesign
             }
         }
 
+        public float Track
+        {
+            get; private set;
+            
+        }
+
 
         Game()
         {
@@ -422,16 +428,9 @@ namespace HackedDesign
 
                 
                 float distance = (highestRadar.transform.position - Game.Instance.player.transform.position).magnitude;
-                float trigger = highestRadarPulse * (Game.Instance.CrossSection * Game.Instance.CrossSection);
+                Track = highestRadarPulse * (Game.Instance.CrossSection * Game.Instance.CrossSection);
                 Debug.Log(this.name + ": " + highestRadarPulse);
-                Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + trigger);  
-
-                
-
-                if(trigger > 1)
-                {
-
-                }
+                Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + Track);  
             }
         }
 

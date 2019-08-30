@@ -41,6 +41,15 @@ namespace HackedDesign
         [SerializeField]
         private RectTransform radarBar;         
 
+        [SerializeField]
+        private Text tracked;      
+
+        [SerializeField]
+        private Color notTrackedColour;
+
+        [SerializeField]
+        private Color trackedColour;        
+
         public void Start()
         {
             if (fuel == null)
@@ -88,10 +97,13 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": xsectionbar not set");
             }
-
             if(radarBar == null)
             {
                 Debug.LogError(this.name + ": radarbar not set");
+            }
+            if(tracked == null)
+            {
+                Debug.LogError(this.name + ": tracked not set");
             }
         }
 
@@ -121,6 +133,15 @@ namespace HackedDesign
             maxCargo.text = Game.Instance.maxCargo.ToString();
 
             xsectionBar.sizeDelta = new Vector2((int)(Game.Instance.CrossSection * 70 / 100), 10.0f);
+
+            if(Game.Instance.Track > 1)
+            {
+                tracked.color = trackedColour;
+            }
+            else
+            {
+                tracked.color = notTrackedColour;
+            }
 
             if(Game.Instance.highestRadar != null)
             {
