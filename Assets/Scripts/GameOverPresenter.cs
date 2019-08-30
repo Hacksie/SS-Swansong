@@ -6,7 +6,7 @@ namespace HackedDesign
     public class GameOverPresenter : MonoBehaviour
     {
         [SerializeField]
-        private Text gameOverText;
+        private Text gameOverText = null;
         [SerializeField]
         [TextArea]
         private string collision = "";

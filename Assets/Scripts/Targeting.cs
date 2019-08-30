@@ -18,7 +18,7 @@ namespace HackedDesign
 
         void OnTriggerStay2D(Collider2D other)
         {
-            if (other.tag == "Respawn") // Ignore the shield
+            if (other.tag == "Respawn" || other.tag == "Player") // Ignore the shield
             {
                 return;
             }

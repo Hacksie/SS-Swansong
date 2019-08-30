@@ -6,52 +6,46 @@ namespace HackedDesign
     public class GameUIPresenter : MonoBehaviour
     {
         [SerializeField]
-        private Text xcoord;
+        private Text xcoord = null;
 
         [SerializeField]
-        private Text ycoord;
+        private Text ycoord = null;
 
         [SerializeField]
-        private Text fuel;
+        private Text fuel = null;
 
         [SerializeField]
-        private Text maxFuel;
+        private Text maxFuel = null;
 
         [SerializeField]
-        private Text heat;
+        private Text cargo = null;
 
         [SerializeField]
-        private Text maxHeat;
+        private Text maxCargo = null;
 
         [SerializeField]
-        private Text cargo;
+        private Text credits = null;
 
         [SerializeField]
-        private Text maxCargo;
+        private Text velocity = null;
 
         [SerializeField]
-        private Text credits;
+        private RectTransform xsectionBar = null; 
 
         [SerializeField]
-        private Text velocity;
+        private RectTransform radarBar = null;         
 
         [SerializeField]
-        private RectTransform xsectionBar; 
+        private Text tracked = null;      
 
         [SerializeField]
-        private RectTransform radarBar;         
+        private Color notTrackedColour = Color.gray;
 
         [SerializeField]
-        private Text tracked;      
+        private Color trackedColour = Color.red;        
 
         [SerializeField]
-        private Color notTrackedColour;
-
-        [SerializeField]
-        private Color trackedColour;        
-
-        [SerializeField]
-        private Text bayDoors;        
+        private Text bayDoors = null;        
 
 
         public void Start()
@@ -64,14 +58,6 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": maxFuel not set");
             }
-            // if (heat == null)
-            // {
-            //     Debug.LogError(this.name + ": heat not set");
-            // }
-            // if (maxHeat == null)
-            // {
-            //     Debug.LogError(this.name + ": maxHeat not set");
-            // }
             if (xcoord == null)
             {
                 Debug.LogError(this.name + ": xcoord not set");

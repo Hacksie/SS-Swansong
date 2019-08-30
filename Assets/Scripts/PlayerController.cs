@@ -12,7 +12,7 @@ namespace HackedDesign
         private float turnRate = 90.0f;
 
         [SerializeField]
-        private Rigidbody2D rigidBody;
+        private Rigidbody2D rigidBody = null;
 
         [SerializeField]
         private float maxThrust = 5.0f;

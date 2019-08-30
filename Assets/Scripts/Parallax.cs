@@ -7,14 +7,20 @@ using UnityEngine;
 public class Parallax : MonoBehaviour
 {
     private Vector2 bounds, startpos;
-    public Camera cam;
 
     [SerializeField]
-    private float parallaxEffect;
+    private Camera cam = null;
+
+    [SerializeField]
+    private float parallaxEffect = 0.0f;
 
     // Start is called before the first frame update
     void Start()
     {
+        if(cam == null)
+        {
+            Debug.LogError(this.name + ": cam not set");
+        }
         startpos = transform.position;
         bounds = GetComponent<SpriteRenderer>().bounds.size;       
     }

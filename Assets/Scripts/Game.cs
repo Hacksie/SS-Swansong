@@ -142,7 +142,7 @@ namespace HackedDesign
 
         public List<GameObject> currentTargets;
 
-        private GameObject currentTarget;
+        private GameObject currentTarget = null;
 
         public GameObject CurrentTarget
         {
@@ -278,6 +278,7 @@ namespace HackedDesign
             Credits = 0;
             minCrossSectionReduction = 0;
             bayDoorsOpen = false;
+            CurrentTarget = null;
             SpawnPlanets();
             SpawnAsteroids();
             SpawnRadarSatellites();
