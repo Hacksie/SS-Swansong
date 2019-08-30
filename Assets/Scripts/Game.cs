@@ -239,7 +239,7 @@ namespace HackedDesign
             if (laserParent == null)
             {
                 Debug.LogError(this.name + ": laser parent not set");
-            }            
+            }
 
             if (targetingSquare == null)
             {
@@ -291,6 +291,7 @@ namespace HackedDesign
             SpawnProxMines();
             SpawnCargoShips();
             SpawnFighterShips();
+            SpawnMissiles();
         }
 
         void SpawnPlanets()
@@ -391,6 +392,16 @@ namespace HackedDesign
             }
         }
 
+        void SpawnMissiles()
+        {
+            int ships = missileParent.transform.childCount;
+            for (int i = 0; i < ships; i++)
+            {
+                missileParent.transform.GetChild(i).gameObject.SetActive(false);
+            }            
+
+        }
+
 
         public void ShowTutorial()
         {
@@ -463,7 +474,7 @@ namespace HackedDesign
             {
                 Heat = maxHeat;
             }
-        }        
+        }
 
 
         public void GameOverCollision()
@@ -484,6 +495,26 @@ namespace HackedDesign
         {
             Debug.Log(this.name + ": Game Over via Fuel");
             state = GameState.GAMEOVERFUEL;
+
+        }
+
+        public void FireMissile(Vector3 start, GameObject target, string type)
+        {
+            
+
+            for(int i = 0; i < missileParent.transform.childCount; i++)
+            {
+                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: Make this more efficient
+                if(m.target == null)
+                {
+                    Debug.Log(this.name + ": fire!");
+                    m.gameObject.SetActive(true);
+                    m.target = target;
+                    m.type = type;
+                    m.transform.position = target.transform.position;
+                    break;
+                }
+            }
 
         }
 
@@ -534,6 +565,7 @@ namespace HackedDesign
             switch (state)
             {
                 case GameState.PLAYING:
+                    Cursor.visible = false;
                     Time.timeScale = 1;
                     player.gameObject.SetActive(true);
                     //targetingSquare.gameObject.SetActive(true);
@@ -548,6 +580,7 @@ namespace HackedDesign
                     break;
                 case GameState.MENU:
                     Time.timeScale = 0;
+                    Cursor.visible = true;
                     player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
@@ -556,6 +589,7 @@ namespace HackedDesign
 
                 case GameState.INTRO:
                     Time.timeScale = 0;
+                    Cursor.visible = true;
                     player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
@@ -563,6 +597,7 @@ namespace HackedDesign
                     break;
                 case GameState.TUTORIAL:
                     Time.timeScale = 0;
+                    Cursor.visible = true;
                     player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
@@ -572,17 +607,22 @@ namespace HackedDesign
 
                 case GameState.GAMEOVERCOLLISION:
                     Time.timeScale = 0;
+                    Cursor.visible = true;
                     break;
 
                 case GameState.GAMEOVERMINE:
                     Time.timeScale = 0;
+                    Cursor.visible = true;
                     break;
 
                 case GameState.GAMEOVERFUEL:
                     Time.timeScale = 0;
+                    Cursor.visible = true;
                     break;
             }
         }
+
+        
 
 
         void FixedUpdate()

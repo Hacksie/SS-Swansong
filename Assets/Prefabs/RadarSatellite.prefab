@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2871481151405257830}
   - component: {fileID: 429000131208744321}
   - component: {fileID: 5052487239747197057}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: ScannerTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 4541537094311383965}
   m_Layer: 0
   m_Name: RadarSatellite
-  m_TagString: Untagged
+  m_TagString: Hostile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

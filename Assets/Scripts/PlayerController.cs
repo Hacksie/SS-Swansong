@@ -65,22 +65,22 @@ namespace HackedDesign
             {
                 Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
             }
-            if(Input.GetButtonUp("Next Weapon"))
+            if (Input.GetButtonUp("Next Weapon"))
             {
                 Game.Instance.currentBay++;
-                if(Game.Instance.currentBay >= 4)
+                if (Game.Instance.currentBay >= 4)
                 {
                     Game.Instance.currentBay = 0;
                 }
             }
-            if(Input.GetButtonUp("Previous Weapon"))
+            if (Input.GetButtonUp("Previous Weapon"))
             {
                 Game.Instance.currentBay--;
-                if(Game.Instance.currentBay < 0)
+                if (Game.Instance.currentBay < 0)
                 {
                     Game.Instance.currentBay = 3;
                 }
-            }            
+            }
 
             if (Input.GetButtonUp("Next Target"))
             {
@@ -111,8 +111,18 @@ namespace HackedDesign
                     }
 
                     Game.Instance.CurrentTarget = Game.Instance.currentTargets[index];
-                }                
+                }
                 //Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
+            }
+            if (Input.GetButtonUp("Fire"))
+            {
+                if (Game.Instance.bayDoorsOpen && Game.Instance.CurrentTarget != null)
+                {
+                    Game.Instance.FireMissile(this.transform.position, Game.Instance.CurrentTarget, Game.Instance.bay[Game.Instance.currentBay]);
+                    Game.Instance.bay[Game.Instance.currentBay] = "";
+
+                    
+                }
             }
         }
 
@@ -142,11 +152,11 @@ namespace HackedDesign
 
             if (UnityEngine.Input.GetButtonUp("Brake"))
             {
-                Velocity -= 2;
+                Velocity = 0;
                 // Take a penalty for using the brakes
                 // Fixme: remove hard coded            
                 Game.Instance.IncreaseHeat(20);
-                Game.Instance.ConsumeFuel(10);     
+                Game.Instance.ConsumeFuel(10);
             }
 
 
