@@ -35,6 +35,12 @@ namespace HackedDesign
         [SerializeField]
         private Text velocity;
 
+        [SerializeField]
+        private RectTransform xsectionBar; 
+
+        [SerializeField]
+        private RectTransform radarBar;         
+
         public void Start()
         {
             if (fuel == null)
@@ -67,15 +73,25 @@ namespace HackedDesign
             }
             if (cargo == null)
             {
-                Debug.LogError(this.name = ": cargo not set");
+                Debug.LogError(this.name + ": cargo not set");
             }
             if(maxCargo == null)
             {
-                Debug.LogError(this.name = ": max cargo not set");
+                Debug.LogError(this.name + ": max cargo not set");
             }
             if(credits == null)
             {
-                Debug.LogError(this.name = ": credits not set");
+                Debug.LogError(this.name + ": credits not set");
+            }
+
+            if(xsectionBar == null)
+            {
+                Debug.LogError(this.name + ": xsectionbar not set");
+            }
+
+            if(radarBar == null)
+            {
+                Debug.LogError(this.name + ": radarbar not set");
             }
         }
 
@@ -104,7 +120,20 @@ namespace HackedDesign
             cargo.text = Game.Instance.Cargo.ToString();
             maxCargo.text = Game.Instance.maxCargo.ToString();
 
-        }
+            xsectionBar.sizeDelta = new Vector2((int)(Game.Instance.CrossSection * 70 / 100), 10.0f);
 
+            if(Game.Instance.highestRadar != null)
+            {
+                //Debug.Log("set radar bar");
+                radarBar.gameObject.SetActive(true);
+                float distance = Mathf.Clamp(100 - (Game.Instance.highestRadar.transform.position - Game.Instance.player.transform.position).magnitude, 0, 100);
+                radarBar.sizeDelta = new Vector2((int)(distance * 70 / 100), 4.0f);
+            }
+            else {
+                radarBar.gameObject.SetActive(false);
+
+            }
+
+        }
     }
 }

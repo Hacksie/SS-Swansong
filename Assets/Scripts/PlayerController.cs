@@ -68,6 +68,11 @@ namespace HackedDesign
             // Clamp within a circle of 0,0
             this.transform.position = Vector2.ClampMagnitude(this.transform.position, Game.Instance.worldBounds);
 
+            if(UnityEngine.Input.GetButtonUp("Fire3"))
+            {
+                Velocity = 0;
+            }
+
 
             UpdateAnimations(force);
 

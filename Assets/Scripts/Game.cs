@@ -8,6 +8,8 @@ namespace HackedDesign
     {
         public static Game Instance { get; private set; }
 
+        public Camera camera;
+
         [Header("UI")]
 
         [SerializeField]
@@ -16,13 +18,18 @@ namespace HackedDesign
         [SerializeField]
         private GameUIPresenter gameUI;
 
+        [SerializeField]
+        private RadarArrow radarArrow;
+
         [Header("EntityPools")]
         [SerializeField]
         private SpriteRenderer targetingSquare;
         [SerializeField]
         private GameObject planetParent;
         [SerializeField]
-        private GameObject asteroidsParent;
+        private GameObject asteroidParent;
+        [SerializeField]
+        private GameObject radarParent;
 
         [Header("State")]
         public GameState state;
@@ -30,6 +37,9 @@ namespace HackedDesign
 
         [SerializeField]
         public PlayerController player;
+
+        public float highestRadarPulse;
+        public Radar highestRadar;
 
 
 
@@ -87,7 +97,7 @@ namespace HackedDesign
         {
             get;
             private set;
-        }        
+        }
 
         [SerializeField]
         public int Credits
@@ -100,7 +110,10 @@ namespace HackedDesign
         [SerializeField]
         public float minCrossSectionReduction;
 
-        [SerializeField]
+
+        public float lastPulse;
+        public float pulseSpeed;
+
         public bool BayDoorsOpen
         {
             get; private set;
@@ -180,13 +193,22 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": planet parent objects not set");
             }
-            if(asteroidsParent == null)
+            if (asteroidParent == null)
             {
                 Debug.LogError(this.name + ": asteroids parent not set");
+            }
+            if (radarParent == null)
+            {
+                Debug.LogError(this.name + ": radar parent not set");
             }
             if (targetingSquare == null)
             {
                 Debug.LogError(this.name + ": target square not set");
+            }
+
+            if(radarArrow == null)
+            {
+                Debug.LogError(this.name + ": radar arrow not set");
             }
 
             state = GameState.MENU;
@@ -214,6 +236,7 @@ namespace HackedDesign
             BayDoorsOpen = false;
             SpawnPlanets();
             SpawnAsteroids();
+            SpawnRadarSatellites();
         }
 
         void SpawnPlanets()
@@ -226,14 +249,14 @@ namespace HackedDesign
             {
                 float magnitude = Random.Range(100, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
-                Debug.Log(position);
+
                 planetParent.transform.GetChild(i).transform.position = position;
             }
         }
 
         void SpawnAsteroids()
         {
-            int asteroids = asteroidsParent.transform.childCount;
+            int asteroids = asteroidParent.transform.childCount;
 
             float angle = 360 / asteroids;
 
@@ -241,12 +264,30 @@ namespace HackedDesign
             {
                 float magnitude = Random.Range(50, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
-                Debug.Log(position);
+
                 float rotation = Random.Range(0, 360);
-                asteroidsParent.transform.GetChild(i).transform.position = position;
-                asteroidsParent.transform.GetChild(i).transform.Rotate(0,0,rotation, Space.World);
+                asteroidParent.transform.GetChild(i).transform.position = position;
+                asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
                 // Check if there is a planet there and move if need be
-            }            
+            }
+        }
+
+        void SpawnRadarSatellites()
+        {
+            int radars = radarParent.transform.childCount;
+
+            float angle = 360 / radars;
+
+            for (int i = 0; i < radars; i++)
+            {
+                float magnitude = Random.Range(20, 100);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+
+                //float rotation = Random.Range(0, 360);
+                radarParent.transform.GetChild(i).transform.position = position;
+                //asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
+                // Check if there is a planet there and move if need be
+            }
         }
 
         public void ContinueGame()
@@ -330,7 +371,13 @@ namespace HackedDesign
             {
                 player.UpdateMovement();
                 BleedHeat();
+                UpdateRadars();
+                radarArrow.UpdatePosition();
             }
+
+
+
+
 
             // if (state == GameState.WARPZONE)
             // {
@@ -338,6 +385,54 @@ namespace HackedDesign
             //     player.transform.rotation = Quaternion.identity;
             //     BleedHeat(); // Continue to bleed heat
             // }
+        }
+
+        void UpdateRadars()
+        {
+            if ((Time.time - lastPulse) > 1)
+            {
+                highestRadar = null;
+
+            }
+
+            if ((Time.time - lastPulse) > pulseSpeed)
+            {
+                Debug.Log(this.name + ": radar pulse");
+                highestRadarPulse = 0;
+                lastPulse = Time.time;
+                int radars = radarParent.transform.childCount;
+
+                for (int i = 0; i < radars; i++)
+                {
+                    Radar r = radarParent.transform.GetChild(i).GetComponent<Radar>();
+                    if (r == null)
+                    {
+                        Debug.LogError(radarParent.transform.GetChild(i) + ": is not set as radar");
+                        continue;
+                    }
+
+                    float inv = r.UpdateRadar();
+
+                    if (inv > highestRadarPulse)
+                    {
+                        highestRadarPulse = inv;
+                        highestRadar = r;
+                    }
+                }
+
+                
+                float distance = (highestRadar.transform.position - Game.Instance.player.transform.position).magnitude;
+                float trigger = highestRadarPulse * (Game.Instance.CrossSection * Game.Instance.CrossSection);
+                Debug.Log(this.name + ": " + highestRadarPulse);
+                Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + trigger);  
+
+                
+
+                if(trigger > 1)
+                {
+
+                }
+            }
         }
 
         void LateUpdate()
