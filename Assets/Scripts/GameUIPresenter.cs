@@ -50,6 +50,10 @@ namespace HackedDesign
         [SerializeField]
         private Color trackedColour;        
 
+        [SerializeField]
+        private Text bayDoors;        
+
+
         public void Start()
         {
             if (fuel == null)
@@ -105,6 +109,10 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": tracked not set");
             }
+            if(bayDoors == null)
+            {
+                Debug.LogError(this.name + ": baydoors not set");
+            }
         }
 
 
@@ -131,6 +139,7 @@ namespace HackedDesign
             credits.text = "$" + Game.Instance.Credits.ToString();
             cargo.text = Game.Instance.Cargo.ToString();
             maxCargo.text = Game.Instance.maxCargo.ToString();
+            bayDoors.text = Game.Instance.bayDoorsOpen ? "OPEN" : "CLOSED";
 
             xsectionBar.sizeDelta = new Vector2((int)(Game.Instance.CrossSection * 70 / 100), 10.0f);
 

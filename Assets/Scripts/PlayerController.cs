@@ -17,23 +17,28 @@ namespace HackedDesign
         [SerializeField]
         private float maxThrust = 5.0f;
 
-        
-        public float Velocity {
-            get {
+
+        public float Velocity
+        {
+            get
+            {
                 return rigidBody.velocity.magnitude;
             }
-            set {
+            set
+            {
                 rigidBody.velocity = rigidBody.velocity.normalized * value;
             }
         }
 
-        public float MaxThrust {
-            get {
+        public float MaxThrust
+        {
+            get
+            {
                 return maxThrust;
             }
         }
 
-         void Start()
+        void Start()
         {
             if (rigidBody == null)
             {
@@ -50,16 +55,28 @@ namespace HackedDesign
             animator.SetBool("Thrust", false);
         }
 
+        public void UpdateActions()
+        {
+            if (Input.GetButtonUp("Start"))
+            {
+                Game.Instance.state = GameState.MENU;
+            }
+            if (Input.GetButtonUp("Bay Doors"))
+            {
+                Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
+            }
+        }
+
 
         public void UpdateMovement()
         {
-            float turn = -1.0f * UnityEngine.Input.GetAxis("Horizontal") * turnRate;
+            float turn = -1.0f * Input.GetAxis("Horizontal") * turnRate;
             this.transform.Rotate(new Vector3(0, 0, turn * Time.fixedDeltaTime));
-            float force = UnityEngine.Input.GetAxis("Vertical") * maxThrust * Time.fixedDeltaTime;
+            float force = Input.GetAxis("Vertical") * maxThrust * Time.fixedDeltaTime;
 
-            
+
             rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
-            if(rigidBody.velocity.magnitude > maxThrust)
+            if (rigidBody.velocity.magnitude > maxThrust)
             {
                 Velocity = maxThrust;
                 //rigidBody.velocity = rigidBody.velocity.normalized * maxThrust;
@@ -68,7 +85,7 @@ namespace HackedDesign
             // Clamp within a circle of 0,0
             this.transform.position = Vector2.ClampMagnitude(this.transform.position, Game.Instance.worldBounds);
 
-            if(UnityEngine.Input.GetButtonUp("Fire3"))
+            if (UnityEngine.Input.GetButtonUp("Fire3"))
             {
                 Velocity = 0;
             }
@@ -87,7 +104,7 @@ namespace HackedDesign
         {
             Debug.Log(this.name + ": collision");
             Game.Instance.GameOverCollision();
-            
+
         }
 
         private void UpdateAnimations(float force)

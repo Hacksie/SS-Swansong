@@ -8,7 +8,7 @@ namespace HackedDesign
     {
         public static Game Instance { get; private set; }
 
-        public Camera camera;
+        public new Camera camera;
 
         [Header("UI")]
 
@@ -17,12 +17,8 @@ namespace HackedDesign
 
         [SerializeField]
         private GameUIPresenter gameUI;
-
         [SerializeField]
-        private GameOverCollisionPresenter gameOverCollisionUI;
-
-        [SerializeField]
-        private GameOverMinePresenter gameOverMineUI;
+        private GameOverPresenter gameOverUI;
 
         [SerializeField]
         private RadarArrow radarArrow;
@@ -31,6 +27,8 @@ namespace HackedDesign
         [SerializeField]
         private SpriteRenderer targetingSquare;
         [SerializeField]
+        private GameObject world;
+        [SerializeField]
         private GameObject planetParent;
         [SerializeField]
         private GameObject asteroidParent;
@@ -38,6 +36,8 @@ namespace HackedDesign
         private GameObject radarParent;
         [SerializeField]
         private GameObject mineParent;
+        [SerializeField]
+        private GameObject cargoShipParent;
 
         [Header("State")]
         public GameState state;
@@ -118,14 +118,17 @@ namespace HackedDesign
         [SerializeField]
         public float minCrossSectionReduction;
 
+        [SerializeField]
+        public bool bayDoorsOpen = false;
+
+        [SerializeField]
+        public float bayDoorsCrossSection = 30.0f;
 
         public float lastPulse;
         public float pulseSpeed;
 
-        public bool BayDoorsOpen
-        {
-            get; private set;
-        }
+
+
 
         public int MaxFuel
         {
@@ -168,7 +171,7 @@ namespace HackedDesign
         {
             get
             {
-                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + Heat + (BayDoorsOpen ? 40 : 0), 0, 100);
+                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + Heat + (bayDoorsOpen ? bayDoorsCrossSection : 0), 0, 100);
             }
         }
 
@@ -201,15 +204,15 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": menu ui not set");
             }
-            if (gameOverCollisionUI == null)
+            if (gameOverUI == null)
             {
                 Debug.LogError(this.name + ": game over collision ui not set");
             }
-            if (gameOverMineUI == null)
-            {
-                Debug.LogError(this.name + ": game over mine ui not set");
-            }
 
+            if (world == null)
+            {
+                Debug.LogError(this.name + ": world parent not set");
+            }
             if (planetParent == null)
             {
                 Debug.LogError(this.name + ": planet parent objects not set");
@@ -226,6 +229,11 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": mine parent not set");
             }
+            if (cargoShipParent == null)
+            {
+                Debug.LogError(this.name + ": cargo ship parent not set");
+            }
+
             if (targetingSquare == null)
             {
                 Debug.LogError(this.name + ": target square not set");
@@ -239,12 +247,15 @@ namespace HackedDesign
             state = GameState.MENU;
             player.gameObject.SetActive(false);
             targetingSquare.gameObject.SetActive(false);
+            radarArrow.gameObject.SetActive(false);
+            world.gameObject.SetActive(false);
         }
 
         public void NewGame()
         {
             state = GameState.PLAYING;
             player.gameObject.SetActive(true);
+            world.gameObject.SetActive(true);
             ResetState();
         }
 
@@ -258,11 +269,12 @@ namespace HackedDesign
             Heat = startingHeat;
             Credits = 0;
             minCrossSectionReduction = 0;
-            BayDoorsOpen = false;
+            bayDoorsOpen = false;
             SpawnPlanets();
             SpawnAsteroids();
             SpawnRadarSatellites();
             SpawnProxMines();
+            SpawnCargoShips();
         }
 
         void SpawnPlanets()
@@ -270,12 +282,8 @@ namespace HackedDesign
             int planets = planetParent.transform.childCount;
 
             float angle = 360.0f / planets;
-            Debug.Log(angle);
-
-
             for (int i = 0; i < planets; i++)
             {
-                Debug.Log(i * angle);
                 float magnitude = Random.Range(100, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
 
@@ -329,12 +337,25 @@ namespace HackedDesign
             {
                 float magnitude = Random.Range(40, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
-
-
                 mineParent.transform.GetChild(i).transform.position = position;
                 // Check if there is a planet there and move if need be
             }
+        }
 
+        void SpawnCargoShips()
+        {
+            int ships = cargoShipParent.transform.childCount;
+
+            float angle = 360.0f / ships;
+            float offset = Random.Range(0, 360);
+
+            for (int i = 0; i < ships; i++)
+            {
+                float magnitude = Random.Range(40, 1000);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+                cargoShipParent.transform.GetChild(i).transform.position = position;
+                // Check if there is a planet there and move if need be
+            }
         }
 
 
@@ -370,9 +391,10 @@ namespace HackedDesign
         public void ConsumeFuel()
         {
             Fuel -= fuelConsumptionPerSecond * Time.fixedDeltaTime;
-            if (Fuel < 0)
+            if (Fuel <= 0)
             {
                 Fuel = 0;
+                GameOverFuel();
 
                 // GameOver state?
             }
@@ -386,6 +408,14 @@ namespace HackedDesign
         public void GameOverMine()
         {
             state = GameState.GAMEOVERMINE;
+        }
+
+
+
+        public void GameOverFuel()
+        {
+            state = GameState.GAMEOVERFUEL;
+
         }
 
         void Update()
@@ -404,10 +434,9 @@ namespace HackedDesign
                 case GameState.PLAYING:
                     Time.timeScale = 1;
 
-                    if (Input.GetButtonUp("Start"))
-                    {
-                        state = GameState.MENU;
-                    }
+                    player.UpdateActions();
+
+
                     break;
 
                 case GameState.GAMEOVERCOLLISION:
@@ -419,6 +448,12 @@ namespace HackedDesign
                 case GameState.GAMEOVERMINE:
                     Time.timeScale = 0;
                     Debug.Log(this.name + ": Game Over via Proximity Mine");
+                    //state = GameState.MENU;
+                    break;
+
+                case GameState.GAMEOVERFUEL:
+                    Time.timeScale = 0;
+                    Debug.Log(this.name + ": Game Over via Fuel");
                     //state = GameState.MENU;
                     break;
             }
@@ -481,8 +516,7 @@ namespace HackedDesign
         {
             menuUI.UpdateUI();
             gameUI.UpdateUI();
-            gameOverCollisionUI.UpdateUI();
-            gameOverMineUI.UpdateUI();
+            gameOverUI.UpdateUI();
         }
     }
 
@@ -493,6 +527,7 @@ namespace HackedDesign
         TUTORIAL,
         PLAYING,
         GAMEOVERCOLLISION,
-        GAMEOVERMINE
+        GAMEOVERMINE,
+        GAMEOVERFUEL
     }
 }
