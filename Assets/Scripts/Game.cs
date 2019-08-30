@@ -138,6 +138,8 @@ namespace HackedDesign
             }
         }
 
+        public List<GameObject> currentTargets;
+
         private GameObject currentTarget;
 
         public GameObject CurrentTarget

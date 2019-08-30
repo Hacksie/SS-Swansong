@@ -25,30 +25,33 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            if (Game.Instance.state == GameState.PLAYING)
+            if (Game.Instance.state == GameState.PLAYING && this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(false);
             }
 
-            if (Game.Instance.state == GameState.MENU)
+            if (Game.Instance.state == GameState.MENU && !this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(true);
             }
 
-            if (menuState == MainMenuState.CREDITS)
+            if (menuState == MainMenuState.CREDITS && (!creditsPanel.activeInHierarchy || optionsPanel.activeInHierarchy))
             {
                 creditsPanel.SetActive(true);
                 optionsPanel.SetActive(false);
             }
-            else if (menuState == MainMenuState.OPTIONS)
+            else if (menuState == MainMenuState.OPTIONS && (creditsPanel.activeInHierarchy || !optionsPanel.activeInHierarchy))
             {
                 creditsPanel.SetActive(false);
                 optionsPanel.SetActive(true);
             }
             else
             {
-                creditsPanel.SetActive(false);
-                optionsPanel.SetActive(false);
+                if ((creditsPanel.activeInHierarchy || optionsPanel.activeInHierarchy))
+                {
+                    creditsPanel.SetActive(false);
+                    optionsPanel.SetActive(false);
+                }
             }
         }
 
