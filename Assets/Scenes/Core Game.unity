@@ -958,11 +958,11 @@ RectTransform:
   m_Father: {fileID: 1534419808}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0}
-  m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 6}
+  m_AnchorMin: {x: 1, y: 0}
+  m_AnchorMax: {x: 1, y: 0}
+  m_AnchoredPosition: {x: -4, y: 6}
   m_SizeDelta: {x: 60, y: 20}
-  m_Pivot: {x: 0.5, y: 0}
+  m_Pivot: {x: 1, y: 0}
 --- !u!114 &26695294
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9187,7 +9187,7 @@ RectTransform:
   m_Children:
   - {fileID: 147037614}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -10523,7 +10523,7 @@ RectTransform:
   m_Children:
   - {fileID: 2104253938}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -15353,7 +15353,7 @@ RectTransform:
   m_Children:
   - {fileID: 1744733477}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 7
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -18961,7 +18961,6 @@ Transform:
   m_Children:
   - {fileID: 1097735583}
   - {fileID: 2016080290}
-  - {fileID: 2062919553}
   - {fileID: 159950161}
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -18995,6 +18994,7 @@ MonoBehaviour:
   player: {fileID: 652425858}
   highestRadarPulse: 0
   highestRadar: {fileID: 0}
+  currentTargets: []
   worldBounds: 1500
   minCrossSection: 10
   startingFuel: 1000
@@ -19011,7 +19011,6 @@ MonoBehaviour:
   bayDoorsCrossSection: 30
   lastPulse: 0
   pulseSpeed: 3
-  currentTargets: []
 --- !u!4 &978173109 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8173243419191035607, guid: e967f804fdb4e0f43a905c8256c89d88,
@@ -19320,8 +19319,6 @@ MonoBehaviour:
   ycoord: {fileID: 1947090657}
   fuel: {fileID: 671413735}
   maxFuel: {fileID: 2056244207}
-  heat: {fileID: 1303535979}
-  maxHeat: {fileID: 1136114461}
   cargo: {fileID: 433722890}
   maxCargo: {fileID: 1634388312}
   credits: {fileID: 1068773981}
@@ -20364,7 +20361,7 @@ RectTransform:
   m_Children:
   - {fileID: 954015605}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -22682,6 +22679,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 1460125436}
   - {fileID: 543090653}
   - {fileID: 1063415061}
   - {fileID: 470637024}
@@ -25632,7 +25630,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 45}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -28604,8 +28602,8 @@ RectTransform:
   m_Children:
   - {fileID: 799909537}
   - {fileID: 2063953462}
-  m_Father: {fileID: 1995189214}
-  m_RootOrder: 3
+  m_Father: {fileID: 1143976214}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -29880,7 +29878,7 @@ RectTransform:
   - {fileID: 26695293}
   - {fileID: 253417910}
   m_Father: {fileID: 1995189214}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -30242,15 +30240,15 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: I am Capt. Olivia Swan, and I am a, let's call me a privateer. This is my
-    glorius rust bucket, the SS Swansong. She is a FX-2117A Aurora class fighter I
-    picked up in a junk yard some 20 years ago. She was a hunk of junk back then,
-    and she's still a hunk of junk today. But I was sitting on zero credits, and I
-    knew a hidden gem when I saw one. The moment I saw her, I knew she deserved one
-    last song. She doesn't have the loadout of modern fighters, nor the speed. But
-    there isn't a ship in this part of the universe as stealthy as her. Lay off the
-    throttle to keep her cross section down and there's nothing we can't sneak past.
-    That shouldn't be hard, it's not like we can afford the fuel anyway.
+  m_Text: I am Capt. Olivia Swan, and I am a, let's call me a privateer. I do my own
+    thing. This is my glorius rust bucket, the SS Swansong. She is a FX-2117A Aurora
+    class fighter I picked up in a junk yard some 20 years ago. She was a hunk of
+    junk back then, and she's still a hunk of junk today. But I was sitting on negative
+    credits, and I knew a hidden gem when I saw one. She deserves one last song. She
+    doesn't have the loadout of a modern fighter, nor the speed, but there isn't a
+    ship in this part of the universe as stealthy as her. Lay off the throttle to
+    keep her cross section down and there's nothing we can't sneak past. That shouldn't
+    be hard, it's not like we can afford the fuel anyway.
 --- !u!222 &1547365562
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -32185,7 +32183,7 @@ RectTransform:
   m_LocalScale: {x: 4, y: 3, z: 1}
   m_Children: []
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -35359,7 +35357,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1995189214}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -35410,7 +35408,7 @@ RectTransform:
   m_Children:
   - {fileID: 1868353844}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -37338,7 +37336,6 @@ RectTransform:
   - {fileID: 1364943551}
   - {fileID: 991663799}
   - {fileID: 1143976214}
-  - {fileID: 1460125436}
   - {fileID: 1883377159}
   - {fileID: 1534419808}
   m_Father: {fileID: 550326508}
@@ -37963,7 +37960,7 @@ RectTransform:
   m_Children:
   - {fileID: 768801008}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 8
+  m_RootOrder: 9
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -38342,36 +38339,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 96026834}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &2062919552
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2062919553}
-  m_Layer: 0
-  m_Name: Radar Ping
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2062919553
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2062919552}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 977256391}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2063953461
 GameObject:
   m_ObjectHideFlags: 0
@@ -38848,7 +38815,7 @@ RectTransform:
   m_Children:
   - {fileID: 930267233}
   m_Father: {fileID: 1143976214}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
@@ -40612,7 +40579,7 @@ PrefabInstance:
     - target: {fileID: 3428933056184121653, guid: 881a7c8c617bf374fa71d2ae036e9b95,
         type: 3}
       propertyPath: m_RootOrder
-      value: 3
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3428933056184121653, guid: 881a7c8c617bf374fa71d2ae036e9b95,
         type: 3}

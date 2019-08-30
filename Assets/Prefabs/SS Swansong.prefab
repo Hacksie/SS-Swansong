@@ -185,7 +185,6 @@ GameObject:
   m_Component:
   - component: {fileID: 6046085457771132030}
   - component: {fileID: 5506668103950245542}
-  - component: {fileID: 1961467525}
   m_Layer: 0
   m_Name: Scanner
   m_TagString: Scanner
@@ -236,15 +235,3 @@ PolygonCollider2D:
       - {x: -2, y: 17}
       - {x: 0, y: 20}
       - {x: 2, y: 17}
---- !u!114 &1961467525
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7590163030921502475}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ac69f307c2bc10a479cee3b074be0533, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 

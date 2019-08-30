@@ -29,7 +29,7 @@ namespace HackedDesign
         [SerializeField]
         private SpriteRenderer targetingSquare;
         [SerializeField]
-        private GameObject world;
+        private GameObject world = null;
         [SerializeField]
         private GameObject planetParent;
         [SerializeField]
@@ -50,6 +50,36 @@ namespace HackedDesign
 
         public float highestRadarPulse;
         public Radar highestRadar;
+
+        public List<GameObject> currentTargets;
+
+        private GameObject currentTarget = null;
+
+        public GameObject CurrentTarget
+        {
+            get
+            {
+                return currentTarget;
+            }
+            set
+            {
+                if (value != null)
+                {
+                    //Debug.Log(this.name + ": set target to " + value.name);
+                    currentTarget = value;
+                    targetingSquare.transform.position = value.transform.position;
+                    Renderer r = value.gameObject.GetComponent<Renderer>();
+                    targetingSquare.size = r.bounds.size;
+                    targetingSquare.gameObject.SetActive(true);
+                }
+                else
+                {
+                    //Debug.Log(this.name + ": clear target");
+                    currentTarget = null;
+                    targetingSquare.gameObject.SetActive(false);
+                }
+            }
+        }        
 
 
 
@@ -140,35 +170,7 @@ namespace HackedDesign
             }
         }
 
-        public List<GameObject> currentTargets;
 
-        private GameObject currentTarget = null;
-
-        public GameObject CurrentTarget
-        {
-            get
-            {
-                return currentTarget;
-            }
-            set
-            {
-                if (value != null)
-                {
-                    //Debug.Log(this.name + ": set target to " + value.name);
-                    currentTarget = value;
-                    targetingSquare.transform.position = value.transform.position;
-                    Renderer r = value.gameObject.GetComponent<Renderer>();
-                    targetingSquare.size = r.bounds.size;
-                    targetingSquare.gameObject.SetActive(true);
-                }
-                else
-                {
-                    //Debug.Log(this.name + ": clear target");
-                    currentTarget = null;
-                    targetingSquare.gameObject.SetActive(false);
-                }
-            }
-        }
 
 
         public int CrossSection
@@ -488,7 +490,7 @@ namespace HackedDesign
                 case GameState.PLAYING:
                     Time.timeScale = 1;
                     player.gameObject.SetActive(true);
-                    targetingSquare.gameObject.SetActive(true);
+                    //targetingSquare.gameObject.SetActive(true);
                     radarArrow.gameObject.SetActive(true);
                     world.gameObject.SetActive(true);
                     player.UpdateActions();
