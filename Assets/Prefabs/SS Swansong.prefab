@@ -232,6 +232,6 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: 0.7}
-      - {x: -2, y: 17}
+      - {x: -4, y: 17}
       - {x: 0, y: 20}
-      - {x: 2, y: 17}
+      - {x: 4, y: 17}

@@ -14,7 +14,8 @@ namespace HackedDesign
                 {
                     m.Explode();
                 }
-                else {
+                else
+                {
                     Debug.LogError(this.name + ": missile doesn't have Missile component");
                 }
             }
@@ -30,5 +31,7 @@ namespace HackedDesign
             Debug.Log(this.name + ": explode");
             this.gameObject.SetActive(false);
         }
+
+
     }
 }

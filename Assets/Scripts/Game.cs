@@ -503,7 +503,8 @@ namespace HackedDesign
 
             for (int i = 0; i < ships; i++)
             {
-                float magnitude = Random.Range(40, 1000);
+                //float magnitude = Random.Range(40, 1000);
+                float magnitude = Random.Range(10, 20);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 cargoShipParent.transform.GetChild(i).transform.position = position;
                 cargoShipParent.transform.GetChild(i).gameObject.SetActive(true);
@@ -599,7 +600,7 @@ namespace HackedDesign
             }
         }
 
-        void AlertShip()
+        public void AlertShip()
         {
             float distance = 100000.0f;
             radarTarget = player.transform.position;
