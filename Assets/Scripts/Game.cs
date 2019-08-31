@@ -47,6 +47,11 @@ namespace HackedDesign
         [SerializeField]
         private GameObject laserParent = null;
 
+        [Header("Missions")]
+        [SerializeField]
+        private int currentMission = 0;
+        
+
         [Header("Limits")]
         [SerializeField]
         public float worldBounds;
@@ -507,7 +512,7 @@ namespace HackedDesign
             for (int i = 0; i < ships; i++)
             {
                 
-                float magnitude = Random.Range(40, 1000);
+                float magnitude = Random.Range(10, 30);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 fighterParent.transform.GetChild(i).transform.position = position;
                 fighterParent.transform.GetChild(i).gameObject.SetActive(true);
