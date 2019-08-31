@@ -19493,6 +19493,7 @@ MonoBehaviour:
   minCrossSectionReduction: 0
   bayDoorsCrossSection: 30
   state: 0
+  gameStarted: 0
   player: {fileID: 652425858}
   bayDoorsOpen: 0
   bay:
@@ -23251,6 +23252,7 @@ MonoBehaviour:
   menuState: 0
   creditsPanel: {fileID: 785122366}
   optionsPanel: {fileID: 2031901016}
+  continueButton: {fileID: 1063415062}
 --- !u!4 &1144295197 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8740811017009165545, guid: 0e9ddb2b345cc8647b2400fafaccddf3,
@@ -41436,6 +41438,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 2072357466699614619, guid: da9f6f025a42b5a4fa21fd90cc3df1ef,
+        type: 3}
+      propertyPath: m_Interpolate
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: da9f6f025a42b5a4fa21fd90cc3df1ef, type: 3}

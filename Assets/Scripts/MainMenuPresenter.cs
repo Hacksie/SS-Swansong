@@ -9,6 +9,7 @@ namespace HackedDesign
 
         public GameObject creditsPanel;
         public GameObject optionsPanel;
+        public Button continueButton;
 
         void Start()
         {
@@ -20,6 +21,10 @@ namespace HackedDesign
             if (creditsPanel == null)
             {
                 Debug.LogError(this.name + ": credits panel not set");
+            }
+            if(continueButton == null)
+            {
+                Debug.LogError(this.name + ": continueButton not set");
             }
         }
 
@@ -54,7 +59,9 @@ namespace HackedDesign
                     optionsPanel.SetActive(false);
                 }
             }
-        }
+
+            continueButton.interactable = Game.Instance.gameStarted;
+         }
 
         public void NewGameEvent()
         {
@@ -66,6 +73,7 @@ namespace HackedDesign
         public void ContinueGameEvent()
         {
             Debug.Log(this.name + ": continue game");
+            Game.Instance.ContinueGame();
             menuState = MainMenuState.OTHER;
         }
 

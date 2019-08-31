@@ -25,7 +25,8 @@ namespace HackedDesign
 
         public void ContinueButtonEvent()
         {
-            Game.Instance.ContinueGame();
+            Game.Instance.StartGame();
+            //Game.Instance.ContinueGame();
         }
     }
 }

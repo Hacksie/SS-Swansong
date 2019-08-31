@@ -116,13 +116,16 @@ namespace HackedDesign
             }
             if (Input.GetButtonUp("Fire"))
             {
-                if (Game.Instance.bayDoorsOpen && Game.Instance.CurrentTarget != null)
-                {
-                    Game.Instance.FireMissile(this.transform.position, Game.Instance.CurrentTarget, Game.Instance.bay[Game.Instance.currentBay]);
-                    Game.Instance.bay[Game.Instance.currentBay] = "";
+                FireMissile();
+            }
+        }
 
-                    
-                }
+        private void FireMissile()
+        {
+            if (Game.Instance.bayDoorsOpen && Game.Instance.CurrentTarget != null)
+            {
+                Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.CurrentTarget, Game.Instance.bay[Game.Instance.currentBay], false);
+                Game.Instance.bay[Game.Instance.currentBay] = "";
             }
         }
 
@@ -171,6 +174,18 @@ namespace HackedDesign
 
         private void OnCollisionEnter2D(Collision2D other)
         {
+            if (other.gameObject.tag == "Projectile")
+            {
+                Missile m = other.gameObject.GetComponent<Missile>(); // FIXME: Make this more efficient
+                if (m != null)
+                {
+                    if (m.source == this.gameObject)
+                    {
+                        return;
+                    }
+                }
+            }
+
             Debug.Log(this.name + ": collision");
             Game.Instance.GameOverCollision();
 
@@ -178,7 +193,7 @@ namespace HackedDesign
 
         private void UpdateAnimations(float force)
         {
-            if (force != 0)
+            if (force >= 0.01 || force <= -0.01)
             {
 
                 animator.SetBool("Thrust", true);

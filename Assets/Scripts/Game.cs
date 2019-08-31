@@ -76,6 +76,8 @@ namespace HackedDesign
         [Header("State")]
         public GameState state;
 
+        [SerializeField]
+        public bool gameStarted = false;
 
         [SerializeField]
         public PlayerController player;
@@ -265,10 +267,123 @@ namespace HackedDesign
             state = GameState.INTRO;
         }
 
+        public void StartGame()
+        {
+            gameStarted = true;
+            ContinueGame();
+        }
+
+        public void ShowTutorial()
+        {
+            state = GameState.TUTORIAL;
+            player.gameObject.SetActive(true);
+            world.gameObject.SetActive(true);
+        }
+
+
+        public void ContinueGame()
+        {
+            state = GameState.PLAYING;
+            player.gameObject.SetActive(true);
+            world.gameObject.SetActive(true);
+
+        }
+
+        public void ExitGame()
+        {
+            Application.Quit();
+        }
+
+        public void IncreaseHeat()
+        {
+            Heat += heatGainPerSecond * Time.deltaTime;
+            if (Heat > maxHeat)
+            {
+                Heat = maxHeat;
+            }
+        }
+
+        public void BleedHeat()
+        {
+            Heat -= heatBleedPerSecond * Time.deltaTime;
+            if (Heat < 0)
+            {
+                Heat = 0; // Move this into the property?
+            }
+        }
+
+        public void ConsumeFuel()
+        {
+            Fuel -= fuelConsumptionPerSecond * Time.deltaTime;
+            if (Fuel <= 0)
+            {
+                Fuel = 0;
+                GameOverFuel();
+            }
+        }
+
+
+        public void ConsumeFuel(float amount)
+        {
+            Fuel -= amount;
+            if (Fuel <= 0)
+            {
+                Fuel = 0;
+                GameOverFuel();
+            }
+        }
+
+        public void IncreaseHeat(float amount)
+        {
+            Heat += amount * Time.deltaTime;
+            if (Heat > maxHeat)
+            {
+                Heat = maxHeat;
+            }
+        }
+
+
+        public void GameOverCollision()
+        {
+            Debug.Log(this.name + ": Game Over via Collision");
+            state = GameState.GAMEOVERCOLLISION;
+            gameStarted = false;
+        }
+
+        public void GameOverMine()
+        {
+            Debug.Log(this.name + ": Game Over via Proximity Mine");
+            state = GameState.GAMEOVERMINE;
+            gameStarted = false;
+        }
+
+
+
+        public void GameOverFuel()
+        {
+            Debug.Log(this.name + ": Game Over via Fuel");
+            state = GameState.GAMEOVERFUEL;
+            gameStarted = false;
+        }
+
+        public void FireMissile(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
+        {
+            for (int i = 0; i < missileParent.transform.childCount; i++)
+            {
+                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: Make this more efficient
+                if (m.target == null)
+                {
+                    m.Launch(start, direction, source, target, type, hostile);
+
+                }
+            }
+        }
+
         void ResetState()
         {
 
             Debug.Log(this.name + ": reset state");
+            gameStarted = false;
             player.transform.position = Vector2.zero;
             player.transform.rotation = Quaternion.Euler(0, 0, 45.0f);
             Fuel = startingFuel;
@@ -394,129 +509,12 @@ namespace HackedDesign
 
         void SpawnMissiles()
         {
-            int ships = missileParent.transform.childCount;
-            for (int i = 0; i < ships; i++)
+            int missiles = missileParent.transform.childCount;
+            for (int i = 0; i < missiles; i++)
             {
                 missileParent.transform.GetChild(i).gameObject.SetActive(false);
-            }            
-
-        }
-
-
-        public void ShowTutorial()
-        {
-            state = GameState.TUTORIAL;
-            player.gameObject.SetActive(true);
-            world.gameObject.SetActive(true);
-        }
-
-
-        public void ContinueGame()
-        {
-            state = GameState.PLAYING;
-            player.gameObject.SetActive(true);
-            world.gameObject.SetActive(true);
-
-        }
-
-        public void ExitGame()
-        {
-            Application.Quit();
-        }
-
-        public void IncreaseHeat()
-        {
-            Heat += heatGainPerSecond * Time.deltaTime;
-            if (Heat > maxHeat)
-            {
-                Heat = maxHeat;
             }
-        }
-
-        public void BleedHeat()
-        {
-            Heat -= heatBleedPerSecond * Time.deltaTime;
-            if (Heat < 0)
-            {
-                Heat = 0; // Move this into the property?
-            }
-        }
-
-        public void ConsumeFuel()
-        {
-            Fuel -= fuelConsumptionPerSecond * Time.deltaTime;
-            if (Fuel <= 0)
-            {
-                Fuel = 0;
-                GameOverFuel();
-
-                // GameOver state?
-            }
-        }
-
-
-        public void ConsumeFuel(float amount)
-        {
-            Fuel -= amount;
-            if (Fuel <= 0)
-            {
-                Fuel = 0;
-                GameOverFuel();
-
-                // GameOver state?
-            }
-        }
-
-        public void IncreaseHeat(float amount)
-        {
-            Heat += amount * Time.deltaTime;
-            if (Heat > maxHeat)
-            {
-                Heat = maxHeat;
-            }
-        }
-
-
-        public void GameOverCollision()
-        {
-            Debug.Log(this.name + ": Game Over via Collision");
-            state = GameState.GAMEOVERCOLLISION;
-        }
-
-        public void GameOverMine()
-        {
-            Debug.Log(this.name + ": Game Over via Proximity Mine");
-            state = GameState.GAMEOVERMINE;
-        }
-
-
-
-        public void GameOverFuel()
-        {
-            Debug.Log(this.name + ": Game Over via Fuel");
-            state = GameState.GAMEOVERFUEL;
-
-        }
-
-        public void FireMissile(Vector3 start, GameObject target, string type)
-        {
-            
-
-            for(int i = 0; i < missileParent.transform.childCount; i++)
-            {
-                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: Make this more efficient
-                if(m.target == null)
-                {
-                    Debug.Log(this.name + ": fire!");
-                    m.gameObject.SetActive(true);
-                    m.target = target;
-                    m.type = type;
-                    m.transform.position = target.transform.position;
-                    break;
-                }
-            }
-
-        }
+        }        
 
         void UpdateRadars()
         {
@@ -622,7 +620,7 @@ namespace HackedDesign
             }
         }
 
-        
+
 
 
         void FixedUpdate()
@@ -631,9 +629,27 @@ namespace HackedDesign
             {
                 case GameState.PLAYING:
                     player.UpdateMovement();
+                    UpdateMissiles();
+                    UpdateShips();
 
                     // Do ship updates in here too
                     break;
+            }
+        }
+
+        void UpdateMissiles()
+        {
+
+        }
+
+        void UpdateShips()
+        {
+            int missiles = missileParent.transform.childCount;
+            for (int i = 0; i < missiles; i++)
+            {
+                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME:
+                m.UpdateMissile();
+                //missileParent.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
 
