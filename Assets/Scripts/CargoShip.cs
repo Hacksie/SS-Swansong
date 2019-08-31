@@ -10,14 +10,25 @@ namespace HackedDesign
             {
                 Explode();
                 Missile m = other.gameObject.GetComponent<Missile>();
-                m.Explode();                
+                if (m != null)
+                {
+                    m.Explode();
+                }
+                else {
+                    Debug.LogError(this.name + ": missile doesn't have Missile component");
+                }
             }
+        }
+
+        public void Reset()
+        {
+
         }
 
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
             this.gameObject.SetActive(false);
-        }              
+        }
     }
 }

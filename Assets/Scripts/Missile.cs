@@ -75,8 +75,12 @@ namespace HackedDesign
         {
             if (target == null)
             {
-                rigidbody.velocity = Vector2.zero;
                 this.gameObject.SetActive(false);
+
+                if(rigidbody != null)
+                {
+                    rigidbody.velocity = Vector2.zero;
+                }
                 return;
             }
 
@@ -112,6 +116,7 @@ namespace HackedDesign
             Debug.Log(this.name + ": explode");
             rigidbody.velocity = Vector2.zero;
             target = null;
+            this.gameObject.SetActive(false);
 
         }
 

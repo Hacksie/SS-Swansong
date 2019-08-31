@@ -11,13 +11,13 @@ namespace HackedDesign
         public float patrolSpeed;
 
         [SerializeField]
-        public float huntSpeed;        
+        public float huntSpeed;
 
         [SerializeField]
         public float fightSpeed;
 
         [SerializeField]
-        public float rotateSpeed;    
+        public float rotateSpeed;
 
         [SerializeField]
         public FighterState state = FighterState.PATROL;
@@ -26,7 +26,11 @@ namespace HackedDesign
         public Vector3 destination;
 
         [SerializeField]
-        public GameObject fightTarget;
+        public Missile currentMissile;
+
+        [SerializeField]
+        public int missileCount = 10;
+
 
         private new Rigidbody2D rigidbody = null;
 
@@ -39,29 +43,28 @@ namespace HackedDesign
             }
 
             Reset();
-        }  
+        }
 
         public void Reset()
         {
             destination = this.transform.position;
             state = FighterState.PATROL;
-            fightTarget = null;
         }
 
         public void UpdateMovement()
         {
-            switch(state)
+            switch (state)
             {
                 case FighterState.PATROL:
-                return;
-                break;
+                    return;
+                    break;
 
                 case FighterState.HUNT:
-                break;
+                    break;
 
                 case FighterState.FIGHT:
-                destination = fightTarget.transform.position;
-                break;
+                    destination = Game.Instance.player.transform.position;
+                    break;
 
             }
 
@@ -83,6 +86,23 @@ namespace HackedDesign
         {
             Debug.Log(this.name + ": explode");
             this.gameObject.SetActive(false);
+        }
+
+        void OnTriggerStay2D(Collider2D other)
+        {
+            if (other.tag == "Player")
+            {
+                state = FighterState.FIGHT;
+                Debug.Log(this.name + ": targeting player");
+
+                if (missileCount > 0 && (currentMissile == null || !currentMissile.gameObject.activeInHierarchy || currentMissile.source != this.gameObject))
+                {
+                    missileCount--;
+                    currentMissile = Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.player.gameObject, "AIM-393", true);
+                }
+                //Game.Instance.FireMissile()
+                
+            }
         }
 
         void OnCollisionEnter2D(Collision2D other)

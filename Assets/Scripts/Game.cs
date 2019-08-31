@@ -376,7 +376,7 @@ namespace HackedDesign
             gameStarted = false;
         }
 
-        public void FireMissile(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
+        public Missile FireMissile(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
         {
             // Use the first missile without a target
             for (int i = 0; i < missileParent.transform.childCount; i++)
@@ -385,9 +385,11 @@ namespace HackedDesign
                 if (m.target == null)
                 {
                     m.Launch(start, direction, source, target, type, hostile);
-                    break;
+                    return m;
                 }
             }
+
+            return null;
         }
 
         void ResetState()
@@ -440,11 +442,12 @@ namespace HackedDesign
             int asteroids = asteroidParent.transform.childCount;
 
             float angle = 360.0f / asteroids;
+            float offset = Random.Range(0, angle);
 
             for (int i = 0; i < asteroids; i++)
             {
                 float magnitude = Random.Range(50, 1000);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
                 float rotation = Random.Range(0, 360);
                 asteroidParent.transform.GetChild(i).transform.position = position;
@@ -459,11 +462,12 @@ namespace HackedDesign
             int radars = radarParent.transform.childCount;
 
             float angle = 360.0f / radars;
+            float offset = Random.Range(0, angle);
 
             for (int i = 0; i < radars; i++)
             {
                 float magnitude = Random.Range(50, 1000);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
                 //float rotation = Random.Range(0, 360);
                 radarParent.transform.GetChild(i).transform.position = position;
@@ -478,12 +482,12 @@ namespace HackedDesign
             int mines = mineParent.transform.childCount;
 
             float angle = 360.0f / mines;
-            //float angle = 5.0f / mines;
+            float offset = Random.Range(0, angle);
 
             for (int i = 0; i < mines; i++)
             {
                 float magnitude = Random.Range(40, 1000);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 mineParent.transform.GetChild(i).transform.position = position;
                 mineParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
@@ -495,7 +499,7 @@ namespace HackedDesign
             int ships = cargoShipParent.transform.childCount;
 
             float angle = 360.0f / ships;
-            float offset = Random.Range(0, 360);
+            float offset = Random.Range(0, angle);
 
             for (int i = 0; i < ships; i++)
             {
@@ -512,11 +516,17 @@ namespace HackedDesign
             int ships = fighterParent.transform.childCount;
 
             float angle = 360.0f / ships;
-            float offset = Random.Range(0, 360);
+            float offset = Random.Range(0, angle);
 
             for (int i = 0; i < ships; i++)
             {
                 FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();   
+                if(fighter == null)
+                {
+                    Debug.LogError(fighter + ": is not set as a FighterShip");
+                    return;
+                }
+
                 float magnitude = Random.Range(10, 30);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
@@ -579,17 +589,13 @@ namespace HackedDesign
                     }
                 }
 
-
                 float distance = (highestRadar.transform.position - player.transform.position).magnitude;
                 Track = highestRadarPulse * (CrossSection * CrossSection);
 
                 if (Track > 1)
                 {
-                    // Alert a ship
                     AlertShip();
                 }
-                //Debug.Log(this.name + ": " + highestRadarPulse);
-                //Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + Track);
             }
         }
 
@@ -643,7 +649,6 @@ namespace HackedDesign
 
         void Update()
         {
-
             switch (state)
             {
                 case GameState.PLAYING:
@@ -706,8 +711,6 @@ namespace HackedDesign
         }
 
 
-
-
         void FixedUpdate()
         {
             switch (state)
@@ -727,9 +730,19 @@ namespace HackedDesign
             int missiles = missileParent.transform.childCount;
             for (int i = 0; i < missiles; i++)
             {
-                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME:
+                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: create a list at spawn
                 m.UpdateMissile();
                 //missileParent.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+
+        void UpdateFighters()
+        {
+            int ships = fighterParent.transform.childCount;
+            for (int i = 0; i < ships; i++)
+            {
+                FighterShip f = fighterParent.transform.GetChild(i).GetComponent<FighterShip>(); // FIXME
+                f.UpdateMovement();
             }
         }
 
@@ -738,17 +751,6 @@ namespace HackedDesign
 
         }
 
-
-        void UpdateFighters()
-        {
-            int ships = fighterParent.transform.childCount;
-            for (int i = 0; i < ships; i++)
-            {
-                FighterShip f = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();
-                f.UpdateMovement();
-            }
-
-        }
 
 
         void LateUpdate()

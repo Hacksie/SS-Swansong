@@ -22,6 +22,11 @@ namespace HackedDesign
             }
         }
 
+        public void Reset()
+        {
+            
+        }
+
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
