@@ -4,15 +4,6 @@ namespace HackedDesign
 {
     public class Radar : MonoBehaviour
     {
-        public int pulseOffset;
-        public int pulseSpeed;
-        public float lastPulse;
-        // Start is called before the first frame update
-        void Start()
-        {
-            pulseOffset = Random.Range(0, pulseSpeed);
-        }
-
         public float UpdateRadar()
         {
 
@@ -34,13 +25,26 @@ namespace HackedDesign
             // A player in the safe zone can't be found
         }
 
+        public void Reset()
+        {
+            
+        }
+
         void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.tag == "Projectile")
             {
-                Explode();
                 Missile m = other.gameObject.GetComponent<Missile>();
-                m.Explode();                
+                if (m != null)
+                {
+                    Explode();
+                    m.Explode();
+                }
+                Laser l = other.gameObject.GetComponent<Laser>();
+                if (l != null)
+                {
+                    l.Explode();
+                }                
             }
         }
 

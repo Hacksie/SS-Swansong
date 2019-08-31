@@ -54,6 +54,12 @@ namespace HackedDesign
         private Text bay3 = null;
 
         [SerializeField]
+        private Text cargo = null;
+
+        [SerializeField]
+        private Text maxCargo = null;        
+
+        [SerializeField]
         private Text target = null;
 
         [SerializeField]
@@ -122,6 +128,15 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": bay4 not set");
             }
+            if(cargo == null)
+            {
+                Debug.LogError(this.name + ": cargo not set");
+            }
+            if(maxCargo == null)
+            {
+                Debug.LogError(this.name + ": cargo max not set");
+            }
+
             if (target == null)
             {
                 Debug.LogError(this.name = ": target not set");
@@ -148,6 +163,8 @@ namespace HackedDesign
             velocity.text = ((int)(Game.Instance.player.Velocity * 100.0f / Game.Instance.player.MaxThrust)).ToString() + "%";
             fuel.text = ((int)Game.Instance.Fuel).ToString();
             maxFuel.text = ((int)Game.Instance.MaxFuel).ToString();
+            cargo.text = Game.Instance.cargo.ToString();
+            maxCargo.text = Game.Instance.maxCargo.ToString();
             // heat.text = ((int)Game.Instance.CrossSection).ToString();
             // maxHeat.text = ((int)Game.Instance.maxHeat).ToString();
             credits.text = "$" + Game.Instance.Credits.ToString();

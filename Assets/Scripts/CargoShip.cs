@@ -34,10 +34,11 @@ namespace HackedDesign
         {
             if (other.gameObject.tag == "Projectile")
             {
-                Explode();
+                
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
+                    Explode();
                     m.Explode();
                 }
                 Laser l = other.gameObject.GetComponent<Laser>();
@@ -59,12 +60,16 @@ namespace HackedDesign
                     patrolIndex = 0;
                 }
             }
+
+            // Do some collision avoidance
             
             rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-            Vector3 targetVector = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y) - transform.position;
+            Vector3 targetVector = target - transform.position;
             float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
             rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
-        }        
+        }
+
+        
 
         public void Reset()
         {

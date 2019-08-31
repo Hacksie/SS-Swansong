@@ -127,8 +127,6 @@ namespace HackedDesign
 
             if (Input.GetButtonUp("Fire Laser"))
             {
-                Debug.Log(this.name + "Fire laser");
-
                 FireLaser();
             }
         }

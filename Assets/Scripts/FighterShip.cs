@@ -84,6 +84,8 @@ namespace HackedDesign
 
             }
 
+            // Do some collision avoidance
+
             rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
             Vector3 targetVector = destination - transform.position;
             float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;

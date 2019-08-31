@@ -33,7 +33,9 @@ namespace HackedDesign
         [SerializeField]
         private GameObject planetParent = null;
         [SerializeField]
-        private GameObject asteroidParent = null;
+        private GameObject asteroidBigParent = null;
+        [SerializeField]
+        private GameObject asteroidParent = null;        
         [SerializeField]
         private GameObject radarParent = null;
         [SerializeField]
@@ -46,6 +48,9 @@ namespace HackedDesign
         private GameObject missileParent = null;
         [SerializeField]
         private GameObject laserParent = null;
+
+        [Header("Information")]
+        public List<MissileDescription> missileDescriptions = new List<MissileDescription>();
 
         [Header("Missions")]
         [SerializeField]
@@ -83,6 +88,19 @@ namespace HackedDesign
         [SerializeField]
         public float laserHeat = 6.0f;
 
+        [SerializeField]
+        public int asteroidBigCargoMin = 0; 
+        [SerializeField]
+        public int asteroidBigCargoMax = 20;
+
+        [SerializeField]
+        public int asteroidCargoMin = 20; 
+        [SerializeField]
+        public int asteroidCargoMax = 100;   
+
+        [SerializeField]
+        public int maxCargo;
+
         [Header("State")]
         public GameState state;
 
@@ -100,6 +118,9 @@ namespace HackedDesign
 
         [SerializeField]
         public int currentBay = 0;
+
+        [SerializeField]
+        public int cargo = 0;        
 
         [SerializeField]
         public float Fuel
@@ -219,10 +240,14 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": planet parent objects not set");
             }
+            if (asteroidBigParent == null)
+            {
+                Debug.LogError(this.name + ": asteroids big parent not set");
+            }
             if (asteroidParent == null)
             {
                 Debug.LogError(this.name + ": asteroids parent not set");
-            }
+            }            
             if (radarParent == null)
             {
                 Debug.LogError(this.name + ": radar parent not set");
@@ -348,6 +373,15 @@ namespace HackedDesign
             }
         }
 
+        public void IncreaseCargo(int amount)
+        {
+            cargo += amount;
+            if(cargo > maxCargo)
+            {
+                cargo = maxCargo;
+            }
+        }
+
 
         public void GameOverCollision()
         {
@@ -403,6 +437,7 @@ namespace HackedDesign
                 if (l.source == null)
                 {
                     IncreaseHeat(laserHeat);
+                    ConsumeFuel(1);
                     l.Launch(start, direction, source, hostile);
                     return l;
                 }
@@ -433,6 +468,7 @@ namespace HackedDesign
 
             CurrentTarget = null;
             SpawnPlanets();
+            SpawnAsteroidsBig();
             SpawnAsteroids();
             SpawnRadarSatellites();
             SpawnProxMines();
@@ -457,22 +493,48 @@ namespace HackedDesign
             }
         }
 
-        void SpawnAsteroids()
+        void SpawnAsteroidsBig()
         {
-            int asteroids = asteroidParent.transform.childCount;
+            int asteroids = asteroidBigParent.transform.childCount;
 
             float angle = 360.0f / asteroids;
             float offset = Random.Range(0, angle);
 
             for (int i = 0; i < asteroids; i++)
             {
+                //float magnitude = Random.Range(10, 20);
                 float magnitude = Random.Range(50, 1000);
+                AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
+                
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
                 float rotation = Random.Range(0, 360);
-                asteroidParent.transform.GetChild(i).transform.position = position;
+                ab.transform.position = position;
+                ab.transform.Rotate(0, 0, rotation, Space.World);
+                ab.gameObject.SetActive(true);
+                ab.asteroid1 = asteroidParent.transform.GetChild(2*i).gameObject.GetComponent<Asteroid>();
+                ab.asteroid2 = asteroidParent.transform.GetChild(2*i+1).gameObject.GetComponent<Asteroid>();
+                // Check if there is a planet there and move if need be
+            }
+        }
+
+        void SpawnAsteroids()
+        {
+            
+            int asteroids = asteroidParent.transform.childCount;
+
+            // float angle = 360.0f / asteroids;
+            // float offset = Random.Range(0, angle);
+
+            for (int i = 0; i < asteroids; i++)
+            {
+                // float magnitude = Random.Range(50, 1000);
+                // Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+
+                float rotation = Random.Range(0, 360);
+                // asteroidBigParent.transform.GetChild(i).transform.position = position;
                 asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
-                asteroidParent.transform.GetChild(i).gameObject.SetActive(true);
+                asteroidParent.transform.GetChild(i).gameObject.SetActive(false);
                 // Check if there is a planet there and move if need be
             }
         }
