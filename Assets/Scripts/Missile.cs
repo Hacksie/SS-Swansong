@@ -8,7 +8,7 @@ namespace HackedDesign
         public float thrust;
 
         [SerializeField]
-        public float rotateSpeed;        
+        public float rotateSpeed;
 
         [SerializeField]
         public GameObject source;
@@ -46,8 +46,11 @@ namespace HackedDesign
             hostile = false;
             launchTime = 0;
             type = null;
-            rigidbody.velocity = Vector2.zero;
-            this.gameObject.SetActive(false);            
+            if (rigidbody != null)
+            {
+                rigidbody.velocity = Vector2.zero;
+            }
+            this.gameObject.SetActive(false);
         }
 
         public void Launch(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
@@ -69,19 +72,19 @@ namespace HackedDesign
             {
                 this.gameObject.SetActive(false);
 
-                if(rigidbody != null)
+                if (rigidbody != null)
                 {
                     rigidbody.velocity = Vector2.zero;
                 }
                 return;
             }
 
-            if(Time.time - this.launchTime > this.timeOut)
+            if (Time.time - this.launchTime > this.timeOut)
             {
                 Debug.Log(this.name + ": missile timed out");
                 Explode();
                 return;
-            }            
+            }
 
             rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
 

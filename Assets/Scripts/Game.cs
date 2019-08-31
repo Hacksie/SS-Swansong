@@ -291,6 +291,7 @@ namespace HackedDesign
             state = GameState.PLAYING;
             player.gameObject.SetActive(true);
             world.gameObject.SetActive(true);
+            Input.ResetInputAxes();
 
         }
 
@@ -522,11 +523,29 @@ namespace HackedDesign
 
             for (int i = 0; i < ships; i++)
             {
-                //float magnitude = Random.Range(40, 1000);
-                float magnitude = Random.Range(10, 20);
+                CargoShip cargo = cargoShipParent.transform.GetChild(i).GetComponent<CargoShip>();
+                if (cargo == null)
+                {
+                    Debug.LogError(cargo.name + ": is not set as a CargoShip");
+                    continue;
+                }
+                float magnitude = Random.Range(40, 1000);
+                //float magnitude = Random.Range(10, 20);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-                cargoShipParent.transform.GetChild(i).transform.position = position;
-                cargoShipParent.transform.GetChild(i).gameObject.SetActive(true);
+                cargo.transform.up = (-1 * position).normalized;
+                cargo.transform.position = position;
+
+                float randomAngle = Random.Range(-45, 45);
+
+                cargo.transform.Rotate(new Vector3(0, 0, randomAngle));                
+
+                cargo.patrol = new Vector2[2];
+                cargo.patrol[0] = cargo.transform.up * magnitude;
+                cargo.patrol[1] = cargo.transform.position;
+
+
+
+                cargo.gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
             }
         }
@@ -543,14 +562,24 @@ namespace HackedDesign
                 FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();
                 if (fighter == null)
                 {
-                    Debug.LogError(fighter + ": is not set as a FighterShip");
-                    return;
+                    Debug.LogError(fighter.name + ": is not set as a FighterShip");
+                    continue;
                 }
 
-                float magnitude = Random.Range(10, 30);
+                float magnitude = Random.Range(50, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-
+                fighter.transform.up = (-1 * position).normalized;
                 fighter.transform.position = position;
+                fighter.transform.position = position;
+
+                float randomAngle = Random.Range(-45, 45);
+
+                fighter.transform.Rotate(new Vector3(0, 0, randomAngle));    
+
+                fighter.patrol = new Vector2[2];
+                fighter.patrol[0] = fighter.transform.up * magnitude;
+                fighter.patrol[1] = fighter.transform.position;                
+
                 fighter.gameObject.SetActive(true);
                 fighter.Reset();
                 // Check if there is a planet there and move if need be
@@ -742,7 +771,7 @@ namespace HackedDesign
                 case GameState.GAMEOVERMISSILE:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    break;                    
+                    break;
             }
         }
 
@@ -787,14 +816,19 @@ namespace HackedDesign
             int ships = fighterParent.transform.childCount;
             for (int i = 0; i < ships; i++)
             {
-                FighterShip f = fighterParent.transform.GetChild(i).GetComponent<FighterShip>(); // FIXME
-                f.UpdateMovement();
+                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>(); // FIXME
+                fighter.UpdateMovement();
             }
         }
 
         void UpdateShips()
         {
-
+            int ships = cargoShipParent.transform.childCount;
+            for (int i = 0; i < ships; i++)
+            {
+                CargoShip cargo = cargoShipParent.transform.GetChild(i).GetComponent<CargoShip>(); // FIXME
+                cargo.UpdateMovement();
+            }
         }
 
         void LateUpdate()

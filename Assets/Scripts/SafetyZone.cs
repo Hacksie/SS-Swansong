@@ -7,7 +7,7 @@ namespace HackedDesign
        
         void OnTriggerEnter2D(Collider2D other)
         {
-            if(other.tag == "Scanner") // Ignore the scanner
+            if(other.tag != "Player") // Ignore the scanner
             {
                 return;
             }

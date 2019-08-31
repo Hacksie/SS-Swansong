@@ -31,6 +31,12 @@ namespace HackedDesign
         [SerializeField]
         public int missileCount = 10;
 
+        [SerializeField]
+        public Vector2[] patrol;
+
+        [SerializeField]
+        public int patrolIndex = 0;
+
 
         private new Rigidbody2D rigidbody = null;
 
@@ -49,6 +55,7 @@ namespace HackedDesign
         {
             destination = this.transform.position;
             state = FighterState.PATROL;
+            patrolIndex = 0;
         }
 
         public void UpdateMovement()
@@ -56,7 +63,16 @@ namespace HackedDesign
             switch (state)
             {
                 case FighterState.PATROL:
-                    return;
+                    Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
+
+                    if ((transform.position - destination).sqrMagnitude < 2)
+                    {
+                        patrolIndex++;
+                        if (patrolIndex >= patrol.Length)
+                        {
+                            patrolIndex = 0;
+                        }
+                    }
                     break;
 
                 case FighterState.HUNT:

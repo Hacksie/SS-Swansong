@@ -42,7 +42,10 @@ namespace HackedDesign
             launchTime = 0;
             type = null;
             this.gameObject.SetActive(false);
-            rigidbody.velocity = Vector2.zero;
+            if (rigidbody != null)
+            {
+                rigidbody.velocity = Vector2.zero;
+            }
         }
 
         public void Launch(Vector3 start, Vector3 direction, GameObject source, bool hostile)

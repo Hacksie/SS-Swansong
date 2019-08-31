@@ -115,13 +115,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a98707247e7ea604db6d5b071139f8d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  thrust: 300
-  rotateSpeed: 500
+  thrust: 400
+  rotateSpeed: 600
   source: {fileID: 0}
   target: {fileID: 0}
   type: 
   hostile: 0
-  timeOut: 20
+  timeOut: 10
   launchTime: 0
 --- !u!58 &6511097229685769928
 CircleCollider2D:
