@@ -368,13 +368,14 @@ namespace HackedDesign
 
         public void FireMissile(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
         {
+            // Use the first missile without a target
             for (int i = 0; i < missileParent.transform.childCount; i++)
             {
                 Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: Make this more efficient
                 if (m.target == null)
                 {
                     m.Launch(start, direction, source, target, type, hostile);
-
+                    break; 
                 }
             }
         }
@@ -420,6 +421,7 @@ namespace HackedDesign
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
 
                 planetParent.transform.GetChild(i).transform.position = position;
+                planetParent.transform.GetChild(i).gameObject.SetActive(true);
             }
         }
 
@@ -437,6 +439,7 @@ namespace HackedDesign
                 float rotation = Random.Range(0, 360);
                 asteroidParent.transform.GetChild(i).transform.position = position;
                 asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
+                asteroidParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
             }
         }
@@ -454,6 +457,7 @@ namespace HackedDesign
 
                 //float rotation = Random.Range(0, 360);
                 radarParent.transform.GetChild(i).transform.position = position;
+                radarParent.transform.GetChild(i).gameObject.SetActive(true);
                 //asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
                 // Check if there is a planet there and move if need be
             }
@@ -471,6 +475,7 @@ namespace HackedDesign
                 float magnitude = Random.Range(40, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
                 mineParent.transform.GetChild(i).transform.position = position;
+                mineParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
             }
         }
@@ -487,6 +492,7 @@ namespace HackedDesign
                 float magnitude = Random.Range(40, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 cargoShipParent.transform.GetChild(i).transform.position = position;
+                cargoShipParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
             }
         }
@@ -500,9 +506,11 @@ namespace HackedDesign
 
             for (int i = 0; i < ships; i++)
             {
+                
                 float magnitude = Random.Range(40, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 fighterParent.transform.GetChild(i).transform.position = position;
+                fighterParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
             }
         }
@@ -532,6 +540,12 @@ namespace HackedDesign
 
                 for (int i = 0; i < radars; i++)
                 {
+                    // If it doesn't exist anymore then it's exploded, skip to the next one
+                    if(!radarParent.transform.GetChild(i).gameObject.activeInHierarchy)
+                    {
+                        continue;
+                    }
+
                     Radar r = radarParent.transform.GetChild(i).GetComponent<Radar>();
                     if (r == null)
                     {

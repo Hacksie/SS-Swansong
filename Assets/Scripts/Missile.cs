@@ -101,28 +101,29 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            rigidbody.velocity = Vector2.zero;
             target = null;
 
         }
 
-        void OnCollisionEnter2D(Collision2D other)
-        {
-            Debug.Log(other.gameObject.name);
-            // if (hostile)
-            // {
+        // void OnCollisionEnter2D(Collision2D other)
+        // {
+            
+        //     // if (hostile)
+        //     // {
 
-            // }
-            // else
-            // {
-            //     if(other.gameObject.tag == "Player" || (other.transform.parent != null && other.transform.parent.tag == "Hostile"))
-            //     {
-            //         return; // If the missile isn't hostile and the collision is us, ignore the collision
-            //     }
-            //     if (other.gameObject.tag == "Hostile" || (other.transform.parent != null && other.transform.parent.tag == "Hostile"))
-            //     {
-            //         Debug.Log(this.name + ": explode!");
-            //     }
-            // }
-        }
+        //     // }
+        //     // else
+        //     // {
+        //     //     if(other.gameObject.tag == "Player" || (other.transform.parent != null && other.transform.parent.tag == "Hostile"))
+        //     //     {
+        //     //         return; // If the missile isn't hostile and the collision is us, ignore the collision
+        //     //     }
+        //     //     if (other.gameObject.tag == "Hostile" || (other.transform.parent != null && other.transform.parent.tag == "Hostile"))
+        //     //     {
+        //     //         Debug.Log(this.name + ": explode!");
+        //     //     }
+        //     // }
+        // }
     }
 }
