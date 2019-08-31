@@ -39,6 +39,15 @@ namespace HackedDesign
             }
         }
 
+        public void Reset()
+        {
+            source = null;
+            target = null;
+            hostile = false;
+            launchTime = 0;
+            type = null;
+        }
+
         public void Launch(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
         {
             Debug.Log(this.name + ": launch!");

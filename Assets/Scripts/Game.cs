@@ -50,7 +50,7 @@ namespace HackedDesign
         [Header("Missions")]
         [SerializeField]
         private int currentMission = 0;
-        
+
 
         [Header("Limits")]
         [SerializeField]
@@ -117,6 +117,9 @@ namespace HackedDesign
             private set;
         }
 
+        [SerializeField]
+        public Vector3? radarTarget = null;
+
         public float highestRadarPulse;
         public Radar highestRadar;
 
@@ -136,10 +139,10 @@ namespace HackedDesign
                 {
                     //Debug.Log(this.name + ": set target to " + value.name);
                     currentTarget = value;
-                    targetingSquare.transform.position = value.transform.position;
-                    Renderer r = value.gameObject.GetComponent<Renderer>();
-                    targetingSquare.size = r.bounds.size;
-                    targetingSquare.gameObject.SetActive(true);
+                    // targetingSquare.transform.position = value.transform.position;
+                    // Renderer r = value.gameObject.GetComponent<Renderer>();
+                    // targetingSquare.size = r.bounds.size;
+                    // targetingSquare.gameObject.SetActive(true);
                 }
                 else
                 {
@@ -173,6 +176,8 @@ namespace HackedDesign
             get; private set;
 
         }
+
+
 
 
 
@@ -380,7 +385,7 @@ namespace HackedDesign
                 if (m.target == null)
                 {
                     m.Launch(start, direction, source, target, type, hostile);
-                    break; 
+                    break;
                 }
             }
         }
@@ -426,7 +431,7 @@ namespace HackedDesign
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
 
                 planetParent.transform.GetChild(i).transform.position = position;
-                planetParent.transform.GetChild(i).gameObject.SetActive(true);
+                planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later
             }
         }
 
@@ -511,11 +516,13 @@ namespace HackedDesign
 
             for (int i = 0; i < ships; i++)
             {
-                
+                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();   
                 float magnitude = Random.Range(10, 30);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-                fighterParent.transform.GetChild(i).transform.position = position;
-                fighterParent.transform.GetChild(i).gameObject.SetActive(true);
+
+                fighter.transform.position = position;
+                fighter.gameObject.SetActive(true);
+                fighter.Reset();
                 // Check if there is a planet there and move if need be
             }
         }
@@ -525,9 +532,14 @@ namespace HackedDesign
             int missiles = missileParent.transform.childCount;
             for (int i = 0; i < missiles; i++)
             {
-                missileParent.transform.GetChild(i).gameObject.SetActive(false);
+                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>();
+                if(m != null)
+                {
+                    m.gameObject.SetActive(false);
+                    m.Reset();
+                }
             }
-        }        
+        }
 
         void UpdateRadars()
         {
@@ -546,7 +558,7 @@ namespace HackedDesign
                 for (int i = 0; i < radars; i++)
                 {
                     // If it doesn't exist anymore then it's exploded, skip to the next one
-                    if(!radarParent.transform.GetChild(i).gameObject.activeInHierarchy)
+                    if (!radarParent.transform.GetChild(i).gameObject.activeInHierarchy)
                     {
                         continue;
                     }
@@ -570,8 +582,61 @@ namespace HackedDesign
 
                 float distance = (highestRadar.transform.position - player.transform.position).magnitude;
                 Track = highestRadarPulse * (CrossSection * CrossSection);
+
+                if (Track > 1)
+                {
+                    // Alert a ship
+                    AlertShip();
+                }
                 //Debug.Log(this.name + ": " + highestRadarPulse);
                 //Debug.Log(this.name + ": " + highestRadar.name + " " + distance + " " + Track);
+            }
+        }
+
+        void AlertShip()
+        {
+            float distance = 100000.0f;
+            radarTarget = player.transform.position;
+            FighterShip selectedShip = null;
+
+            Debug.Log(this.name + ": track target " + radarTarget);
+
+            int ships = fighterParent.transform.childCount;
+
+            for (int i = 0; i < ships; i++)
+            {
+                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();
+
+                // fighter is dead, ignore it
+                if (fighter == null || !fighter.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+
+                float dis = (fighter.transform.position - player.transform.position).sqrMagnitude;
+
+                if (dis < distance)
+                {
+                    distance = dis;
+                    selectedShip = fighter;
+                }
+            }
+
+            if (selectedShip != null)
+            {
+                selectedShip.Hunt(player.transform.position);
+                Debug.Log(this.name + ": alerting ship " + selectedShip.name);
+            }
+        }
+
+        void UpdateTargetingSquare()
+        {
+            if (CurrentTarget != null)
+            {
+                targetingSquare.transform.position = CurrentTarget.transform.position;
+                Renderer r = CurrentTarget.gameObject.GetComponent<Renderer>();
+                targetingSquare.size = r.bounds.size;
+                targetingSquare.gameObject.SetActive(true);
             }
         }
 
@@ -592,6 +657,7 @@ namespace HackedDesign
                     BleedHeat();
                     UpdateRadars();
                     radarArrow.UpdatePosition();
+                    UpdateTargetingSquare();
 
 
                     break;
@@ -649,19 +715,14 @@ namespace HackedDesign
                 case GameState.PLAYING:
                     player.UpdateMovement();
                     UpdateMissiles();
+                    UpdateFighters();
                     UpdateShips();
 
-                    // Do ship updates in here too
                     break;
             }
         }
 
         void UpdateMissiles()
-        {
-
-        }
-
-        void UpdateShips()
         {
             int missiles = missileParent.transform.childCount;
             for (int i = 0; i < missiles; i++)
@@ -671,6 +732,24 @@ namespace HackedDesign
                 //missileParent.transform.GetChild(i).gameObject.SetActive(false);
             }
         }
+
+        void UpdateShips()
+        {
+
+        }
+
+
+        void UpdateFighters()
+        {
+            int ships = fighterParent.transform.childCount;
+            for (int i = 0; i < ships; i++)
+            {
+                FighterShip f = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();
+                f.UpdateMovement();
+            }
+
+        }
+
 
         void LateUpdate()
         {
