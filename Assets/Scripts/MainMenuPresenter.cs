@@ -22,7 +22,7 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": credits panel not set");
             }
-            if(continueButton == null)
+            if (continueButton == null)
             {
                 Debug.LogError(this.name + ": continueButton not set");
             }
@@ -41,19 +41,19 @@ namespace HackedDesign
                 this.gameObject.SetActive(true);
             }
 
-            if (menuState == MainMenuState.CREDITS && (!creditsPanel.activeInHierarchy || optionsPanel.activeInHierarchy))
+            if (menuState == MainMenuState.CREDITS)
             {
                 creditsPanel.SetActive(true);
                 optionsPanel.SetActive(false);
             }
-            else if (menuState == MainMenuState.OPTIONS && (creditsPanel.activeInHierarchy || !optionsPanel.activeInHierarchy))
+            else if (menuState == MainMenuState.OPTIONS)
             {
                 creditsPanel.SetActive(false);
                 optionsPanel.SetActive(true);
             }
             else
             {
-                if ((creditsPanel.activeInHierarchy || optionsPanel.activeInHierarchy))
+                if (menuState == MainMenuState.OTHER && (creditsPanel.activeInHierarchy || optionsPanel.activeInHierarchy))
                 {
                     creditsPanel.SetActive(false);
                     optionsPanel.SetActive(false);
@@ -61,7 +61,7 @@ namespace HackedDesign
             }
 
             continueButton.interactable = Game.Instance.gameStarted;
-         }
+        }
 
         public void NewGameEvent()
         {

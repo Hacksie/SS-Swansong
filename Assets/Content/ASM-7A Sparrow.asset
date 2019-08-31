@@ -12,8 +12,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dffcb668e4a2b1e469798d176c9488fe, type: 3}
   m_Name: ASM-7A Sparrow
   m_EditorClassIdentifier: 
-  shortName: 
-  description: 
-  thrust: 0
-  rotationSpeed: 0
-  timeOut: 0
+  shortName: ASM-7A
+  description: Anti Ship Missile 7A
+  thrust: 400
+  rotationSpeed: 400
+  timeOut: 10
+  credsMin: 20
+  credsMax: 50

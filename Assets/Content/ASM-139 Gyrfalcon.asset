@@ -9,10 +9,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: ASM-139
+  m_Script: {fileID: 11500000, guid: dffcb668e4a2b1e469798d176c9488fe, type: 3}
+  m_Name: ASM-139 Gyrfalcon
   m_EditorClassIdentifier: Assembly-CSharp:HackedDesign:MissileDescription
-  shortName: 
-  description: 
-  thrust: 0
-  rotationSpeed: 0
+  shortName: ASM-139
+  description: Anti Ship Missile 139 Gyrfalcom
+  thrust: 400
+  rotationSpeed: 800
+  timeOut: 15
+  credsMin: 100
+  credsMax: 200

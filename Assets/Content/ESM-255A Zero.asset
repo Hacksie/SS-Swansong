@@ -10,9 +10,12 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dffcb668e4a2b1e469798d176c9488fe, type: 3}
-  m_Name: ESM-255
+  m_Name: ESM-255A Zero
   m_EditorClassIdentifier: 
-  shortName: 
-  description: 
-  thrust: 0
-  rotationSpeed: 0
+  shortName: ERM-255A
+  description: Electro Radiation Missile
+  thrust: 400
+  rotationSpeed: 300
+  timeOut: 10
+  credsMin: 0
+  credsMax: 0
