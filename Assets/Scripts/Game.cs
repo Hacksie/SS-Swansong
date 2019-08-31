@@ -78,6 +78,11 @@ namespace HackedDesign
         [SerializeField]
         public float bayDoorsCrossSection = 30.0f;
 
+        [SerializeField]
+        public float missileHeat = 10.0f;
+        [SerializeField]
+        public float laserHeat = 6.0f;
+
         [Header("State")]
         public GameState state;
 
@@ -137,16 +142,10 @@ namespace HackedDesign
             {
                 if (value != null)
                 {
-                    //Debug.Log(this.name + ": set target to " + value.name);
                     currentTarget = value;
-                    // targetingSquare.transform.position = value.transform.position;
-                    // Renderer r = value.gameObject.GetComponent<Renderer>();
-                    // targetingSquare.size = r.bounds.size;
-                    // targetingSquare.gameObject.SetActive(true);
                 }
                 else
                 {
-                    //Debug.Log(this.name + ": clear target");
                     currentTarget = null;
                     targetingSquare.gameObject.SetActive(false);
                 }
@@ -176,10 +175,6 @@ namespace HackedDesign
             get; private set;
 
         }
-
-
-
-
 
         private float lastPulse = 0;
         private float pulseSpeed = 3.0f;
@@ -345,7 +340,7 @@ namespace HackedDesign
 
         public void IncreaseHeat(float amount)
         {
-            Heat += amount * Time.deltaTime;
+            Heat += amount;
             if (Heat > maxHeat)
             {
                 Heat = maxHeat;
@@ -367,12 +362,17 @@ namespace HackedDesign
             gameStarted = false;
         }
 
-
-
         public void GameOverFuel()
         {
             Debug.Log(this.name + ": Game Over via Fuel");
             state = GameState.GAMEOVERFUEL;
+            gameStarted = false;
+        }
+
+        public void GameOverMissile()
+        {
+            Debug.Log(this.name + ": Game Over via Missile");
+            state = GameState.GAMEOVERMISSILE;
             gameStarted = false;
         }
 
@@ -382,10 +382,28 @@ namespace HackedDesign
             for (int i = 0; i < missileParent.transform.childCount; i++)
             {
                 Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: Make this more efficient
-                if (m.target == null)
+                if (m.source == null)
                 {
+                    IncreaseHeat(missileHeat);
                     m.Launch(start, direction, source, target, type, hostile);
                     return m;
+                }
+            }
+
+            return null;
+        }
+
+        public Laser FireLaser(Vector3 start, Vector3 direction, GameObject source, bool hostile)
+        {
+            // Use the first missile without a target
+            for (int i = 0; i < laserParent.transform.childCount; i++)
+            {
+                Laser l = laserParent.transform.GetChild(i).GetComponent<Laser>(); // FIXME: Make this more efficient
+                if (l.source == null)
+                {
+                    IncreaseHeat(laserHeat);
+                    l.Launch(start, direction, source, hostile);
+                    return l;
                 }
             }
 
@@ -408,7 +426,7 @@ namespace HackedDesign
             bay[0] = "ML Charge";
             bay[1] = "ML Charge";
             //bay[2] = "ASM-34 EMP";
-            //bay[3] = "AIM-129";
+            //bay[3] = "AIM-139";
             bay[2] = "";
             bay[3] = "";
 
@@ -420,6 +438,7 @@ namespace HackedDesign
             SpawnCargoShips();
             SpawnFighterShips();
             SpawnMissiles();
+            SpawnLasers();
         }
 
         void SpawnPlanets()
@@ -521,8 +540,8 @@ namespace HackedDesign
 
             for (int i = 0; i < ships; i++)
             {
-                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();   
-                if(fighter == null)
+                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();
+                if (fighter == null)
                 {
                     Debug.LogError(fighter + ": is not set as a FighterShip");
                     return;
@@ -544,10 +563,24 @@ namespace HackedDesign
             for (int i = 0; i < missiles; i++)
             {
                 Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>();
-                if(m != null)
+                if (m != null)
                 {
                     m.gameObject.SetActive(false);
                     m.Reset();
+                }
+            }
+        }
+
+        void SpawnLasers()
+        {
+            int missiles = laserParent.transform.childCount;
+            for (int i = 0; i < missiles; i++)
+            {
+                Laser l = laserParent.transform.GetChild(i).GetComponent<Laser>();
+                if (l != null)
+                {
+                    l.gameObject.SetActive(false);
+                    l.Reset();
                 }
             }
         }
@@ -605,8 +638,6 @@ namespace HackedDesign
             float distance = 100000.0f;
             radarTarget = player.transform.position;
             FighterShip selectedShip = null;
-
-            Debug.Log(this.name + ": track target " + radarTarget);
 
             int ships = fighterParent.transform.childCount;
 
@@ -708,6 +739,10 @@ namespace HackedDesign
                     Time.timeScale = 0;
                     Cursor.visible = true;
                     break;
+                case GameState.GAMEOVERMISSILE:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    break;                    
             }
         }
 
@@ -719,9 +754,9 @@ namespace HackedDesign
                 case GameState.PLAYING:
                     player.UpdateMovement();
                     UpdateMissiles();
+                    UpdateLasers();
                     UpdateFighters();
                     UpdateShips();
-
                     break;
             }
         }
@@ -734,6 +769,16 @@ namespace HackedDesign
                 Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: create a list at spawn
                 m.UpdateMissile();
                 //missileParent.transform.GetChild(i).gameObject.SetActive(false);
+            }
+        }
+
+        void UpdateLasers()
+        {
+            int lasers = laserParent.transform.childCount;
+            for (int i = 0; i < lasers; i++)
+            {
+                Laser l = laserParent.transform.GetChild(i).GetComponent<Laser>(); // FIXME: create a list at spawn
+                l.UpdateMissile();
             }
         }
 
@@ -751,8 +796,6 @@ namespace HackedDesign
         {
 
         }
-
-
 
         void LateUpdate()
         {
@@ -772,6 +815,7 @@ namespace HackedDesign
         PLAYING,
         GAMEOVERCOLLISION,
         GAMEOVERMINE,
-        GAMEOVERFUEL
+        GAMEOVERFUEL,
+        GAMEOVERMISSILE
     }
 }

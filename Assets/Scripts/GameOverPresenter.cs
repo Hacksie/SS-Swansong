@@ -16,6 +16,9 @@ namespace HackedDesign
         [SerializeField]
         [TextArea]
         private string fuel = "";
+        [SerializeField]
+        [TextArea]
+        private string missile = "";        
 
         void Start()
         {
@@ -42,6 +45,11 @@ namespace HackedDesign
                 gameOverText.text = mine;
                 this.gameObject.SetActive(true);
             }
+            else if (Game.Instance.state == GameState.GAMEOVERMISSILE)
+            {
+                gameOverText.text = missile;
+                this.gameObject.SetActive(true);
+            }            
             else
             {
                 this.gameObject.SetActive(false);

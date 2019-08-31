@@ -17,6 +17,12 @@ namespace HackedDesign
         [SerializeField]
         private float maxThrust = 5.0f;
 
+        [SerializeField]
+        private float lastLaser = 0.0f;
+
+        [SerializeField]
+        private float laserTimeout = 0.5f;
+
 
         public float Velocity
         {
@@ -114,9 +120,16 @@ namespace HackedDesign
                 }
                 //Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
             }
-            if (Input.GetButtonUp("Fire"))
+            if (Input.GetButtonUp("Fire Missile"))
             {
                 FireMissile();
+            }
+
+            if (Input.GetButtonUp("Fire Laser"))
+            {
+                Debug.Log(this.name + "Fire laser");
+
+                FireLaser();
             }
         }
 
@@ -127,6 +140,19 @@ namespace HackedDesign
                 Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.CurrentTarget, Game.Instance.bay[Game.Instance.currentBay], false);
                 Game.Instance.bay[Game.Instance.currentBay] = "";
             }
+        }
+
+        private void FireLaser()
+        {
+            if ((Time.time - lastLaser) > laserTimeout)
+            {
+                lastLaser = Time.time;
+                //Game.Instance.
+                Game.Instance.FireLaser(this.transform.position + this.transform.up, this.transform.up, this.gameObject, false);
+                //Game.Instance.IncreaseHeat(6);
+                //Game.Instance.bay[Game.Instance.currentBay] = "";
+            }
+
         }
 
         private void UpdateRotation()
@@ -181,6 +207,23 @@ namespace HackedDesign
                 {
                     if (m.source == this.gameObject)
                     {
+                        return;
+                    }
+                    else
+                    {
+                        Game.Instance.GameOverMissile();
+                        return;
+                    }
+                }
+                Laser l = other.gameObject.GetComponent<Laser>(); // FIXME: Make this more efficient
+                if (l != null)
+                {
+                    if (l.source == this.gameObject)
+                    {
+                        return;
+                    }
+                    else{
+                        Game.Instance.GameOverMissile();
                         return;
                     }
                 }

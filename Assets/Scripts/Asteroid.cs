@@ -10,7 +10,15 @@ namespace HackedDesign
             {
                 Explode();
                 Missile m = other.gameObject.GetComponent<Missile>();
-                m.Explode();                
+                if (m != null)
+                {
+                    m.Explode();
+                }
+                Laser l = other.gameObject.GetComponent<Laser>();
+                if (l != null)
+                {
+                    l.Explode();
+                }               
             }
         }
 

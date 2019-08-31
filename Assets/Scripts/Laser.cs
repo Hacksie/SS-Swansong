@@ -2,13 +2,10 @@ using UnityEngine;
 
 namespace HackedDesign
 {
-    public class Missile : MonoBehaviour
+    public class Laser : MonoBehaviour
     {
         [SerializeField]
         public float thrust;
-
-        [SerializeField]
-        public float rotateSpeed;        
 
         [SerializeField]
         public GameObject source;
@@ -25,8 +22,6 @@ namespace HackedDesign
         [SerializeField]
         public float timeOut;
         public float launchTime;
-
-
 
         private new Rigidbody2D rigidbody = null;
 
@@ -46,17 +41,16 @@ namespace HackedDesign
             hostile = false;
             launchTime = 0;
             type = null;
+            this.gameObject.SetActive(false);
             rigidbody.velocity = Vector2.zero;
-            this.gameObject.SetActive(false);            
         }
 
-        public void Launch(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
+        public void Launch(Vector3 start, Vector3 direction, GameObject source, bool hostile)
         {
             Debug.Log(this.name + ": launch!");
             this.gameObject.SetActive(true);
             this.source = source;
-            this.target = target;
-            this.type = type;
+            this.type = "Laser";
             this.transform.position = start;
             this.transform.up = direction;
             this.launchTime = Time.time;
@@ -65,17 +59,10 @@ namespace HackedDesign
 
         public void UpdateMissile()
         {
-            if (target == null)
+            if(source == null)
             {
-                this.gameObject.SetActive(false);
-
-                if(rigidbody != null)
-                {
-                    rigidbody.velocity = Vector2.zero;
-                }
                 return;
             }
-
             if(Time.time - this.launchTime > this.timeOut)
             {
                 Debug.Log(this.name + ": missile timed out");
@@ -85,11 +72,6 @@ namespace HackedDesign
 
             rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
 
-            Vector3 targetVector = target.transform.position - transform.position;
-
-            float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-
-            rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
         }
 
         public void Explode()

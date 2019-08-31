@@ -93,15 +93,11 @@ namespace HackedDesign
             if (other.tag == "Player")
             {
                 state = FighterState.FIGHT;
-                Debug.Log(this.name + ": targeting player");
-
                 if (missileCount > 0 && (currentMissile == null || !currentMissile.gameObject.activeInHierarchy || currentMissile.source != this.gameObject))
                 {
                     missileCount--;
                     currentMissile = Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.player.gameObject, "AIM-393", true);
                 }
-                //Game.Instance.FireMissile()
-                
             }
         }
 
@@ -111,7 +107,15 @@ namespace HackedDesign
             {
                 Explode();
                 Missile m = other.gameObject.GetComponent<Missile>();
-                m.Explode();
+                if (m != null)
+                {
+                    m.Explode();
+                }
+                Laser l = other.gameObject.GetComponent<Laser>();
+                if (l != null)
+                {
+                    l.Explode();
+                }
             }
         }
     }
