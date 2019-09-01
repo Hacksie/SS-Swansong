@@ -11,7 +11,7 @@ namespace HackedDesign
 
         void Start()
         {
-            rigidbody = GetComponent<Rigidbody2D>();
+            //rigidbody = GetComponent<Rigidbody2D>();
             if (rigidbody == null)
             {
                 Debug.LogError(this.name + ": rigidbody is null");
@@ -22,16 +22,18 @@ namespace HackedDesign
         {
             if (other.gameObject.tag == "Projectile")
             {
-                Explode();
+                
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
                     m.Explode();
+                    Explode();
                 }
                 Laser l = other.gameObject.GetComponent<Laser>();
                 if (l != null)
                 {
                     l.Explode();
+                    Explode();
                 }               
             }
         }

@@ -42,9 +42,6 @@ namespace HackedDesign
         private Text bayDoors = null;
 
         [SerializeField]
-        private Text bay0 = null;
-
-        [SerializeField]
         private Text bay1 = null;
 
         [SerializeField]
@@ -52,6 +49,9 @@ namespace HackedDesign
 
         [SerializeField]
         private Text bay3 = null;
+
+        [SerializeField]
+        private Text bay4 = null;
 
         [SerializeField]
         private Text cargo = null;
@@ -112,19 +112,19 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": baydoors not set");
             }
-            if (bay0 == null)
+            if (bay1 == null)
             {
                 Debug.LogError(this.name + ": bay1 not set");
             }
-            if (bay1 == null)
+            if (bay2 == null)
             {
                 Debug.LogError(this.name + ": bay2 not set");
             }
-            if (bay2 == null)
+            if (bay3 == null)
             {
                 Debug.LogError(this.name + ": bay3 not set");
             }
-            if (bay3 == null)
+            if (bay4 == null)
             {
                 Debug.LogError(this.name + ": bay4 not set");
             }
@@ -169,14 +169,14 @@ namespace HackedDesign
             // maxHeat.text = ((int)Game.Instance.maxHeat).ToString();
             credits.text = "$" + Game.Instance.Credits.ToString();
             bayDoors.text = Game.Instance.bayDoorsOpen ? "OPEN" : "CLOSED";
-            bay0.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[0]) ? Game.Instance.bay[0] : "empty";
-            bay0.color = Game.Instance.currentBay == 0 ? currentBayColour : notCurrentBayColour;
-            bay1.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[1]) ? Game.Instance.bay[1] : "empty";
-            bay1.color = Game.Instance.currentBay == 1 ? currentBayColour : notCurrentBayColour;
-            bay2.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[2]) ? Game.Instance.bay[2] : "empty"; ;
-            bay2.color = Game.Instance.currentBay == 2 ? currentBayColour : notCurrentBayColour;
-            bay3.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[3]) ? Game.Instance.bay[3] : "empty";
-            bay3.color = Game.Instance.currentBay == 3 ? currentBayColour : notCurrentBayColour;
+            bay1.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[0]) ? Game.Instance.bay[0] : "empty";
+            bay1.color = Game.Instance.currentBay == 0 ? currentBayColour : notCurrentBayColour;
+            bay2.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[1]) ? Game.Instance.bay[1] : "empty";
+            bay2.color = Game.Instance.currentBay == 1 ? currentBayColour : notCurrentBayColour;
+            bay3.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[2]) ? Game.Instance.bay[2] : "empty"; ;
+            bay3.color = Game.Instance.currentBay == 2 ? currentBayColour : notCurrentBayColour;
+            bay4.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[3]) ? Game.Instance.bay[3] : "empty";
+            bay4.color = Game.Instance.currentBay == 3 ? currentBayColour : notCurrentBayColour;
 
 
             target.text = (Game.Instance.CurrentTarget == null) ? "" : Game.Instance.CurrentTarget.name;

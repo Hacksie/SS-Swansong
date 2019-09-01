@@ -8,10 +8,10 @@ namespace HackedDesign
         public float thrust;
 
         [SerializeField]
-        public float rotateSpeed;        
+        public float rotateSpeed;
 
         [SerializeField]
-        public Vector2[] patrol;  
+        public Vector2[] patrol;
 
         [SerializeField]
         public int patrolIndex = 0;
@@ -34,13 +34,13 @@ namespace HackedDesign
         {
             if (other.gameObject.tag == "Projectile")
             {
-                
+
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
-                    Game.Instance.Explosion(this.transform.position);
-                    Explode();
                     m.Explode();
+                    Explode();
+                    Game.Instance.Explosion(this.transform.position);
                 }
                 // Laser l = other.gameObject.GetComponent<Laser>();
                 // if (l != null)
@@ -54,23 +54,24 @@ namespace HackedDesign
         {
             Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 
-            if((transform.position - target).sqrMagnitude < 2) {
+            if ((transform.position - target).sqrMagnitude < 2)
+            {
                 patrolIndex++;
-                if(patrolIndex >= patrol.Length)
+                if (patrolIndex >= patrol.Length)
                 {
                     patrolIndex = 0;
                 }
             }
 
             // Do some collision avoidance
-            
+
             rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
             Vector3 targetVector = target - transform.position;
             float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
             rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
         }
 
-        
+
 
         public void Reset()
         {

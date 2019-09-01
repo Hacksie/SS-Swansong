@@ -468,12 +468,13 @@ namespace HackedDesign
             Credits = 0;
             minCrossSectionReduction = 0;
             bayDoorsOpen = false;
-            bay[0] = "ML Charge";
-            bay[1] = "ML Charge";
-            //bay[2] = "ASM-34 EMP";
-            //bay[3] = "AIM-139";
-            bay[2] = "";
-            bay[3] = "";
+
+            bay[0] = "AS-07 Sparrow";
+            bay[1] = "AS-07 Sparrow";
+            bay[2] = "AS-07 Sparrow";
+            bay[3] = "AS-07 Sparrow";
+            // bay[2] = "";
+            // bay[3] = "";
 
             CurrentTarget = null;
             SpawnPlanets();
@@ -513,7 +514,7 @@ namespace HackedDesign
             for (int i = 0; i < asteroids; i++)
             {
                 //float magnitude = Random.Range(10, 20);
-                float magnitude = Random.Range(50, 1000);
+                float magnitude = Random.Range(20, 1000);
                 //float magnitude = Random.Range(10, 100);
                 AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
 

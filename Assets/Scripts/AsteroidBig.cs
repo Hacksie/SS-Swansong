@@ -11,16 +11,19 @@ namespace HackedDesign
         {
             if (other.gameObject.tag == "Projectile")
             {
-                Explode();
+                
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
                     m.Explode();
+                    Explode();
                 }
                 Laser l = other.gameObject.GetComponent<Laser>();
                 if (l != null)
                 {
                     l.Explode();
+                    Explode();
+                    //Explode();
                 }
             }
         }
