@@ -67,6 +67,10 @@ namespace HackedDesign
             {
                 Game.Instance.state = GameState.MENU;
             }
+            if(Input.GetButton("Select"))
+            {
+                Game.Instance.state = GameState.MISSIONS;
+            }
             if (Input.GetButtonUp("Bay Doors"))
             {
                 Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
@@ -129,10 +133,18 @@ namespace HackedDesign
             {
                 FireLaser();
             }
+
+            
         }
 
         private void FireMissile()
         {
+            if(Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
+            {
+                Game.Instance.state = GameState.MARKET;
+                return;
+            }
+
             if (Game.Instance.bayDoorsOpen && Game.Instance.CurrentTarget != null)
             {
                 Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.CurrentTarget, Game.Instance.bay[Game.Instance.currentBay], false);
@@ -142,6 +154,11 @@ namespace HackedDesign
 
         private void FireLaser()
         {
+            if(Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
+            {
+                Game.Instance.state = GameState.MARKET;
+                return;
+            }            
 
             if (Game.Instance.bayDoorsOpen && ((Time.time - lastLaser) > laserTimeout))
             {

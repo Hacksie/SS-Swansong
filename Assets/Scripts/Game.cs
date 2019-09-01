@@ -21,9 +21,19 @@ namespace HackedDesign
         private GameOverPresenter gameOverUI = null;
         [SerializeField]
         private IntroPresenter introUI = null;
+        [SerializeField]
+        private MissionPresenter missionUI = null;
+        [SerializeField]
+        private MarketPresenter marketUI = null;        
 
         [SerializeField]
         private RadarArrow radarArrow = null;
+
+        [SerializeField]
+        private RadarArrow nearestShipArrow = null;  // FIXME:
+
+        [SerializeField]
+        private RadarArrow missionTargetArrow = null;  // FIXME:        
 
         [Header("EntityPools")]
         [SerializeField]
@@ -54,9 +64,11 @@ namespace HackedDesign
         [Header("Information")]
         public List<MissileDescription> missileDescriptions = new List<MissileDescription>();
 
+        public List<MissionDescription> missionDescriptions = new List<MissionDescription>();
+
         [Header("Missions")]
         [SerializeField]
-        private int currentMission = 0;
+        public int currentMission = 0;
 
 
         [Header("Limits")]
@@ -236,6 +248,14 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": game over collision ui not set");
             }
+            if(missionUI == null)
+            {
+                Debug.LogError(this.name + ": mission ui not set");
+            }  
+            if(marketUI == null)
+            {
+                Debug.LogError(this.name + ": market ui not set");
+            }                            
 
             if (world == null)
             {
@@ -292,6 +312,13 @@ namespace HackedDesign
                 Debug.LogError(this.name + ": radar arrow not set");
             }
 
+            if(missionDescriptions.Count == 0)
+            {
+                Debug.LogError(this.name + ": missions not set");
+            }
+
+
+
             state = GameState.MENU;
             player.gameObject.SetActive(false);
             targetingSquare.gameObject.SetActive(false);
@@ -304,17 +331,18 @@ namespace HackedDesign
             //player.gameObject.SetActive(true);
             ResetState();
             state = GameState.INTRO;
+            gameStarted = true;
         }
 
-        public void StartGame()
-        {
-            gameStarted = true;
-            ContinueGame();
-        }
+        // public void StartGame()
+        // {
+        //     gameStarted = true;
+        //     ContinueGame();
+        // }
 
         public void ShowTutorial()
         {
-            state = GameState.TUTORIAL;
+            state = GameState.MISSIONS;
             player.gameObject.SetActive(true);
             world.gameObject.SetActive(true);
         }
@@ -879,14 +907,22 @@ namespace HackedDesign
                     radarArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(false);
                     break;
-                case GameState.TUTORIAL:
+                case GameState.MISSIONS:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    player.gameObject.SetActive(false);
+                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(false);
                     break;
+                case GameState.MARKET:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    world.gameObject.SetActive(false);
+                    break;                    
 
 
                 case GameState.GAMEOVERCOLLISION:
@@ -972,6 +1008,8 @@ namespace HackedDesign
             introUI.UpdateUI();
             gameUI.UpdateUI();
             gameOverUI.UpdateUI();
+            missionUI.UpdateUI();
+            marketUI.UpdateUI();
 
         }
     }
@@ -980,7 +1018,8 @@ namespace HackedDesign
     {
         MENU,
         INTRO,
-        TUTORIAL,
+        MISSIONS,
+        MARKET,
         PLAYING,
         GAMEOVERCOLLISION,
         GAMEOVERMINE,

@@ -57,7 +57,7 @@ namespace HackedDesign
         private Text cargo = null;
 
         [SerializeField]
-        private Text maxCargo = null;        
+        private Text maxCargo = null;
 
         [SerializeField]
         private Text target = null;
@@ -67,7 +67,6 @@ namespace HackedDesign
 
         [SerializeField]
         private Color currentBayColour = Color.red;
-
 
         public void Start()
         {
@@ -128,11 +127,11 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": bay4 not set");
             }
-            if(cargo == null)
+            if (cargo == null)
             {
                 Debug.LogError(this.name + ": cargo not set");
             }
-            if(maxCargo == null)
+            if (maxCargo == null)
             {
                 Debug.LogError(this.name + ": cargo max not set");
             }
@@ -146,13 +145,13 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            if (Game.Instance.state != GameState.PLAYING)
+            if (Game.Instance.state != GameState.PLAYING && Game.Instance.state != GameState.MISSIONS && Game.Instance.state != GameState.MARKET)
             {
                 this.gameObject.SetActive(false);
                 return;
             }
 
-            if (Game.Instance.state == GameState.PLAYING)
+            if (Game.Instance.state == GameState.PLAYING || Game.Instance.state == GameState.MISSIONS || Game.Instance.state == GameState.MARKET)
             {
                 this.gameObject.SetActive(true);
             }
@@ -177,8 +176,6 @@ namespace HackedDesign
             bay3.color = Game.Instance.currentBay == 2 ? currentBayColour : notCurrentBayColour;
             bay4.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[3]) ? Game.Instance.bay[3] : "empty";
             bay4.color = Game.Instance.currentBay == 3 ? currentBayColour : notCurrentBayColour;
-
-
             target.text = (Game.Instance.CurrentTarget == null) ? "" : Game.Instance.CurrentTarget.name;
 
             xsectionBar.sizeDelta = new Vector2((int)(Game.Instance.CrossSection * 70 / 100), 10.0f);
@@ -204,6 +201,7 @@ namespace HackedDesign
                 radarBar.gameObject.SetActive(false);
 
             }
+
 
         }
     }
