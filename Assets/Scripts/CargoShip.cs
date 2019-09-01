@@ -38,14 +38,15 @@ namespace HackedDesign
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
+                    Game.Instance.Explosion(this.transform.position);
                     Explode();
                     m.Explode();
                 }
-                Laser l = other.gameObject.GetComponent<Laser>();
-                if (l != null)
-                {
-                    l.Explode();
-                }
+                // Laser l = other.gameObject.GetComponent<Laser>();
+                // if (l != null)
+                // {
+                //     l.Explode();
+                // }
             }
         }
 

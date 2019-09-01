@@ -35,7 +35,7 @@ namespace HackedDesign
         [SerializeField]
         private GameObject asteroidBigParent = null;
         [SerializeField]
-        private GameObject asteroidParent = null;        
+        private GameObject asteroidParent = null;
         [SerializeField]
         private GameObject radarParent = null;
         [SerializeField]
@@ -48,6 +48,8 @@ namespace HackedDesign
         private GameObject missileParent = null;
         [SerializeField]
         private GameObject laserParent = null;
+        [SerializeField]
+        private GameObject explosionsParent = null;
 
         [Header("Information")]
         public List<MissileDescription> missileDescriptions = new List<MissileDescription>();
@@ -89,14 +91,14 @@ namespace HackedDesign
         public float laserHeat = 6.0f;
 
         [SerializeField]
-        public int asteroidBigCargoMin = 0; 
+        public int asteroidBigCargoMin = 0;
         [SerializeField]
         public int asteroidBigCargoMax = 20;
 
         [SerializeField]
-        public int asteroidCargoMin = 20; 
+        public int asteroidCargoMin = 20;
         [SerializeField]
-        public int asteroidCargoMax = 100;   
+        public int asteroidCargoMax = 100;
 
         [SerializeField]
         public int maxCargo;
@@ -120,7 +122,10 @@ namespace HackedDesign
         public int currentBay = 0;
 
         [SerializeField]
-        public int cargo = 0;        
+        public int cargo = 0;
+
+        [SerializeField]
+        public int currentExplosionIndex = 0;
 
         [SerializeField]
         public float Fuel
@@ -247,7 +252,7 @@ namespace HackedDesign
             if (asteroidParent == null)
             {
                 Debug.LogError(this.name + ": asteroids parent not set");
-            }            
+            }
             if (radarParent == null)
             {
                 Debug.LogError(this.name + ": radar parent not set");
@@ -271,6 +276,10 @@ namespace HackedDesign
             if (laserParent == null)
             {
                 Debug.LogError(this.name + ": laser parent not set");
+            }
+            if (explosionsParent == null)
+            {
+                Debug.LogError(this.name + ": explosion parent not set");
             }
 
             if (targetingSquare == null)
@@ -376,7 +385,7 @@ namespace HackedDesign
         public void IncreaseCargo(int amount)
         {
             cargo += amount;
-            if(cargo > maxCargo)
+            if (cargo > maxCargo)
             {
                 cargo = maxCargo;
             }
@@ -476,6 +485,7 @@ namespace HackedDesign
             SpawnFighterShips();
             SpawnMissiles();
             SpawnLasers();
+            SpawnExplosions();
         }
 
         void SpawnPlanets()
@@ -504,23 +514,24 @@ namespace HackedDesign
             {
                 //float magnitude = Random.Range(10, 20);
                 float magnitude = Random.Range(50, 1000);
+                //float magnitude = Random.Range(10, 100);
                 AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
-                
+
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
                 float rotation = Random.Range(0, 360);
                 ab.transform.position = position;
                 ab.transform.Rotate(0, 0, rotation, Space.World);
                 ab.gameObject.SetActive(true);
-                ab.asteroid1 = asteroidParent.transform.GetChild(2*i).gameObject.GetComponent<Asteroid>();
-                ab.asteroid2 = asteroidParent.transform.GetChild(2*i+1).gameObject.GetComponent<Asteroid>();
+                ab.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
+                ab.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
                 // Check if there is a planet there and move if need be
             }
         }
 
         void SpawnAsteroids()
         {
-            
+
             int asteroids = asteroidParent.transform.childCount;
 
             // float angle = 360.0f / asteroids;
@@ -591,15 +602,15 @@ namespace HackedDesign
                     Debug.LogError(cargo.name + ": is not set as a CargoShip");
                     continue;
                 }
-                float magnitude = Random.Range(40, 1000);
-                //float magnitude = Random.Range(10, 20);
+                float magnitude = Random.Range(70, 1000);
+                //float magnitude = Random.Range(20, 50);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 cargo.transform.up = (-1 * position).normalized;
                 cargo.transform.position = position;
 
                 float randomAngle = Random.Range(-45, 45);
 
-                cargo.transform.Rotate(new Vector3(0, 0, randomAngle));                
+                cargo.transform.Rotate(new Vector3(0, 0, randomAngle));
 
                 cargo.patrol = new Vector2[2];
                 cargo.patrol[0] = cargo.transform.up * magnitude;
@@ -628,7 +639,7 @@ namespace HackedDesign
                     continue;
                 }
 
-                float magnitude = Random.Range(50, 1000);
+                float magnitude = Random.Range(80, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 fighter.transform.up = (-1 * position).normalized;
                 fighter.transform.position = position;
@@ -636,11 +647,11 @@ namespace HackedDesign
 
                 float randomAngle = Random.Range(-45, 45);
 
-                fighter.transform.Rotate(new Vector3(0, 0, randomAngle));    
+                fighter.transform.Rotate(new Vector3(0, 0, randomAngle));
 
                 fighter.patrol = new Vector2[2];
                 fighter.patrol[0] = fighter.transform.up * magnitude;
-                fighter.patrol[1] = fighter.transform.position;                
+                fighter.patrol[1] = fighter.transform.position;
 
                 fighter.gameObject.SetActive(true);
                 fighter.Reset();
@@ -674,6 +685,22 @@ namespace HackedDesign
                     l.Reset();
                 }
             }
+        }
+
+        void SpawnExplosions()
+        {
+
+            // int explosions = explosionsParent.transform.childCount;
+            // for (int i = 0; i < explosions; i++)
+            // {
+            //     Explosion e = explosionsParent.transform.GetChild(i).GetComponent<Explosion>();
+            //     if (e != null)
+            //     {
+
+            //         e.gameObject.SetActive(false);
+            //         //e.Reset();
+            //     }
+            // }
         }
 
         void UpdateRadars()
@@ -722,6 +749,51 @@ namespace HackedDesign
                     AlertShip();
                 }
             }
+        }
+
+        public void Explosion(Vector3 position)
+        {
+            int explosions = explosionsParent.transform.childCount;
+
+            Explosion e = explosionsParent.transform.GetChild(currentExplosionIndex).GetComponent<Explosion>();
+
+            currentExplosionIndex++;
+            if (currentExplosionIndex >= explosions)
+            {
+                currentExplosionIndex = 0;
+            }
+
+            e.transform.position = position;
+
+            float randomAngle = Random.Range(0, 360);
+
+            e.transform.Rotate(new Vector3(0, 0, randomAngle));
+
+            e.gameObject.SetActive(true);
+            e.Play();
+
+            /* 
+                        for (int i = 0; i < explosions; i++)
+                        {
+                            Explosion e = explosionsParent.transform.GetChild(i).GetComponent<Explosion>();
+
+                            if(e.gameObject.activeInHierarchy)
+                            {
+                                continue;
+                            }
+
+                            e.transform.position = position;
+
+                            float randomAngle = Random.Range(0, 360);
+
+                            e.transform.Rotate(new Vector3(0, 0, randomAngle));                
+
+                            e.gameObject.SetActive(true);
+                            e.Play();
+                            break;
+                        }*/
+
+
         }
 
         public void AlertShip()

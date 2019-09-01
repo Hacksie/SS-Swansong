@@ -116,7 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrust: 400
-  rotateSpeed: 600
+  rotateSpeed: 1000
   source: {fileID: 0}
   target: {fileID: 0}
   type: 

@@ -142,13 +142,11 @@ namespace HackedDesign
 
         private void FireLaser()
         {
-            if ((Time.time - lastLaser) > laserTimeout)
+
+            if (Game.Instance.bayDoorsOpen && ((Time.time - lastLaser) > laserTimeout))
             {
                 lastLaser = Time.time;
-                //Game.Instance.
                 Game.Instance.FireLaser(this.transform.position + this.transform.up, this.transform.up, this.gameObject, false);
-                //Game.Instance.IncreaseHeat(6);
-                //Game.Instance.bay[Game.Instance.currentBay] = "";
             }
 
         }

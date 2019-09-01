@@ -46,6 +46,7 @@ namespace HackedDesign
             Debug.Log(this.name + ": explode");
             int cargo = Random.Range(Game.Instance.asteroidCargoMin, Game.Instance.asteroidCargoMax);
             Game.Instance.IncreaseCargo(cargo);
+            Game.Instance.Explosion(this.transform.position);
 
             this.gameObject.SetActive(false);
         }              
