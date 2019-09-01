@@ -19,7 +19,7 @@ namespace HackedDesign
             else if (Game.Instance.state != GameState.INTRO && this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(false);
-
+                return;
             }
         }
 

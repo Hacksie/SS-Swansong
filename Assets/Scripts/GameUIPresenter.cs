@@ -160,13 +160,13 @@ namespace HackedDesign
             xcoord.text = ((int)Game.Instance.player.transform.position.x).ToString();
             ycoord.text = ((int)Game.Instance.player.transform.position.y).ToString();
             velocity.text = ((int)(Game.Instance.player.Velocity * 100.0f / Game.Instance.player.MaxThrust)).ToString() + "%";
-            fuel.text = ((int)Game.Instance.Fuel).ToString();
+            fuel.text = ((int)Game.Instance.fuel).ToString();
             maxFuel.text = ((int)Game.Instance.MaxFuel).ToString();
             cargo.text = Game.Instance.cargo.ToString();
             maxCargo.text = Game.Instance.maxCargo.ToString();
             // heat.text = ((int)Game.Instance.CrossSection).ToString();
             // maxHeat.text = ((int)Game.Instance.maxHeat).ToString();
-            credits.text = "$" + Game.Instance.Credits.ToString();
+            credits.text = "$" + Game.Instance.credits.ToString();
             bayDoors.text = Game.Instance.bayDoorsOpen ? "OPEN" : "CLOSED";
             bay1.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[0]) ? Game.Instance.bay[0] : "empty";
             bay1.color = Game.Instance.currentBay == 0 ? currentBayColour : notCurrentBayColour;

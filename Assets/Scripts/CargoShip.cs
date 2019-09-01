@@ -16,6 +16,18 @@ namespace HackedDesign
         [SerializeField]
         public int patrolIndex = 0;
 
+        [SerializeField]
+        public bool disabled = false;
+
+        [SerializeField]
+        public float disabledStartTime = 0;
+
+        [SerializeField]
+        public int cargo = 130;
+
+        [SerializeField]
+        public int cargoExplode = 20;        
+
         private new Rigidbody2D rigidbody = null;
 
         public void Start()
@@ -38,9 +50,20 @@ namespace HackedDesign
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
-                    m.Explode();
-                    Explode();
-                    Game.Instance.Explosion(this.transform.position);
+                    if (m.name == "ES-23 Harpoon")
+                    {
+                        disabled = true;
+                        Game.Instance.IncreaseCargo(cargo);
+                        cargo = 0;
+                        cargoExplode = 0;
+                    }
+                    else
+                    {
+                        m.Explode();
+                        Explode();
+                        Game.Instance.IncreaseCargo(cargoExplode);
+                        Game.Instance.Explosion(this.transform.position);
+                    }
                 }
                 // Laser l = other.gameObject.GetComponent<Laser>();
                 // if (l != null)
@@ -52,23 +75,27 @@ namespace HackedDesign
 
         public void UpdateMovement()
         {
-            Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 
-            if ((transform.position - target).sqrMagnitude < 2)
+            if (!disabled)
             {
-                patrolIndex++;
-                if (patrolIndex >= patrol.Length)
+                Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
+
+                if ((transform.position - target).sqrMagnitude < 2)
                 {
-                    patrolIndex = 0;
+                    patrolIndex++;
+                    if (patrolIndex >= patrol.Length)
+                    {
+                        patrolIndex = 0;
+                    }
                 }
+
+                // Do some collision avoidance
+
+                rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                Vector3 targetVector = target - transform.position;
+                float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
+                rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
             }
-
-            // Do some collision avoidance
-
-            rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-            Vector3 targetVector = target - transform.position;
-            float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-            rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
         }
 
 

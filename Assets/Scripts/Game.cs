@@ -115,6 +115,22 @@ namespace HackedDesign
         [SerializeField]
         public int maxCargo;
 
+        [SerializeField]
+        public int fuelBuyMin = 20;
+        [SerializeField]
+        public int fuelBuyMax = 30;
+
+        [SerializeField]
+        public int fuelSellMin = 10;
+        [SerializeField]
+        public int fuelSellMax = 20;        
+
+        [SerializeField]
+        public int startingCredits = 0;
+
+        [SerializeField]
+        public float marketRefreshRate = 120;        
+
         [Header("State")]
         public GameState state;
 
@@ -140,25 +156,24 @@ namespace HackedDesign
         public int currentExplosionIndex = 0;
 
         [SerializeField]
-        public float Fuel
-        {
-            get;
-            private set;
-        }
+        public float lastMarketRefresh; 
+
+
 
         [SerializeField]
-        public float Heat
-        {
-            get;
-            private set;
-        }
+        public float fuel;
 
         [SerializeField]
-        public int Credits
-        {
-            get;
-            private set;
-        }
+        public int currentFuelBuyPrice;        
+
+        [SerializeField]
+        public int currentFuelSellPrice;        
+
+        [SerializeField]
+        public float heat;
+
+        [SerializeField]
+        public int credits;
 
         [SerializeField]
         public Vector3? radarTarget = null;
@@ -204,7 +219,7 @@ namespace HackedDesign
         {
             get
             {
-                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + Heat + (bayDoorsOpen ? bayDoorsCrossSection : 0), 0, 100);
+                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + heat + (bayDoorsOpen ? bayDoorsCrossSection : 0), 0, 100);
             }
         }
 
@@ -364,28 +379,28 @@ namespace HackedDesign
 
         public void IncreaseHeat()
         {
-            Heat += heatGainPerSecond * Time.deltaTime;
-            if (Heat > maxHeat)
+            heat += heatGainPerSecond * Time.deltaTime;
+            if (heat > maxHeat)
             {
-                Heat = maxHeat;
+                heat = maxHeat;
             }
         }
 
         public void BleedHeat()
         {
-            Heat -= heatBleedPerSecond * Time.deltaTime;
-            if (Heat < 0)
+            heat -= heatBleedPerSecond * Time.deltaTime;
+            if (heat < 0)
             {
-                Heat = 0; // Move this into the property?
+                heat = 0; // Move this into the property?
             }
         }
 
         public void ConsumeFuel()
         {
-            Fuel -= fuelConsumptionPerSecond * Time.deltaTime;
-            if (Fuel <= 0)
+            fuel -= fuelConsumptionPerSecond * Time.deltaTime;
+            if (fuel <= 0)
             {
-                Fuel = 0;
+                fuel = 0;
                 GameOverFuel();
             }
         }
@@ -393,20 +408,20 @@ namespace HackedDesign
 
         public void ConsumeFuel(float amount)
         {
-            Fuel -= amount;
-            if (Fuel <= 0)
+            fuel -= amount;
+            if (fuel <= 0)
             {
-                Fuel = 0;
+                fuel = 0;
                 GameOverFuel();
             }
         }
 
         public void IncreaseHeat(float amount)
         {
-            Heat += amount;
-            if (Heat > maxHeat)
+            heat += amount;
+            if (heat > maxHeat)
             {
-                Heat = maxHeat;
+                heat = maxHeat;
             }
         }
 
@@ -485,26 +500,26 @@ namespace HackedDesign
 
         void ResetState()
         {
-
             Debug.Log(this.name + ": reset state");
             gameStarted = false;
             player.transform.position = Vector2.zero;
             player.transform.rotation = Quaternion.Euler(0, 0, 45.0f);
-            Fuel = startingFuel;
+            fuel = startingFuel;
             maxFuelIncrease = 0;
-            Heat = startingHeat;
-            Credits = 0;
+            heat = startingHeat;
+            credits = startingCredits;
             minCrossSectionReduction = 0;
             bayDoorsOpen = false;
 
-            bay[0] = "AS-07 Sparrow";
-            bay[1] = "AS-07 Sparrow";
-            bay[2] = "AS-07 Sparrow";
-            bay[3] = "AS-07 Sparrow";
+            bay[0] = "AS-07 Swallow";
+            bay[1] = "AS-07 Swallow";
+            bay[2] = "AS-07 Swallow";
+            bay[3] = "AS-07 Swallow";
             // bay[2] = "";
             // bay[3] = "";
 
             CurrentTarget = null;
+            RefreshPrices();
             SpawnPlanets();
             SpawnAsteroidsBig();
             SpawnAsteroids();
@@ -859,6 +874,7 @@ namespace HackedDesign
             }
         }
 
+
         void UpdateTargetingSquare()
         {
             if (CurrentTarget != null)
@@ -870,9 +886,28 @@ namespace HackedDesign
             }
         }
 
+        public void RefreshPrices()
+        {
+            Debug.Log(this.name + ": refresh prices");
+            currentFuelBuyPrice = Random.Range(fuelBuyMin, fuelBuyMax + 1);
+            currentFuelSellPrice = Random.Range(fuelSellMin, fuelSellMax + 1);
+        }        
+
+
+        public void CheckMarketRefresh()
+        {
+            if((Time.unscaledTime - lastMarketRefresh) > marketRefreshRate)
+            {
+                lastMarketRefresh = Time.unscaledTime;
+                RefreshPrices();
+            }
+        }
+
 
         void Update()
         {
+            
+
             switch (state)
             {
                 case GameState.PLAYING:
