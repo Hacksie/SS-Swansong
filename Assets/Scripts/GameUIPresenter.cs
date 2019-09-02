@@ -6,6 +6,9 @@ namespace HackedDesign
     public class GameUIPresenter : MonoBehaviour
     {
         [SerializeField]
+        private Text missionText = null;
+
+        [SerializeField]
         private Text xcoord = null;
 
         [SerializeField]
@@ -70,6 +73,10 @@ namespace HackedDesign
 
         public void Start()
         {
+            if(missionText == null)
+            {
+                Debug.LogError(this.name + ": mission not set");
+            }
             if (fuel == null)
             {
                 Debug.LogError(this.name + ": fuel not set");
@@ -145,18 +152,18 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            if (Game.Instance.state != GameState.PLAYING && Game.Instance.state != GameState.TUTORIAL && Game.Instance.state != GameState.MARKET)
+            if (Game.Instance.state != GameState.PLAYING && Game.Instance.state != GameState.TUTORIAL)
             {
                 this.gameObject.SetActive(false);
                 return;
             }
 
-            if (Game.Instance.state == GameState.PLAYING || Game.Instance.state == GameState.TUTORIAL || Game.Instance.state == GameState.MARKET)
+            if (Game.Instance.state == GameState.PLAYING || Game.Instance.state == GameState.TUTORIAL)
             {
                 this.gameObject.SetActive(true);
             }
 
-
+            missionText.text = Game.Instance.missionDescriptions[Game.Instance.currentMission].shortDescription;
             xcoord.text = ((int)Game.Instance.player.transform.position.x).ToString();
             ycoord.text = ((int)Game.Instance.player.transform.position.y).ToString();
             velocity.text = ((int)(Game.Instance.player.Velocity * 100.0f / Game.Instance.player.MaxThrust)).ToString() + "%";

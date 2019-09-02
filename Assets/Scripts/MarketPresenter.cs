@@ -189,7 +189,7 @@ namespace HackedDesign
 
             if (Game.Instance.CheckMissions())
             {
-                Game.Instance.currentMission++;
+                Game.Instance.NextMission();
                 //Show mission complete!
             }
 
@@ -214,13 +214,13 @@ namespace HackedDesign
                 {
                     missionShortDescription[i].text = Game.Instance.missionDescriptions[i].shortDescription;
                     missionShortDescription[i].color = activeColour;
+                    missionLongDescription.text = Game.Instance.missionDescriptions[i].description;
                 }
                 else if (i > Game.Instance.currentMission)
                 {
                     missionShortDescription[i].text = "";
                     missionShortDescription[i].color = notCompletedColour;
                 }
-
             }
         }
 

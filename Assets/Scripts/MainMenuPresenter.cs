@@ -6,13 +6,16 @@ namespace HackedDesign
 {
     public class MainMenuPresenter : MonoBehaviour
     {
-        public MainMenuState menuState = MainMenuState.OTHER;
+        private MainMenuState menuState = MainMenuState.OTHER;
 
-
-        public GameObject creditsPanel;
-        public GameObject optionsPanel;
-        public Button newButton;
-        public Button continueButton;
+        [SerializeField]
+        private GameObject creditsPanel = null;
+        [SerializeField]
+        private GameObject optionsPanel = null;
+        [SerializeField]
+        private Button newButton  = null;
+        [SerializeField]
+        private Button continueButton = null;
 
         void Start()
         {

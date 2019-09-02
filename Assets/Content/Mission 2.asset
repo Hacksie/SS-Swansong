@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3d8256ffa77a438c5266b0cfbf984, type: 3}
   m_Name: Mission 2
   m_EditorClassIdentifier: 
-  shortDescription: Sell some cargo
-  description: Now it's time to turn that cargo into credits. Use the market to sell
-    all your cargo.
+  shortDescription: Fuel ain't cheap
+  description: Now it's time to turn that cargo into credits and those credits into
+    fuel. Use the market to sell all your cargo. You should buy some fuel for the
+    ship

@@ -203,9 +203,9 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: 0, y: 0.7}
-      - {x: -4, y: 12}
-      - {x: 0, y: 13}
-      - {x: 4, y: 12}
+      - {x: -4, y: 10}
+      - {x: 0, y: 11}
+      - {x: 4, y: 10}
 --- !u!1 &8486207455097577483
 GameObject:
   m_ObjectHideFlags: 0

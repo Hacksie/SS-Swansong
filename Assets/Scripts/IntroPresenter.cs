@@ -9,10 +9,10 @@ namespace HackedDesign
         IntroState state = IntroState.INTRO1;
 
         [SerializeField]
-        private Button continueButton;        
+        private Button continueButton = null;        
 
         [SerializeField]
-        private Text introText;
+        private Text introText = null;
 
         [SerializeField]
         [TextArea]

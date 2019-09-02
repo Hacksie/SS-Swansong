@@ -4,6 +4,9 @@ namespace HackedDesign
 {
     public class ProxMine : MonoBehaviour
     {
+        [SerializeField]
+        public bool exploded = false;        
+
         void OnTriggerEnter2D(Collider2D other)
         {
             if (other.tag == "Player") // Ignore the shield
@@ -37,12 +40,14 @@ namespace HackedDesign
 
         public void Reset()
         {
-
+            this.exploded = false;
+            this.gameObject.SetActive(true);
         }
 
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            this.exploded = true;
             this.gameObject.SetActive(false);
         }
     }

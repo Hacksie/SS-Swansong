@@ -28,7 +28,6 @@ namespace HackedDesign
 
                 if (Game.Instance.CheckMissions())
                 {
-
                     this.gameObject.SetActive(false);
                     return;
                 }

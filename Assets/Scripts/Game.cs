@@ -24,7 +24,7 @@ namespace HackedDesign
         [SerializeField]
         private MarketPresenter marketUI = null;
         [SerializeField]
-        private TutorialPresenter tutorialUI = null;        
+        private TutorialPresenter tutorialUI = null;
 
         [SerializeField]
         private RadarArrow radarArrow = null;
@@ -38,6 +38,8 @@ namespace HackedDesign
         [Header("EntityPools")]
         [SerializeField]
         private SpriteRenderer targetingSquare = null;
+        [SerializeField]
+        private GameObject market = null;                
         [SerializeField]
         private GameObject world = null;
         [SerializeField]
@@ -287,12 +289,17 @@ namespace HackedDesign
             if (tutorialUI == null)
             {
                 Debug.LogError(this.name + ": market ui not set");
-            }            
+            }
 
+            if (market == null)
+            {
+                Debug.LogError(this.name + ": market not set");
+            }  
             if (world == null)
             {
                 Debug.LogError(this.name + ": world parent not set");
             }
+          
             if (planetParent == null)
             {
                 Debug.LogError(this.name + ": planet parent objects not set");
@@ -654,7 +661,15 @@ namespace HackedDesign
 
             for (int i = 0; i < mines; i++)
             {
-                float magnitude = Random.Range(40, 1000);
+                ProxMine pm = mineParent.transform.GetChild(i).GetComponent<ProxMine>();
+                if (pm == null)
+                {
+                    Debug.LogError(pm.name + ": is not set as a Prox Mine");
+                    continue;
+                }
+                pm.Reset();
+                //float magnitude = Random.Range(40, 1000);
+                float magnitude = Random.Range(40, 50);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 mineParent.transform.GetChild(i).transform.position = position;
                 mineParent.transform.GetChild(i).gameObject.SetActive(true);
@@ -986,15 +1001,6 @@ namespace HackedDesign
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(true);
-                    break;                    
-                case GameState.MISSIONS:
-                    Time.timeScale = 0;
-                    Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
-                    targetingSquare.gameObject.SetActive(false);
-                    radarArrow.gameObject.SetActive(false);
-                    missionArrow.gameObject.SetActive(false);
-                    world.gameObject.SetActive(false);
                     break;
                 case GameState.MARKET:
                     Time.timeScale = 0;
@@ -1055,19 +1061,50 @@ namespace HackedDesign
             }
         }
 
+        public void NextMission()
+        {
+            currentMission++;
+            switch (currentMission)
+            {
+                case 2:
+                    ProxMine m = missionTargets[2].GetComponent<ProxMine>();
+                    if (m != null)
+                    {
+                        m.Reset();
+                    }
+                    break;
+            }
+            //In case we want to do pre mission setup
+        }
+
         public bool CheckMissions()
         {
-            switch(currentMission)
+            switch (currentMission)
             {
                 case 0:
                     return CheckMission1();
                 case 1:
                     return CheckMission2();
+                case 2:
+                    return CheckMission3();
+                case 3:
+                return CheckMission4();
+                case 4:
+                return CheckMission5();
+                case 5:
+                return CheckMission6();
+                case 6:
+                return CheckMission7();
+                case 7:
+                return CheckMission8();
+                case 8:
+                return CheckMission9();
+                case 9:
+                return CheckMission10();
+
             }
-            
 
             return false;
-
         }
 
         bool CheckMission1()
@@ -1075,10 +1112,10 @@ namespace HackedDesign
             Asteroid asteroidSmall = missionTargets[0].GetComponent<Asteroid>();
 
             // Good start
-            if(asteroidSmall != null)
+            if (asteroidSmall != null)
             {
                 AsteroidBig parent = asteroidSmall.parent;
-                if(parent.exploded && parent.asteroid1.exploded && parent.asteroid2.exploded)
+                if (parent.exploded && parent.asteroid1.exploded && parent.asteroid2.exploded)
                 {
                     //Debug.Log("Mission 1 completed");
                     return true;
@@ -1091,6 +1128,50 @@ namespace HackedDesign
         bool CheckMission2()
         {
             return (Game.Instance.cargo == 0);
+        }
+
+        bool CheckMission3()
+        {
+            ProxMine mine = missionTargets[2].GetComponent<ProxMine>();
+            if(mine.exploded)
+            {
+                return true;
+            }
+            return false;
+        }
+        bool CheckMission4()
+        {
+            return false;
+        }
+
+        bool CheckMission5()
+        {
+            return false;
+        }
+
+        bool CheckMission6()
+        {
+            return false;
+        }
+
+        bool CheckMission7()
+        {
+            return false;
+        }
+
+        bool CheckMission8()
+        {
+            return false;
+        }
+
+        bool CheckMission9()
+        {
+            return false;
+        }
+
+        bool CheckMission10()
+        {
+            return false;
         }
 
         void UpdateMission1()
@@ -1145,6 +1226,7 @@ namespace HackedDesign
                 }
             }
         }
+
 
         void UpdateMissiles()
         {
@@ -1205,7 +1287,6 @@ namespace HackedDesign
         MENU,
         INTRO,
         TUTORIAL,
-        MISSIONS,
         MARKET,
         PLAYING,
         GAMEOVERCOLLISION,

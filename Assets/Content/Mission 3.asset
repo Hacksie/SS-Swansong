@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3d8256ffa77a438c5266b0cfbf984, type: 3}
   m_Name: Mission 3
   m_EditorClassIdentifier: 
-  shortDescription: Hunt a proximity mine
-  description: 
+  shortDescription: They just leap out at you
+  description: The federation likes to sprinkle proximity mines around the asteroid
+    field. The less the better. Kill the proximity mine
