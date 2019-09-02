@@ -947,10 +947,10 @@ namespace HackedDesign
                 case GameState.INTRO:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    player.gameObject.SetActive(false);
+                    player.gameObject.SetActive(true);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
-                    world.gameObject.SetActive(false);
+                    world.gameObject.SetActive(true);
                     break;
                 case GameState.MISSIONS:
                     Time.timeScale = 0;

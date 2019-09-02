@@ -1,10 +1,14 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace HackedDesign
 {
     public class MissionPresenter : MonoBehaviour
     {
+        [SerializeField]
+        private Button continueButton;        
+
         [SerializeField]
         private Color activeColour = Color.white;
 
@@ -34,6 +38,10 @@ namespace HackedDesign
                     Debug.LogError(this.name + ": long desc not set");
                 }
             }
+            if(continueButton == null)
+            {
+                Debug.LogError(this.name +": continue button is not set");
+            }            
         }
 
         public void UpdateUI()
@@ -41,6 +49,8 @@ namespace HackedDesign
             if (Game.Instance.state == GameState.MISSIONS && !this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);                
             }
             else if (Game.Instance.state != GameState.MISSIONS && this.gameObject.activeInHierarchy)
             {

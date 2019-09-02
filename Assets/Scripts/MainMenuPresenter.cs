@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace HackedDesign
 {
@@ -7,8 +8,10 @@ namespace HackedDesign
     {
         public MainMenuState menuState = MainMenuState.OTHER;
 
+
         public GameObject creditsPanel;
         public GameObject optionsPanel;
+        public Button newButton;
         public Button continueButton;
 
         void Start()
@@ -22,6 +25,10 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": credits panel not set");
             }
+            if (newButton == null)
+            {
+                Debug.LogError(this.name + ": newButton not set");
+            }
             if (continueButton == null)
             {
                 Debug.LogError(this.name + ": continueButton not set");
@@ -30,6 +37,7 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
+            //if()
             if (Game.Instance.state != GameState.MENU && this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(false);
@@ -39,6 +47,10 @@ namespace HackedDesign
             if (Game.Instance.state == GameState.MENU && !this.gameObject.activeInHierarchy)
             {
                 this.gameObject.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(newButton.gameObject);
+                //SetSelectedGameObject();
+
             }
 
             if (menuState == MainMenuState.CREDITS)

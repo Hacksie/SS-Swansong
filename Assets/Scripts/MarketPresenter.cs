@@ -1,10 +1,15 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace HackedDesign
 {
     public class MarketPresenter : MonoBehaviour
     {
+        [SerializeField]
+        private Button continueButton;        
+
+
         [SerializeField]
         Text fuelBuyPriceText;
         [SerializeField]
@@ -106,22 +111,32 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": cargo all sell price text not set");
             }
-
+           if(continueButton == null)
+            {
+                Debug.LogError(this.name +": continue button is not set");
+            }            
         }
 
 
 
         public void UpdateUI()
         {
-            if (Game.Instance.state == GameState.MARKET) // && !this.gameObject.activeInHierarchy)
+            if (Game.Instance.state != GameState.MARKET)
             {
-                this.gameObject.SetActive(true);
-            }
-            else if (Game.Instance.state != GameState.MARKET) // FIXME: Handle return && this.gameObject.activeInHierarchy
-            {
-                this.gameObject.SetActive(false);
+                if (this.gameObject.activeInHierarchy)
+                {
+                    this.gameObject.SetActive(false);
+                }
                 return;
             }
+
+            if (Game.Instance.state == GameState.MARKET && !this.gameObject.activeInHierarchy)
+            {
+                this.gameObject.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+            }
+            
 
             if (Input.GetButtonUp("Next Weapon"))
             {
@@ -207,11 +222,12 @@ namespace HackedDesign
             {
                 Game.Instance.credits -= price;
                 Game.Instance.fuel = Game.Instance.MaxFuel;
-            } else
+            }
+            else
             {
-                Game.Instance.fuel += ((float)Game.Instance.credits) / Game.Instance.currentFuelBuyPrice; 
+                Game.Instance.fuel += ((float)Game.Instance.credits) / Game.Instance.currentFuelBuyPrice;
                 Game.Instance.credits = 0;
-                
+
                 //Debug.Log(this.name + ": " + Game.Instance.credits / Game.Instance.currentFuelBuyPrice);
             }
 
