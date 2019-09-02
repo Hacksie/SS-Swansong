@@ -13,10 +13,6 @@ MonoBehaviour:
   m_Name: Mission 1
   m_EditorClassIdentifier: 
   shortDescription: Mine an asteroid
-  description: 'The easiest way to collect credits is to mine asteroids and sell the
-    minerals . There''s an asteroid nearby that is suitable. Shoot it with your mining
+  description: The easiest way to collect credits is to mine asteroids and sell the
+    minerals. There's an asteroid nearby that is suitable. Shoot it with your mining
     laser until all the pieces have been collected.
-
-
-'
-  target: {fileID: 0}

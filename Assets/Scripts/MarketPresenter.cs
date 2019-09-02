@@ -7,7 +7,22 @@ namespace HackedDesign
     public class MarketPresenter : MonoBehaviour
     {
         [SerializeField]
-        private Button continueButton;        
+        private Button continueButton;
+
+        [SerializeField]
+        private Color activeColour = Color.white;
+
+        [SerializeField]
+        private Color completedColour = Color.grey;
+
+        [SerializeField]
+        private Color notCompletedColour = new Color(0, 0, 0, 0);
+
+        [SerializeField]
+        private Text[] missionShortDescription = new Text[10];
+
+        [SerializeField]
+        private Text missionLongDescription;
 
 
         [SerializeField]
@@ -59,6 +74,12 @@ namespace HackedDesign
 
         void Start()
         {
+            if (continueButton == null)
+            {
+                Debug.LogError(this.name + ": continue button is not set");
+            }
+
+
             if (bay1SelectedText == null)
             {
                 Debug.LogError(this.name + ": bay1selected text is not set");
@@ -111,10 +132,20 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": cargo all sell price text not set");
             }
-           if(continueButton == null)
+
+            for (int i = 0; i < 10; i++)
             {
-                Debug.LogError(this.name +": continue button is not set");
-            }            
+                if (missionShortDescription[i] == null)
+                {
+                    Debug.LogError(this.name + ": short desc " + i + " not set");
+                }
+
+                if (missionLongDescription == null)
+                {
+                    Debug.LogError(this.name + ": long desc not set");
+                }
+            }
+
         }
 
 
@@ -132,11 +163,12 @@ namespace HackedDesign
 
             if (Game.Instance.state == GameState.MARKET && !this.gameObject.activeInHierarchy)
             {
+                Input.ResetInputAxes();
                 this.gameObject.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
             }
-            
+
 
             if (Input.GetButtonUp("Next Weapon"))
             {
@@ -155,11 +187,41 @@ namespace HackedDesign
                 }
             }
 
+            if (Game.Instance.CheckMissions())
+            {
+                Game.Instance.currentMission++;
+                //Show mission complete!
+            }
+
             Game.Instance.CheckMarketRefresh();
 
-
+            UpdateMissions();
             UpdateBays();
             UpdatePrices();
+        }
+
+        void UpdateMissions()
+        {
+            for (int i = 0; i < 10; i++)
+            {
+
+                if (i < Game.Instance.currentMission)
+                {
+                    missionShortDescription[i].text = Game.Instance.missionDescriptions[i].shortDescription;
+                    missionShortDescription[i].color = completedColour;
+                }
+                else if (i == Game.Instance.currentMission)
+                {
+                    missionShortDescription[i].text = Game.Instance.missionDescriptions[i].shortDescription;
+                    missionShortDescription[i].color = activeColour;
+                }
+                else if (i > Game.Instance.currentMission)
+                {
+                    missionShortDescription[i].text = "";
+                    missionShortDescription[i].color = notCompletedColour;
+                }
+
+            }
         }
 
         void UpdateBays()
@@ -301,11 +363,18 @@ namespace HackedDesign
         public void SellCargo100Event()
         {
             Debug.Log(this.name + ": sell cargo");
+            if (Game.Instance.cargo - 100 > 0)
+            {
+                Game.Instance.credits += Game.Instance.currentCargoSellPrice * 100;
+                Game.Instance.cargo -= 100;
+            }
         }
 
         public void SellCargoAllEvent()
         {
             Debug.Log(this.name + ": sell cargo all");
+            Game.Instance.credits += Game.Instance.currentCargoSellPrice * Game.Instance.cargo;
+            Game.Instance.cargo = 0;
         }
 
         public void SellBay1Event()

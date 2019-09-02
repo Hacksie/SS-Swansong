@@ -9,6 +9,5 @@ namespace HackedDesign
         public string shortDescription;
         [TextArea]
         public string description;
-        public GameObject target;
     }
 }

@@ -145,13 +145,13 @@ namespace HackedDesign
 
         public void UpdateUI()
         {
-            if (Game.Instance.state != GameState.PLAYING && Game.Instance.state != GameState.MISSIONS && Game.Instance.state != GameState.MARKET)
+            if (Game.Instance.state != GameState.PLAYING && Game.Instance.state != GameState.TUTORIAL && Game.Instance.state != GameState.MARKET)
             {
                 this.gameObject.SetActive(false);
                 return;
             }
 
-            if (Game.Instance.state == GameState.PLAYING || Game.Instance.state == GameState.MISSIONS || Game.Instance.state == GameState.MARKET)
+            if (Game.Instance.state == GameState.PLAYING || Game.Instance.state == GameState.TUTORIAL || Game.Instance.state == GameState.MARKET)
             {
                 this.gameObject.SetActive(true);
             }

@@ -22,9 +22,9 @@ namespace HackedDesign
         [SerializeField]
         private IntroPresenter introUI = null;
         [SerializeField]
-        private MissionPresenter missionUI = null;
-        [SerializeField]
         private MarketPresenter marketUI = null;
+        [SerializeField]
+        private TutorialPresenter tutorialUI = null;        
 
         [SerializeField]
         private RadarArrow radarArrow = null;
@@ -276,14 +276,18 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": game over collision ui not set");
             }
-            if (missionUI == null)
-            {
-                Debug.LogError(this.name + ": mission ui not set");
-            }
+            // if (missionUI == null)
+            // {
+            //     Debug.LogError(this.name + ": mission ui not set");
+            // }
             if (marketUI == null)
             {
                 Debug.LogError(this.name + ": market ui not set");
             }
+            if (tutorialUI == null)
+            {
+                Debug.LogError(this.name + ": market ui not set");
+            }            
 
             if (world == null)
             {
@@ -375,7 +379,7 @@ namespace HackedDesign
 
         public void ShowTutorial()
         {
-            state = GameState.MISSIONS;
+            state = GameState.TUTORIAL;
             player.gameObject.SetActive(true);
             world.gameObject.SetActive(true);
         }
@@ -580,19 +584,22 @@ namespace HackedDesign
                 if (i == 0)
                 {
                     magnitude = 25.0f;
-                }   
-
-
+                }
                 AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
 
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
                 float rotation = Random.Range(0, 360);
+                ab.exploded = false;
                 ab.transform.position = position;
                 ab.transform.Rotate(0, 0, rotation, Space.World);
                 ab.gameObject.SetActive(true);
                 ab.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
+                ab.asteroid1.parent = ab; // FIXME: is this circular reference an issue?
+                ab.asteroid1.exploded = false;
                 ab.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
+                ab.asteroid2.parent = ab;
+                ab.asteroid2.exploded = false;
                 // Check if there is a planet there and move if need be
             }
         }
@@ -971,6 +978,15 @@ namespace HackedDesign
                     missionArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(true);
                     break;
+                case GameState.TUTORIAL:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    player.gameObject.SetActive(true);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    world.gameObject.SetActive(true);
+                    break;                    
                 case GameState.MISSIONS:
                     Time.timeScale = 0;
                     Cursor.visible = true;
@@ -1031,27 +1047,103 @@ namespace HackedDesign
 
         void UpdateMissions()
         {
+            switch (currentMission)
+            {
+                case 0:
+                    UpdateMission1();
+                    break;
+            }
+        }
+
+        public bool CheckMissions()
+        {
             switch(currentMission)
             {
                 case 0:
-                UpdateMission1();
-                break;
+                    return CheckMission1();
+                case 1:
+                    return CheckMission2();
             }
-
-        }
-
-        bool UpdateMission1()
-        {
-            AsteroidBig a = missionTargets[0].GetComponent<AsteroidBig>();
-
-            if(a.exploded == true)
-            {
-
-            }
+            
 
             return false;
 
+        }
 
+        bool CheckMission1()
+        {
+            Asteroid asteroidSmall = missionTargets[0].GetComponent<Asteroid>();
+
+            // Good start
+            if(asteroidSmall != null)
+            {
+                AsteroidBig parent = asteroidSmall.parent;
+                if(parent.exploded && parent.asteroid1.exploded && parent.asteroid2.exploded)
+                {
+                    //Debug.Log("Mission 1 completed");
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        bool CheckMission2()
+        {
+            return (Game.Instance.cargo == 0);
+        }
+
+        void UpdateMission1()
+        {
+            AsteroidBig asteroidBig = missionTargets[0].GetComponent<AsteroidBig>();
+            Asteroid asteroidSmall = missionTargets[0].GetComponent<Asteroid>();
+
+            if (asteroidBig != null)
+            {
+                // if the current target is the big asteroid, but it's been exploded, set the current target to the first small asteroid
+                if (asteroidBig.exploded)
+                {
+                    missionTargets[0] = asteroidBig.asteroid1.gameObject;
+                }
+
+            }
+
+            else if (asteroidSmall != null) // currently targeting a small asteroid
+            {
+                // FIXME: This code makes me cry
+                if (asteroidSmall.exploded) // did we blow it up
+                {
+                    if (asteroidSmall == asteroidSmall.parent.asteroid1) // are we small asteroid 1
+                    {
+                        if (asteroidSmall.parent.asteroid2.exploded)
+                        {
+                            // Mission complete
+                            //currentMission++;
+                            return;
+                        }
+                        else
+                        {
+                            // Set target to asteroid 2
+                            missionTargets[0] = asteroidSmall.parent.asteroid2.gameObject;
+                        }
+
+                    }
+                    else if (asteroidSmall == asteroidSmall.parent.asteroid2) // are we small asteroid 2
+                    {
+                        if (asteroidSmall.parent.asteroid1.exploded)
+                        {
+                            // Mission complete
+                            //currentMission++;
+                            return;
+                        }
+                        else
+                        {
+                            // Set target to asteroid 2
+                            missionTargets[0] = asteroidSmall.parent.asteroid1.gameObject;
+                        }
+                    }
+                }
+            }
         }
 
         void UpdateMissiles()
@@ -1101,7 +1193,8 @@ namespace HackedDesign
             introUI.UpdateUI();
             gameUI.UpdateUI();
             gameOverUI.UpdateUI();
-            missionUI.UpdateUI();
+            tutorialUI.UpdateUI();
+            //missionUI.UpdateUI();
             marketUI.UpdateUI();
 
         }
@@ -1111,12 +1204,14 @@ namespace HackedDesign
     {
         MENU,
         INTRO,
+        TUTORIAL,
         MISSIONS,
         MARKET,
         PLAYING,
         GAMEOVERCOLLISION,
         GAMEOVERMINE,
         GAMEOVERFUEL,
-        GAMEOVERMISSILE
+        GAMEOVERMISSILE,
+        GAMEOVERCARGOSHIP // Don't blow up the cargo ship!
     }
 }

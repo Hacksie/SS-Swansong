@@ -41,6 +41,7 @@ namespace HackedDesign
         {
             if (Game.Instance.state == GameState.INTRO && !this.gameObject.activeInHierarchy)
             {
+                Input.ResetInputAxes();
                 this.gameObject.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(continueButton.gameObject);

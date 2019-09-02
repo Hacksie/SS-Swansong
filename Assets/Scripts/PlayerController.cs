@@ -69,7 +69,7 @@ namespace HackedDesign
             }
             if(Input.GetButton("Select"))
             {
-                Game.Instance.state = GameState.MISSIONS;
+                Game.Instance.state = GameState.TUTORIAL;
             }
             if (Input.GetButtonUp("Bay Doors"))
             {

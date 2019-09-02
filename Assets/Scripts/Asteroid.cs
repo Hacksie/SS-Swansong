@@ -8,7 +8,10 @@ namespace HackedDesign
         public int cargo;
 
         [SerializeField]
-        public bool exploded;        
+        public bool exploded = false;
+
+        [SerializeField]        
+        public AsteroidBig parent;
 
         public new Rigidbody2D rigidbody;
 
@@ -49,6 +52,7 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            this.exploded = true;
             int cargo = Random.Range(Game.Instance.asteroidCargoMin, Game.Instance.asteroidCargoMax);
             Game.Instance.IncreaseCargo(cargo);
             Game.Instance.Explosion(this.transform.position);
