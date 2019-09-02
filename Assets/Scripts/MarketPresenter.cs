@@ -15,6 +15,11 @@ namespace HackedDesign
         [SerializeField]
         Text fuel100SellPriceText;
 
+        [SerializeField]
+        Text cargoSellPriceText;
+        [SerializeField]
+        Text cargoAllSellPriceText;
+
 
         [SerializeField]
         private Text bay1SelectedText;
@@ -81,19 +86,27 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": bay4 missile text is not set");
             }
-            if(fuelBuyPriceText == null)
+            if (fuelBuyPriceText == null)
             {
                 Debug.LogError(this.name + ": fuelBuyPrice text is not set");
             }
-            if(fuelSellPriceText == null)
+            if (fuelSellPriceText == null)
             {
                 Debug.LogError(this.name + ": fuel sell price text not set");
             }
-            if(fuel100SellPriceText == null)
+            if (fuel100SellPriceText == null)
             {
                 Debug.LogError(this.name + ": fuel100 sell price text not set");
-            }            
-        
+            }
+            if (cargoSellPriceText == null)
+            {
+                Debug.LogError(this.name + ": cargo sell price text not set");
+            }
+            if (cargoAllSellPriceText == null)
+            {
+                Debug.LogError(this.name + ": cargo all sell price text not set");
+            }
+
         }
 
 
@@ -149,10 +162,25 @@ namespace HackedDesign
         void UpdatePrices()
         {
             float remainingFuel = Game.Instance.MaxFuel - Game.Instance.fuel;
-            fuelBuyPriceText.text = "$" + (Game.Instance.currentFuelBuyPrice *10);
-            fuelAllBuyPriceText.text = "$" + Mathf.CeilToInt(remainingFuel * Game.Instance.currentFuelBuyPrice);
+            float totalCargo = Game.Instance.cargo;
+
+
+
+            fuelBuyPriceText.text = "$" + (Game.Instance.currentFuelBuyPrice * 10);
+
             fuelSellPriceText.text = "$" + (Game.Instance.currentFuelSellPrice * 10);
             fuel100SellPriceText.text = "$" + (Game.Instance.currentFuelSellPrice * 100);
+            cargoSellPriceText.text = "$" + (Game.Instance.currentCargoSellPrice * 100);
+            cargoAllSellPriceText.text = "$" + (Game.Instance.currentCargoSellPrice * totalCargo);
+
+            if (Mathf.CeilToInt(remainingFuel * Game.Instance.currentFuelBuyPrice) <= Game.Instance.credits)
+            {
+                fuelAllBuyPriceText.text = "$" + Mathf.CeilToInt(remainingFuel * Game.Instance.currentFuelBuyPrice);
+            }
+            else
+            {
+                fuelAllBuyPriceText.text = "$" + Game.Instance.credits;
+            }
 
         }
 
@@ -161,10 +189,10 @@ namespace HackedDesign
         public void BuyFuelEvent()
         {
             Debug.Log(this.name + ": buy fuel");
-  
-            if(Game.Instance.MaxFuel - Game.Instance.fuel > 10 && (Game.Instance.currentFuelBuyPrice *10 <= Game.Instance.credits))
+
+            if (Game.Instance.MaxFuel - Game.Instance.fuel > 10 && (Game.Instance.currentFuelBuyPrice * 10 <= Game.Instance.credits))
             {
-                Game.Instance.credits -= Game.Instance.currentFuelBuyPrice *10;
+                Game.Instance.credits -= Game.Instance.currentFuelBuyPrice * 10;
                 Game.Instance.fuel += 10;
             }
 
@@ -175,45 +203,84 @@ namespace HackedDesign
             Debug.Log(this.name + ": buy fuel all");
             float remainingFuel = Game.Instance.MaxFuel - Game.Instance.fuel;
             int price = Mathf.CeilToInt(remainingFuel * Game.Instance.currentFuelBuyPrice);
-            if(Game.Instance.currentFuelBuyPrice *price <= Game.Instance.credits)
+            if (Game.Instance.currentFuelBuyPrice * price <= Game.Instance.credits)
             {
                 Game.Instance.credits -= price;
                 Game.Instance.fuel = Game.Instance.MaxFuel;
+            } else
+            {
+                Game.Instance.fuel += ((float)Game.Instance.credits) / Game.Instance.currentFuelBuyPrice; 
+                Game.Instance.credits = 0;
+                
+                //Debug.Log(this.name + ": " + Game.Instance.credits / Game.Instance.currentFuelBuyPrice);
             }
 
-        }        
+        }
 
         public void BuyMissile1Event()
         {
             Debug.Log(this.name + ": buy missile 1");
+            if (string.IsNullOrWhiteSpace(Game.Instance.bay[Game.Instance.currentBay]))
+            {
+                Game.Instance.bay[Game.Instance.currentBay] = "AS-07 Swallow";
+            }
         }
 
         public void BuyMissile2Event()
         {
             Debug.Log(this.name + ": buy missile 2");
+            if (string.IsNullOrWhiteSpace(Game.Instance.bay[Game.Instance.currentBay]))
+            {
+                Game.Instance.bay[Game.Instance.currentBay] = "AS-39 Gyrfalcon";
+            }
         }
 
         public void BuyMissile3Event()
         {
             Debug.Log(this.name + ": buy missile 3");
+            if (string.IsNullOrWhiteSpace(Game.Instance.bay[Game.Instance.currentBay]))
+            {
+                Game.Instance.bay[Game.Instance.currentBay] = "ES-23 Harpoon";
+            }
         }
 
         public void BuyMissile4Event()
         {
             Debug.Log(this.name + ": buy missile 4");
+            if (string.IsNullOrWhiteSpace(Game.Instance.bay[Game.Instance.currentBay]))
+            {
+                Game.Instance.bay[Game.Instance.currentBay] = "RM-44 Rook";
+            }
         }
 
         public void SellFuelEvent()
         {
             //Check 0
             Debug.Log(this.name + ": sell fuel");
+
+            if (Game.Instance.fuel - 10 > 0)
+            {
+                Game.Instance.credits += Game.Instance.currentFuelSellPrice * 10;
+                Game.Instance.fuel -= 10;
+            }
+
+            // if(Game.Instance.MaxFuel - Game.Instance.fuel > 10 && (Game.Instance.currentFuelBuyPrice *10 <= Game.Instance.credits))
+            // {
+            //     Game.Instance.credits -= Game.Instance.currentFuelBuyPrice *10;
+            //     Game.Instance.fuel += 10;
+            // }            
         }
 
         public void SellFuel100Event()
         {
             //Check 0
             Debug.Log(this.name + ": sell fuel 100");
-        }  
+            if (Game.Instance.fuel - 100 > 0)
+            {
+                Game.Instance.credits += Game.Instance.currentFuelSellPrice * 100;
+                Game.Instance.fuel -= 100;
+            }
+        }
 
         public void SellCargo100Event()
         {
@@ -224,25 +291,41 @@ namespace HackedDesign
         {
             Debug.Log(this.name + ": sell cargo all");
         }
-           
+
         public void SellBay1Event()
         {
             Debug.Log(this.name + ": sell bay1");
+            if (!string.IsNullOrWhiteSpace(Game.Instance.bay[0]))
+            {
+                Game.Instance.bay[0] = "";
+            }
         }
 
         public void SellBay2Event()
         {
             Debug.Log(this.name + ": sell bay2");
+            if (!string.IsNullOrWhiteSpace(Game.Instance.bay[1]))
+            {
+                Game.Instance.bay[1] = "";
+            }
         }
 
         public void SellBay3Event()
         {
             Debug.Log(this.name + ": sell bay3");
+            if (!string.IsNullOrWhiteSpace(Game.Instance.bay[2]))
+            {
+                Game.Instance.bay[2] = "";
+            }
         }
 
         public void SellBay4Event()
         {
             Debug.Log(this.name + ": sell bay4");
+            if (!string.IsNullOrWhiteSpace(Game.Instance.bay[3]))
+            {
+                Game.Instance.bay[3] = "";
+            }
         }
 
         public void SelectBay1Event()

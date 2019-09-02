@@ -126,6 +126,11 @@ namespace HackedDesign
         public int fuelSellMax = 20;        
 
         [SerializeField]
+        public int cargoSellMin = 11;
+        [SerializeField]
+        public int cargoSellMax = 33;               
+
+        [SerializeField]
         public int startingCredits = 0;
 
         [SerializeField]
@@ -168,6 +173,10 @@ namespace HackedDesign
 
         [SerializeField]
         public int currentFuelSellPrice;        
+
+        [SerializeField]
+        public int currentCargoSellPrice;        
+
 
         [SerializeField]
         public float heat;
@@ -891,14 +900,15 @@ namespace HackedDesign
             Debug.Log(this.name + ": refresh prices");
             currentFuelBuyPrice = Random.Range(fuelBuyMin, fuelBuyMax + 1);
             currentFuelSellPrice = Random.Range(fuelSellMin, fuelSellMax + 1);
+            currentCargoSellPrice = Random.Range(cargoSellMin, cargoSellMax + 1);
         }        
 
 
         public void CheckMarketRefresh()
         {
-            if((Time.unscaledTime - lastMarketRefresh) > marketRefreshRate)
+            if((Time.time - lastMarketRefresh) > marketRefreshRate)
             {
-                lastMarketRefresh = Time.unscaledTime;
+                lastMarketRefresh = Time.time;
                 RefreshPrices();
             }
         }
