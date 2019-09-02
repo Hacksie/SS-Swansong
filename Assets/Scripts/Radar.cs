@@ -4,9 +4,12 @@ namespace HackedDesign
 {
     public class Radar : MonoBehaviour
     {
+        // Maybe we need an EMP missile to kill th shield?
         bool disabled;
         float lastDisableTimer = 0;
         public float disableTimeout = 10.0f;
+
+
 
         public float UpdateRadar()
         {
@@ -35,6 +38,8 @@ namespace HackedDesign
 
         public void Reset()
         {
+            disabled = false;
+            lastDisableTimer = 0;
 
         }
 

@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: Mission 5
   m_EditorClassIdentifier: 
   shortDescription: Reducing the threat model
-  description: 
+  description: 'These radar satellites can be really painful. Let''s make life a little
+    easier by removing one from existence. We''ll need an RM-44 Rook Anti Rad missile. '

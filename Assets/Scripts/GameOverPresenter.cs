@@ -23,7 +23,10 @@ namespace HackedDesign
         private string fuel = "";
         [SerializeField]
         [TextArea]
-        private string missile = "";        
+        private string missile = "";  
+        [SerializeField]
+        [TextArea]
+        private string cargo = "";               
 
         void Start()
         {
@@ -70,7 +73,15 @@ namespace HackedDesign
                 this.gameObject.SetActive(true);
                 EventSystem.current.SetSelectedGameObject(null);
                 EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
-            }            
+            }     
+            else if (Game.Instance.state == GameState.GAMEOVERCARGOSHIP)
+            {
+                gameOverText.text = cargo;
+                Input.ResetInputAxes();
+                this.gameObject.SetActive(true);
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+            }                     
             else
             {
                 this.gameObject.SetActive(false);

@@ -77,7 +77,7 @@ namespace HackedDesign
         public void UpdateMovement()
         {
 
-            if (!disabled)
+            if (!disabled && gameObject.activeInHierarchy)
             {
                 Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 

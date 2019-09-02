@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shortDescription: They just leap out at you
   description: The federation likes to sprinkle proximity mines around the asteroid
-    field. The less the better. Kill the proximity mine
+    field. The less the better. The target prox mine has been particularly annoying
+    me lately. Anything close will cause it to blow up. Make sure it's not my ship.

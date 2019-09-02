@@ -12,5 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3d8256ffa77a438c5266b0cfbf984, type: 3}
   m_Name: Mission 8
   m_EditorClassIdentifier: 
-  shortDescription: An old friend
-  description: 
+  shortDescription: Distress beacon
+  description: I've picked up a nearby distress beacon. Normally I wouldn't be so
+    stupid to fall into such a trap, except the signal seems to be coming from another
+    FX-2117A Aurora. I just have to check it out

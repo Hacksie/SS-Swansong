@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3d8256ffa77a438c5266b0cfbf984, type: 3}
   m_Name: Mission 9
   m_EditorClassIdentifier: 
-  shortDescription: A distress beacon
-  description: 
+  shortDescription: An old friend
+  description: Turns out Capt. Hawke is hanging about in the sector. Let's go welcome
+    him with a AS-39 Gyrfalcon to the face.

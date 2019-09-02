@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Mission 4
   m_EditorClassIdentifier: 
   shortDescription: More lucrative cargo
-  description: Traveling around the asteroid field are cargo ships. If you disable
-    one with an ES-23 Harpoon, you can steal their cargo.
+  description: Traveling around the asteroid field are cargo ships. I've gotten word
+    that a particular ship has some particularly lucrative cargo. Use an ES-23 Harpoon
+    missile to disable it so that we can steal their cargo.

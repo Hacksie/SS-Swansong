@@ -30,16 +30,13 @@ namespace HackedDesign
         private RadarArrow radarArrow = null;
 
         [SerializeField]
-        private RadarArrow nearestShipArrow = null;  // FIXME:
-
-        [SerializeField]
-        private MissionArrow missionArrow = null;  // FIXME:        
+        private MissionArrow missionArrow = null;
 
         [Header("EntityPools")]
         [SerializeField]
         private SpriteRenderer targetingSquare = null;
         [SerializeField]
-        private GameObject market = null;                
+        private GameObject market = null;
         [SerializeField]
         private GameObject world = null;
         [SerializeField]
@@ -63,19 +60,15 @@ namespace HackedDesign
         [SerializeField]
         private GameObject explosionsParent = null;
         [SerializeField]
-        private GameObject empParent = null;        
+        private GameObject empParent = null;
 
         [Header("Information")]
         public List<MissileDescription> missileDescriptions = new List<MissileDescription>();
 
+        [Header("Missions")]
         public List<MissionDescription> missionDescriptions = new List<MissionDescription>();
 
         public List<GameObject> missionTargets = new List<GameObject>();
-
-        [Header("Missions")]
-        [SerializeField]
-        public int currentMission = 0;
-
 
 
 
@@ -169,10 +162,14 @@ namespace HackedDesign
         public int currentExplosionIndex = 0;
 
         [SerializeField]
-        public int currentEMPIndex = 0;        
+        public int currentEMPIndex = 0;
 
         [SerializeField]
         public float lastMarketRefresh;
+
+        [SerializeField]
+        public int currentMission = 0;
+
 
 
 
@@ -210,7 +207,7 @@ namespace HackedDesign
         public int currentMissile3BuyPrice;
 
         [SerializeField]
-        public int currentMissile4BuyPrice;                        
+        public int currentMissile4BuyPrice;
 
         [SerializeField]
         public float heat;
@@ -322,12 +319,12 @@ namespace HackedDesign
             if (market == null)
             {
                 Debug.LogError(this.name + ": market not set");
-            }  
+            }
             if (world == null)
             {
                 Debug.LogError(this.name + ": world parent not set");
             }
-          
+
             if (planetParent == null)
             {
                 Debug.LogError(this.name + ": planet parent objects not set");
@@ -371,7 +368,7 @@ namespace HackedDesign
             if (empParent == null)
             {
                 Debug.LogError(this.name + ": explosion parent not set");
-            }            
+            }
 
             if (targetingSquare == null)
             {
@@ -921,7 +918,7 @@ namespace HackedDesign
 
             e.gameObject.SetActive(true);
             e.Play();
-        }        
+        }
 
         public void AlertShip()
         {
@@ -1082,20 +1079,6 @@ namespace HackedDesign
         }
 
 
-        void FixedUpdate()
-        {
-            switch (state)
-            {
-                case GameState.PLAYING:
-                    player.UpdateMovement();
-                    UpdateMissiles();
-                    UpdateLasers();
-                    UpdateFighters();
-                    UpdateShips();
-                    break;
-            }
-        }
-
         void UpdateMissions()
         {
             switch (currentMission)
@@ -1133,19 +1116,19 @@ namespace HackedDesign
                 case 2:
                     return CheckMission3();
                 case 3:
-                return CheckMission4();
+                    return CheckMission4();
                 case 4:
-                return CheckMission5();
+                    return CheckMission5();
                 case 5:
-                return CheckMission6();
+                    return CheckMission6();
                 case 6:
-                return CheckMission7();
+                    return CheckMission7();
                 case 7:
-                return CheckMission8();
+                    return CheckMission8();
                 case 8:
-                return CheckMission9();
+                    return CheckMission9();
                 case 9:
-                return CheckMission10();
+                    return CheckMission10();
 
             }
 
@@ -1178,7 +1161,7 @@ namespace HackedDesign
         bool CheckMission3()
         {
             ProxMine mine = missionTargets[2].GetComponent<ProxMine>();
-            if(mine.exploded)
+            if (mine.exploded)
             {
                 return true;
             }
@@ -1186,17 +1169,28 @@ namespace HackedDesign
         }
         bool CheckMission4()
         {
-            return false;
+            CargoShip c = missionTargets[3].GetComponent<CargoShip>();
+
+            //Did we accidentally kill it earlier?
+            if (!c.gameObject.activeInHierarchy)
+            {
+                c.gameObject.SetActive(true);
+
+            }
+
+            return c.disabled;
         }
 
         bool CheckMission5()
         {
-            return false;
+            return !missionTargets[4].gameObject.activeInHierarchy;
+
         }
 
         bool CheckMission6()
         {
-            return false;
+            return (credits > 30000);
+            //return false;
         }
 
         bool CheckMission7()
@@ -1234,41 +1228,37 @@ namespace HackedDesign
 
             }
 
-            else if (asteroidSmall != null) // currently targeting a small asteroid
+            else if (asteroidSmall != null && asteroidSmall.exploded) // currently targeting a small asteroid
             {
                 // FIXME: This code makes me cry
-                if (asteroidSmall.exploded) // did we blow it up
+                if (asteroidSmall == asteroidSmall.parent.asteroid1) // are we small asteroid 1
                 {
-                    if (asteroidSmall == asteroidSmall.parent.asteroid1) // are we small asteroid 1
+                    if (asteroidSmall.parent.asteroid2.exploded)
                     {
-                        if (asteroidSmall.parent.asteroid2.exploded)
-                        {
-                            // Mission complete
-                            //currentMission++;
-                            return;
-                        }
-                        else
-                        {
-                            // Set target to asteroid 2
-                            missionTargets[0] = asteroidSmall.parent.asteroid2.gameObject;
-                        }
-
+                        // Mission complete
+                        return;
                     }
-                    else if (asteroidSmall == asteroidSmall.parent.asteroid2) // are we small asteroid 2
+                    else
                     {
-                        if (asteroidSmall.parent.asteroid1.exploded)
-                        {
-                            // Mission complete
-                            //currentMission++;
-                            return;
-                        }
-                        else
-                        {
-                            // Set target to asteroid 2
-                            missionTargets[0] = asteroidSmall.parent.asteroid1.gameObject;
-                        }
+                        // Set target to asteroid 2
+                        missionTargets[0] = asteroidSmall.parent.asteroid2.gameObject;
+                    }
+
+                }
+                else if (asteroidSmall == asteroidSmall.parent.asteroid2) // are we small asteroid 2
+                {
+                    if (asteroidSmall.parent.asteroid1.exploded)
+                    {
+                        // Mission complete
+                        return;
+                    }
+                    else
+                    {
+                        // Set target to asteroid 2
+                        missionTargets[0] = asteroidSmall.parent.asteroid1.gameObject;
                     }
                 }
+
             }
         }
 
@@ -1278,9 +1268,11 @@ namespace HackedDesign
             int missiles = missileParent.transform.childCount;
             for (int i = 0; i < missiles; i++)
             {
-                Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: create a list at spawn
-                m.UpdateMissile();
-                //missileParent.transform.GetChild(i).gameObject.SetActive(false);
+                Missile missile = missileParent.transform.GetChild(i).GetComponent<Missile>(); // FIXME: create a list at spawn
+                if (missile != null)
+                {
+                    missile.UpdateMissile();
+                }
             }
         }
 
@@ -1289,8 +1281,11 @@ namespace HackedDesign
             int lasers = laserParent.transform.childCount;
             for (int i = 0; i < lasers; i++)
             {
-                Laser l = laserParent.transform.GetChild(i).GetComponent<Laser>(); // FIXME: create a list at spawn
-                l.UpdateMissile();
+                Laser laser = laserParent.transform.GetChild(i).GetComponent<Laser>(); // FIXME: create a list at spawn
+                if (laser != null)
+                {
+                    laser.UpdateMissile();
+                }
             }
         }
 
@@ -1299,8 +1294,11 @@ namespace HackedDesign
             int ships = fighterParent.transform.childCount;
             for (int i = 0; i < ships; i++)
             {
-                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>(); // FIXME
-                fighter.UpdateMovement();
+                FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>(); // FIXME: create a list at spawn
+                if (fighter != null)
+                {
+                    fighter.UpdateMovement();
+                }
             }
         }
 
@@ -1310,7 +1308,24 @@ namespace HackedDesign
             for (int i = 0; i < ships; i++)
             {
                 CargoShip cargo = cargoShipParent.transform.GetChild(i).GetComponent<CargoShip>(); // FIXME
-                cargo.UpdateMovement();
+                if (cargo != null)
+                {
+                    cargo.UpdateMovement();
+                }
+            }
+        }
+
+        void FixedUpdate()
+        {
+            switch (state)
+            {
+                case GameState.PLAYING:
+                    player.UpdateMovement();
+                    UpdateMissiles();
+                    UpdateLasers();
+                    UpdateFighters();
+                    UpdateShips();
+                    break;
             }
         }
 
@@ -1321,9 +1336,7 @@ namespace HackedDesign
             gameUI.UpdateUI();
             gameOverUI.UpdateUI();
             tutorialUI.UpdateUI();
-            //missionUI.UpdateUI();
             marketUI.UpdateUI();
-
         }
     }
 
