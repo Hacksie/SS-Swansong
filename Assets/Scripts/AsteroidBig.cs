@@ -4,8 +4,13 @@ namespace HackedDesign
 {
     public class AsteroidBig : MonoBehaviour
     {
+        [SerializeField]
         public Asteroid asteroid1;
+        [SerializeField]
         public Asteroid asteroid2; 
+
+        [SerializeField]
+        public bool exploded;
 
         void OnCollisionEnter2D(Collision2D other)
         {
@@ -31,6 +36,7 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            this.exploded = true;
             this.gameObject.SetActive(false);
 
             SpawnAsteroids();

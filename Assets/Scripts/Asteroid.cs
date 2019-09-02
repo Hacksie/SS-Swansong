@@ -7,6 +7,9 @@ namespace HackedDesign
         [SerializeField]
         public int cargo;
 
+        [SerializeField]
+        public bool exploded;        
+
         public new Rigidbody2D rigidbody;
 
         void Start()

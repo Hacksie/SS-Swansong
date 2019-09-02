@@ -24,7 +24,7 @@ namespace HackedDesign
         [SerializeField]
         private MissionPresenter missionUI = null;
         [SerializeField]
-        private MarketPresenter marketUI = null;        
+        private MarketPresenter marketUI = null;
 
         [SerializeField]
         private RadarArrow radarArrow = null;
@@ -33,7 +33,7 @@ namespace HackedDesign
         private RadarArrow nearestShipArrow = null;  // FIXME:
 
         [SerializeField]
-        private RadarArrow missionTargetArrow = null;  // FIXME:        
+        private MissionArrow missionArrow = null;  // FIXME:        
 
         [Header("EntityPools")]
         [SerializeField]
@@ -66,9 +66,13 @@ namespace HackedDesign
 
         public List<MissionDescription> missionDescriptions = new List<MissionDescription>();
 
+        public List<GameObject> missionTargets = new List<GameObject>();
+
         [Header("Missions")]
         [SerializeField]
         public int currentMission = 0;
+
+
 
 
         [Header("Limits")]
@@ -123,18 +127,18 @@ namespace HackedDesign
         [SerializeField]
         public int fuelSellMin = 10;
         [SerializeField]
-        public int fuelSellMax = 20;        
+        public int fuelSellMax = 20;
 
         [SerializeField]
         public int cargoSellMin = 11;
         [SerializeField]
-        public int cargoSellMax = 33;               
+        public int cargoSellMax = 33;
 
         [SerializeField]
         public int startingCredits = 0;
 
         [SerializeField]
-        public float marketRefreshRate = 120;        
+        public float marketRefreshRate = 120;
 
         [Header("State")]
         public GameState state;
@@ -161,7 +165,7 @@ namespace HackedDesign
         public int currentExplosionIndex = 0;
 
         [SerializeField]
-        public float lastMarketRefresh; 
+        public float lastMarketRefresh;
 
 
 
@@ -169,13 +173,13 @@ namespace HackedDesign
         public float fuel;
 
         [SerializeField]
-        public int currentFuelBuyPrice;        
+        public int currentFuelBuyPrice;
 
         [SerializeField]
-        public int currentFuelSellPrice;        
+        public int currentFuelSellPrice;
 
         [SerializeField]
-        public int currentCargoSellPrice;        
+        public int currentCargoSellPrice;
 
 
         [SerializeField]
@@ -272,14 +276,14 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": game over collision ui not set");
             }
-            if(missionUI == null)
+            if (missionUI == null)
             {
                 Debug.LogError(this.name + ": mission ui not set");
-            }  
-            if(marketUI == null)
+            }
+            if (marketUI == null)
             {
                 Debug.LogError(this.name + ": market ui not set");
-            }                            
+            }
 
             if (world == null)
             {
@@ -335,8 +339,12 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": radar arrow not set");
             }
+            if (missionArrow == null)
+            {
+                Debug.LogError(this.name + ": mission arrow not set");
+            }
 
-            if(missionDescriptions.Count == 0)
+            if (missionDescriptions.Count == 0)
             {
                 Debug.LogError(this.name + ": missions not set");
             }
@@ -347,6 +355,7 @@ namespace HackedDesign
             player.gameObject.SetActive(false);
             targetingSquare.gameObject.SetActive(false);
             radarArrow.gameObject.SetActive(false);
+            missionArrow.gameObject.SetActive(false);
             world.gameObject.SetActive(false);
         }
 
@@ -565,9 +574,15 @@ namespace HackedDesign
 
             for (int i = 0; i < asteroids; i++)
             {
-                //float magnitude = Random.Range(10, 20);
                 float magnitude = Random.Range(20, 1000);
-                //float magnitude = Random.Range(10, 100);
+
+                // FIXME: this is a hack for the first mission, put this in a mission setup function
+                if (i == 0)
+                {
+                    magnitude = 25.0f;
+                }   
+
+
                 AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
 
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
@@ -901,12 +916,12 @@ namespace HackedDesign
             currentFuelBuyPrice = Random.Range(fuelBuyMin, fuelBuyMax + 1);
             currentFuelSellPrice = Random.Range(fuelSellMin, fuelSellMax + 1);
             currentCargoSellPrice = Random.Range(cargoSellMin, cargoSellMax + 1);
-        }        
+        }
 
 
         public void CheckMarketRefresh()
         {
-            if((Time.time - lastMarketRefresh) > marketRefreshRate)
+            if ((Time.time - lastMarketRefresh) > marketRefreshRate)
             {
                 lastMarketRefresh = Time.time;
                 RefreshPrices();
@@ -916,7 +931,7 @@ namespace HackedDesign
 
         void Update()
         {
-            
+
 
             switch (state)
             {
@@ -926,11 +941,13 @@ namespace HackedDesign
                     player.gameObject.SetActive(true);
                     //targetingSquare.gameObject.SetActive(true);
                     radarArrow.gameObject.SetActive(true);
+                    missionArrow.gameObject.SetActive(true);
                     world.gameObject.SetActive(true);
                     player.UpdateActions();
                     BleedHeat();
                     UpdateRadars();
                     radarArrow.UpdatePosition();
+                    missionArrow.UpdatePosition();
                     UpdateTargetingSquare();
 
 
@@ -941,6 +958,7 @@ namespace HackedDesign
                     player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(false);
                     break;
 
@@ -950,6 +968,7 @@ namespace HackedDesign
                     player.gameObject.SetActive(true);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(true);
                     break;
                 case GameState.MISSIONS:
@@ -958,6 +977,7 @@ namespace HackedDesign
                     //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(false);
                     break;
                 case GameState.MARKET:
@@ -966,8 +986,9 @@ namespace HackedDesign
                     //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
                     world.gameObject.SetActive(false);
-                    break;                    
+                    break;
 
 
                 case GameState.GAMEOVERCOLLISION:
@@ -989,6 +1010,8 @@ namespace HackedDesign
                     Cursor.visible = true;
                     break;
             }
+
+            UpdateMissions();
         }
 
 
@@ -1004,6 +1027,31 @@ namespace HackedDesign
                     UpdateShips();
                     break;
             }
+        }
+
+        void UpdateMissions()
+        {
+            switch(currentMission)
+            {
+                case 0:
+                UpdateMission1();
+                break;
+            }
+
+        }
+
+        bool UpdateMission1()
+        {
+            AsteroidBig a = missionTargets[0].GetComponent<AsteroidBig>();
+
+            if(a.exploded == true)
+            {
+
+            }
+
+            return false;
+
+
         }
 
         void UpdateMissiles()
