@@ -691,8 +691,8 @@ namespace HackedDesign
                     continue;
                 }
                 pm.Reset();
-                //float magnitude = Random.Range(40, 1000);
-                float magnitude = Random.Range(40, 50);
+                float magnitude = Random.Range(30, 1000);
+                //float magnitude = Random.Range(40, 50);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 mineParent.transform.GetChild(i).transform.position = position;
                 mineParent.transform.GetChild(i).gameObject.SetActive(true);

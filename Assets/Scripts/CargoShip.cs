@@ -52,6 +52,7 @@ namespace HackedDesign
                 {
                     if (m.name == "ES-23 Harpoon")
                     {
+                        m.Explode();
                         disabled = true;
                         Game.Instance.IncreaseCargo(cargo);
                         cargo = 0;

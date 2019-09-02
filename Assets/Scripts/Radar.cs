@@ -4,8 +4,16 @@ namespace HackedDesign
 {
     public class Radar : MonoBehaviour
     {
+        bool disabled;
+        float lastDisableTimer = 0;
+        public float disableTimeout = 10.0f;
+
         public float UpdateRadar()
         {
+            if(disabled && Time.time - lastDisableTimer > disableTimeout )
+            {
+                disabled = false;
+            }
 
             // lastPulse = Time.time;
 
@@ -27,25 +35,36 @@ namespace HackedDesign
 
         public void Reset()
         {
-            
+
         }
 
         void OnCollisionEnter2D(Collision2D other)
         {
             if (other.gameObject.tag == "Projectile")
             {
+
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
-                    m.Explode();
-                    Explode();
-                    Game.Instance.Explosion(this.transform.position);
-                }
-                // Laser l = other.gameObject.GetComponent<Laser>();
-                // if (l != null)
-                // {
-                //     l.Explode();
-                // }                
+                    if (m.name == "ES-23 Harpoon")
+                    {
+                        disabled = true;
+                        lastDisableTimer = Time.time;
+                        Game.Instance.Explosion(this.transform.position);
+                    }
+                    else if (m.name == "RM-44 Rook")
+                    {
+                        m.Explode();
+                        Explode();
+                        Game.Instance.Explosion(this.transform.position);
+                    }
+                    else
+                    {
+                        m.Explode();
+                        Game.Instance.Explosion(m.transform.position);
+                        // Radars are immune
+                    }
+                }            
             }
         }
 
@@ -53,7 +72,7 @@ namespace HackedDesign
         {
             Debug.Log(this.name + ": exploded");
             this.gameObject.SetActive(false);
-        }                
+        }
 
     }
 }
