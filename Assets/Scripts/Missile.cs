@@ -97,6 +97,14 @@ namespace HackedDesign
 
         public void Explode()
         {
+            if(type == "ES-23 Harpoon" || type == "RM-44 Rook") 
+            {
+                Game.Instance.EMPExplosion(this.transform.position);
+            }
+            else 
+            {
+                Game.Instance.Explosion(this.transform.position);
+            }
             Debug.Log(this.name + ": explode");
             Reset();
         }

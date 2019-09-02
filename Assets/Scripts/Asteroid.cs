@@ -10,7 +10,7 @@ namespace HackedDesign
         [SerializeField]
         public bool exploded = false;
 
-        [SerializeField]        
+        [SerializeField]
         public AsteroidBig parent;
 
         public new Rigidbody2D rigidbody;
@@ -28,19 +28,27 @@ namespace HackedDesign
         {
             if (other.gameObject.tag == "Projectile")
             {
-                
+
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
-                    m.Explode();
-                    Explode();
+                    if (m.name == "ES-23 Harpoon")
+                    {
+                        m.Explode();
+                    }
+                    else
+                    {
+                        m.Explode();
+                        Explode();
+
+                    }
                 }
                 Laser l = other.gameObject.GetComponent<Laser>();
                 if (l != null)
                 {
                     l.Explode();
                     Explode();
-                }               
+                }
             }
         }
 
@@ -58,6 +66,6 @@ namespace HackedDesign
             Game.Instance.Explosion(this.transform.position);
 
             this.gameObject.SetActive(false);
-        }              
+        }
     }
 }

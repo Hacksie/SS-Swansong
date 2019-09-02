@@ -37,6 +37,16 @@ namespace HackedDesign
         [SerializeField]
         public int patrolIndex = 0;
 
+        [SerializeField]
+        public int cargo = 50;
+
+        [SerializeField]
+        public int cargoExplode = 3;        
+
+
+        [SerializeField]
+        public bool disabled = false;
+
 
         private new Rigidbody2D rigidbody = null;
 
@@ -60,36 +70,39 @@ namespace HackedDesign
 
         public void UpdateMovement()
         {
-            switch (state)
+            if (!disabled)
             {
-                case FighterState.PATROL:
-                    Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
+                switch (state)
+                {
+                    case FighterState.PATROL:
+                        Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 
-                    if ((transform.position - destination).sqrMagnitude < 2)
-                    {
-                        patrolIndex++;
-                        if (patrolIndex >= patrol.Length)
+                        if ((transform.position - destination).sqrMagnitude < 2)
                         {
-                            patrolIndex = 0;
+                            patrolIndex++;
+                            if (patrolIndex >= patrol.Length)
+                            {
+                                patrolIndex = 0;
+                            }
                         }
-                    }
-                    break;
+                        break;
 
-                case FighterState.HUNT:
-                    break;
+                    case FighterState.HUNT:
+                        break;
 
-                case FighterState.FIGHT:
-                    destination = Game.Instance.player.transform.position;
-                    break;
+                    case FighterState.FIGHT:
+                        destination = Game.Instance.player.transform.position;
+                        break;
 
+                }
+
+                // Do some collision avoidance
+
+                rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                Vector3 targetVector = destination - transform.position;
+                float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
+                rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
             }
-
-            // Do some collision avoidance
-
-            rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-            Vector3 targetVector = destination - transform.position;
-            float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-            rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
 
         }
 
@@ -103,6 +116,7 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            Game.Instance.Explosion(this.transform.position);
             this.gameObject.SetActive(false);
         }
 
@@ -123,14 +137,23 @@ namespace HackedDesign
         {
             if (other.gameObject.tag == "Projectile")
             {
-                
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
-                    
-                    m.Explode();
-                    Explode();
-                    Game.Instance.Explosion(this.transform.position);
+
+                    if (m.name == "ES-23 Harpoon")
+                    {
+                        m.Explode();
+                        disabled = true;
+                        Game.Instance.IncreaseCargo(cargo);
+                    }
+                    else
+                    {
+                        m.Explode();
+                        Explode();
+                        Game.Instance.IncreaseCargo(cargoExplode);
+                        Game.Instance.Explosion(this.transform.position);
+                    }
                 }
                 // Laser l = other.gameObject.GetComponent<Laser>();
                 // if (l != null)

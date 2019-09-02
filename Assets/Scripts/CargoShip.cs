@@ -109,6 +109,7 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            Game.Instance.Explosion(this.transform.position);
             this.gameObject.SetActive(false);
         }
 

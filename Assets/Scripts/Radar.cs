@@ -50,6 +50,7 @@ namespace HackedDesign
                     {
                         disabled = true;
                         lastDisableTimer = Time.time;
+                        m.Explode();
                         Game.Instance.Explosion(this.transform.position);
                     }
                     else if (m.name == "RM-44 Rook")
@@ -60,9 +61,10 @@ namespace HackedDesign
                     }
                     else
                     {
+                        // Radars are immune to normal missiles
                         m.Explode();
                         Game.Instance.Explosion(m.transform.position);
-                        // Radars are immune
+                        
                     }
                 }            
             }

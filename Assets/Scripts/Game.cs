@@ -62,6 +62,8 @@ namespace HackedDesign
         private GameObject laserParent = null;
         [SerializeField]
         private GameObject explosionsParent = null;
+        [SerializeField]
+        private GameObject empParent = null;        
 
         [Header("Information")]
         public List<MissileDescription> missileDescriptions = new List<MissileDescription>();
@@ -165,6 +167,9 @@ namespace HackedDesign
 
         [SerializeField]
         public int currentExplosionIndex = 0;
+
+        [SerializeField]
+        public int currentEMPIndex = 0;        
 
         [SerializeField]
         public float lastMarketRefresh;
@@ -363,6 +368,10 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": explosion parent not set");
             }
+            if (empParent == null)
+            {
+                Debug.LogError(this.name + ": explosion parent not set");
+            }            
 
             if (targetingSquare == null)
             {
@@ -582,6 +591,7 @@ namespace HackedDesign
             SpawnMissiles();
             SpawnLasers();
             SpawnExplosions();
+            SpawnEMPExplosions();
         }
 
         void SpawnPlanets()
@@ -816,6 +826,11 @@ namespace HackedDesign
             // }
         }
 
+        void SpawnEMPExplosions()
+        {
+
+        }
+
         void UpdateRadars()
         {
             if ((Time.time - lastPulse) > 1)
@@ -884,30 +899,29 @@ namespace HackedDesign
 
             e.gameObject.SetActive(true);
             e.Play();
-
-            /* 
-                        for (int i = 0; i < explosions; i++)
-                        {
-                            Explosion e = explosionsParent.transform.GetChild(i).GetComponent<Explosion>();
-
-                            if(e.gameObject.activeInHierarchy)
-                            {
-                                continue;
-                            }
-
-                            e.transform.position = position;
-
-                            float randomAngle = Random.Range(0, 360);
-
-                            e.transform.Rotate(new Vector3(0, 0, randomAngle));                
-
-                            e.gameObject.SetActive(true);
-                            e.Play();
-                            break;
-                        }*/
-
-
         }
+
+        public void EMPExplosion(Vector3 position)
+        {
+            int emps = empParent.transform.childCount;
+
+            Explosion e = empParent.transform.GetChild(currentEMPIndex).GetComponent<Explosion>();
+
+            currentEMPIndex++;
+            if (currentEMPIndex >= emps)
+            {
+                currentEMPIndex = 0;
+            }
+
+            e.transform.position = position;
+
+            float randomAngle = Random.Range(0, 360);
+
+            e.transform.Rotate(new Vector3(0, 0, randomAngle));
+
+            e.gameObject.SetActive(true);
+            e.Play();
+        }        
 
         public void AlertShip()
         {

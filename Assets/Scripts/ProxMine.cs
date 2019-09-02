@@ -22,7 +22,6 @@ namespace HackedDesign
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
-                    
                     m.Explode();
                     Explode();
                     Game.Instance.Explosion(this.transform.position);

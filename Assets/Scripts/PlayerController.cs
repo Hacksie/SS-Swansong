@@ -132,9 +132,7 @@ namespace HackedDesign
             if (Input.GetButtonUp("Fire Laser"))
             {
                 FireLaser();
-            }
-
-            
+            }           
         }
 
         private void FireMissile()
@@ -145,7 +143,8 @@ namespace HackedDesign
                 return;
             }
 
-            if (Game.Instance.bayDoorsOpen && Game.Instance.CurrentTarget != null)
+            // FIXME: check we have a legit mission
+            if (Game.Instance.bayDoorsOpen && Game.Instance.CurrentTarget != null && !string.IsNullOrWhiteSpace(Game.Instance.bay[Game.Instance.currentBay]))
             {
                 Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.CurrentTarget, Game.Instance.bay[Game.Instance.currentBay], false);
                 Game.Instance.bay[Game.Instance.currentBay] = "";
