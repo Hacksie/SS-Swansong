@@ -40,6 +40,22 @@ namespace HackedDesign
         [SerializeField]
         Text cargoAllSellPriceText;
 
+        [SerializeField]
+        Text missile1BuyPriceText;
+        [SerializeField]
+        Text missile2BuyPriceText;
+        [SerializeField]
+        Text missile3BuyPriceText;
+        [SerializeField]
+        Text missile4BuyPriceText;
+        [SerializeField]
+        Text bay1SellPriceText;
+        [SerializeField]
+        Text bay2SellPriceText;
+        [SerializeField]
+        Text bay3SellPriceText;
+        [SerializeField]
+        Text bay4SellPriceText;
 
         [SerializeField]
         private Text bay1SelectedText;
@@ -133,6 +149,57 @@ namespace HackedDesign
                 Debug.LogError(this.name + ": cargo all sell price text not set");
             }
 
+            if (missile1BuyPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile1 buy not set");
+            }
+            if (missile2BuyPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile2 buy not set");
+            }
+            if (missile3BuyPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile3 buy not set");
+            }
+            if (missile4BuyPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile4 buy not set");
+            }
+
+            if (bay1SellPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile1 buy not set");
+            }
+            if (bay2SellPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile2 buy not set");
+            }
+            if (bay3SellPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile3 buy not set");
+            }
+            if (bay4SellPriceText == null)
+            {
+                Debug.LogError(this.name + ": missile4 buy not set");
+            }
+
+            // [SerializeField]
+            // Text mission1BuyPriceText;
+            // [SerializeField]
+            // Text mission2BuyPriceText;
+            // [SerializeField]
+            // Text mission3BuyPriceText;
+            // [SerializeField]
+            // Text mission4BuyPriceText;
+            // [SerializeField]
+            // Text mission1SellPriceText;
+            // [SerializeField]
+            // Text mission2SellPriceText;
+            // [SerializeField]
+            // Text mission3SellPriceText;
+            // [SerializeField]
+            // Text mission4SellPriceText;            
+
             for (int i = 0; i < 10; i++)
             {
                 if (missionShortDescription[i] == null)
@@ -145,7 +212,6 @@ namespace HackedDesign
                     Debug.LogError(this.name + ": long desc not set");
                 }
             }
-
         }
 
 
@@ -234,6 +300,36 @@ namespace HackedDesign
             bay2MissileText.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[1]) ? Game.Instance.bay[1] : "empty";
             bay3MissileText.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[2]) ? Game.Instance.bay[2] : "empty";
             bay4MissileText.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[3]) ? Game.Instance.bay[3] : "empty";
+
+            int bay1 = GetMissilePrice(Game.Instance.bay[0]);
+            int bay2 = GetMissilePrice(Game.Instance.bay[1]);
+            int bay3 = GetMissilePrice(Game.Instance.bay[2]);
+            int bay4 = GetMissilePrice(Game.Instance.bay[3]);
+
+            bay1SellPriceText.text  = (bay1 == 0) ? "" : "$" + bay1;
+            bay2SellPriceText.text  = (bay2 == 0) ? "" : "$" + bay2;
+            bay3SellPriceText.text  = (bay3 == 0) ? "" : "$" + bay3;
+            bay4SellPriceText.text  = (bay4 == 0) ? "" : "$" + bay4;
+        
+        }
+
+        int GetMissilePrice(string missile)
+        {
+            // So much hard coding
+            switch(missile)
+            {
+                case "AS-07 Swallow":
+                    return Game.Instance.currentMissile1SellPrice;
+                case "AS-39 Gyrfalcon":
+                return Game.Instance.currentMissile2SellPrice;
+                case "ES-23 Harpoon":
+                return Game.Instance.currentMissile3SellPrice;
+                case "RM-44 Rook":
+                return Game.Instance.currentMissile4SellPrice;
+
+            }
+            return 0;
+            
         }
 
         void UpdatePrices()
@@ -259,6 +355,10 @@ namespace HackedDesign
                 fuelAllBuyPriceText.text = "$" + Game.Instance.credits;
             }
 
+            missile1BuyPriceText.text = "$" + Game.Instance.currentMissile1BuyPrice.ToString();
+            missile2BuyPriceText.text = "$" + Game.Instance.currentMissile2BuyPrice.ToString();
+            missile3BuyPriceText.text = "$" + Game.Instance.currentMissile3BuyPrice.ToString();
+            missile4BuyPriceText.text = "$" + Game.Instance.currentMissile4BuyPrice.ToString();        
         }
 
 
@@ -382,7 +482,9 @@ namespace HackedDesign
             Debug.Log(this.name + ": sell bay1");
             if (!string.IsNullOrWhiteSpace(Game.Instance.bay[0]))
             {
+                int price = GetMissilePrice(Game.Instance.bay[0]);
                 Game.Instance.bay[0] = "";
+                Game.Instance.credits += price;
             }
         }
 
@@ -391,7 +493,9 @@ namespace HackedDesign
             Debug.Log(this.name + ": sell bay2");
             if (!string.IsNullOrWhiteSpace(Game.Instance.bay[1]))
             {
+                int price = GetMissilePrice(Game.Instance.bay[1]);
                 Game.Instance.bay[1] = "";
+                Game.Instance.credits += price;                
             }
         }
 
@@ -400,7 +504,9 @@ namespace HackedDesign
             Debug.Log(this.name + ": sell bay3");
             if (!string.IsNullOrWhiteSpace(Game.Instance.bay[2]))
             {
+                int price = GetMissilePrice(Game.Instance.bay[2]);
                 Game.Instance.bay[2] = "";
+                Game.Instance.credits += price;  
             }
         }
 
@@ -409,7 +515,9 @@ namespace HackedDesign
             Debug.Log(this.name + ": sell bay4");
             if (!string.IsNullOrWhiteSpace(Game.Instance.bay[3]))
             {
+                int price = GetMissilePrice(Game.Instance.bay[3]);
                 Game.Instance.bay[3] = "";
+                Game.Instance.credits += price;                  
             }
         }
 

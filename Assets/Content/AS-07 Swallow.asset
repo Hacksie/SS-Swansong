@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dffcb668e4a2b1e469798d176c9488fe, type: 3}
   m_Name: AS-07 Swallow
   m_EditorClassIdentifier: 
-  longName: 
-  description: Anti Ship Missile 7A
+  longName: AS-07 Swallow
+  description: A nimble yet cheap, anti-ship missile
   thrust: 400
   rotationSpeed: 400
   timeOut: 10
-  buyMin: 0
-  buyMax: 0
-  sellMin: 0
-  sellMax: 0
+  buyMin: 100
+  buyMax: 150
+  sellMin: 75
+  sellMax: 125

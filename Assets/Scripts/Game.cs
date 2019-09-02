@@ -183,6 +183,29 @@ namespace HackedDesign
         [SerializeField]
         public int currentCargoSellPrice;
 
+        [SerializeField]
+        public int currentMissile1SellPrice;
+
+        [SerializeField]
+        public int currentMissile2SellPrice;
+
+        [SerializeField]
+        public int currentMissile3SellPrice;
+
+        [SerializeField]
+        public int currentMissile4SellPrice;
+
+        [SerializeField]
+        public int currentMissile1BuyPrice;
+
+        [SerializeField]
+        public int currentMissile2BuyPrice;
+
+        [SerializeField]
+        public int currentMissile3BuyPrice;
+
+        [SerializeField]
+        public int currentMissile4BuyPrice;                        
 
         [SerializeField]
         public float heat;
@@ -938,6 +961,14 @@ namespace HackedDesign
             currentFuelBuyPrice = Random.Range(fuelBuyMin, fuelBuyMax + 1);
             currentFuelSellPrice = Random.Range(fuelSellMin, fuelSellMax + 1);
             currentCargoSellPrice = Random.Range(cargoSellMin, cargoSellMax + 1);
+            currentMissile1BuyPrice = Random.Range(missileDescriptions[0].buyMin, missileDescriptions[0].buyMax + 1);
+            currentMissile2BuyPrice = Random.Range(missileDescriptions[1].buyMin, missileDescriptions[1].buyMax + 1);
+            currentMissile3BuyPrice = Random.Range(missileDescriptions[2].buyMin, missileDescriptions[2].buyMax + 1);
+            currentMissile4BuyPrice = Random.Range(missileDescriptions[3].buyMin, missileDescriptions[3].buyMax + 1);
+            currentMissile1SellPrice = Random.Range(missileDescriptions[0].buyMin, missileDescriptions[0].buyMax + 1);
+            currentMissile2SellPrice = Random.Range(missileDescriptions[1].buyMin, missileDescriptions[1].buyMax + 1);
+            currentMissile3SellPrice = Random.Range(missileDescriptions[2].buyMin, missileDescriptions[2].buyMax + 1);
+            currentMissile4SellPrice = Random.Range(missileDescriptions[3].buyMin, missileDescriptions[3].buyMax + 1);
         }
 
 

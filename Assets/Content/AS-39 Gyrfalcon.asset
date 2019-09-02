@@ -12,10 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dffcb668e4a2b1e469798d176c9488fe, type: 3}
   m_Name: AS-39 Gyrfalcon
   m_EditorClassIdentifier: Assembly-CSharp:HackedDesign:MissileDescription
-  shortName: ASM-139
-  description: Anti Ship Missile 139 Gyrfalcom
+  longName: AS-39 Gyrfalcon
+  description: A powerful ship killer missile
   thrust: 400
   rotationSpeed: 800
   timeOut: 15
-  credsMin: 100
-  credsMax: 200
+  buyMin: 400
+  buyMax: 600
+  sellMin: 250
+  sellMax: 440
