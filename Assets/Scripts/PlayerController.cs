@@ -67,7 +67,7 @@ namespace HackedDesign
             {
                 Game.Instance.state = GameState.MENU;
             }
-            if(Input.GetButton("Select"))
+            if (Input.GetButton("Select"))
             {
                 Game.Instance.state = GameState.TUTORIAL;
             }
@@ -124,20 +124,21 @@ namespace HackedDesign
                 }
                 //Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
             }
-            if (Input.GetButtonUp("Fire Missile"))
+            //Debug.Log(Input.GetAxis("Fire Missile"));
+            if (Input.GetButtonDown("Fire Missile") || Input.GetAxis("Fire Missile") == 1)
             {
                 FireMissile();
             }
 
-            if (Input.GetButtonUp("Fire Laser"))
+            if (Input.GetButtonDown("Fire Laser") || Input.GetAxis("Fire Laser") == 1)
             {
                 FireLaser();
-            }           
+            }
         }
 
         private void FireMissile()
         {
-            if(Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
+            if (Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
             {
                 Game.Instance.state = GameState.MARKET;
                 return;
@@ -153,11 +154,11 @@ namespace HackedDesign
 
         private void FireLaser()
         {
-            if(Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
+            if (Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
             {
                 Game.Instance.state = GameState.MARKET;
                 return;
-            }            
+            }
 
             if (Game.Instance.bayDoorsOpen && ((Time.time - lastLaser) > laserTimeout))
             {
@@ -234,7 +235,8 @@ namespace HackedDesign
                     {
                         return;
                     }
-                    else{
+                    else
+                    {
                         Game.Instance.GameOverMissile();
                         return;
                     }

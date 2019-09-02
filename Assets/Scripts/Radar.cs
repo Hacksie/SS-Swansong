@@ -66,7 +66,12 @@ namespace HackedDesign
                         Game.Instance.Explosion(m.transform.position);
                         
                     }
-                }            
+                } 
+                Laser l = other.gameObject.GetComponent<Laser>();
+                if (l != null)
+                {
+                    l.Explode();
+                }                           
             }
         }
 
