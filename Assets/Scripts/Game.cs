@@ -157,6 +157,9 @@ namespace HackedDesign
         public bool gameStarted = false;
 
         [SerializeField]
+        public bool gameFinished = false;
+
+        [SerializeField]
         public PlayerController player;
 
         [SerializeField]
@@ -609,9 +612,9 @@ namespace HackedDesign
 
             CurrentTarget = null;
             RefreshPrices();
-            SpawnPlanets();
+            //SpawnPlanets();
             SpawnAsteroidsBig();
-            SpawnAsteroids();
+            //SpawnAsteroids();
             SpawnRadarSatellites();
             SpawnProxMines();
             SpawnCargoShips();
@@ -626,7 +629,8 @@ namespace HackedDesign
 
         void SpawnStoryChars()
         {
-            float magnitude = Random.Range(10, 20);
+            //float magnitude = Random.Range(10, 20);
+            float magnitude = Random.Range(500, 600);
             float angle = Random.Range(0, 360.0f);
             Vector3 position = Quaternion.Euler(0, 0, angle) * (Vector2.up * magnitude);
 
@@ -642,20 +646,20 @@ namespace HackedDesign
             //planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later            
         }
 
-        void SpawnPlanets()
-        {
-            int planets = planetParent.transform.childCount;
+        // void SpawnPlanets()
+        // {
+        //     int planets = planetParent.transform.childCount;
 
-            float angle = 360.0f / planets;
-            for (int i = 0; i < planets; i++)
-            {
-                float magnitude = Random.Range(100, 1000);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
+        //     float angle = 360.0f / planets;
+        //     for (int i = 0; i < planets; i++)
+        //     {
+        //         float magnitude = Random.Range(100, 1000);
+        //         Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
 
-                planetParent.transform.GetChild(i).transform.position = position;
-                planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later
-            }
-        }
+        //         planetParent.transform.GetChild(i).transform.position = position;
+        //         planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later
+        //     }
+        // }
 
         void SpawnAsteroidsBig()
         {
@@ -666,7 +670,7 @@ namespace HackedDesign
 
             for (int i = 0; i < asteroids; i++)
             {
-                float magnitude = Random.Range(20, 1000);
+                float magnitude = Random.Range(30, 1000);
 
                 // FIXME: this is a hack for the first mission, put this in a mission setup function
                 if (i == 0)
@@ -677,17 +681,20 @@ namespace HackedDesign
 
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
-                float rotation = Random.Range(0, 360);
                 ab.exploded = false;
                 ab.transform.position = position;
-                ab.transform.Rotate(0, 0, rotation, Space.World);
+                ab.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
                 ab.gameObject.SetActive(true);
                 ab.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
                 ab.asteroid1.parent = ab; // FIXME: is this circular reference an issue?
                 ab.asteroid1.exploded = false;
+                ab.asteroid1.gameObject.SetActive(false);
+                ab.asteroid1.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
                 ab.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
                 ab.asteroid2.parent = ab;
                 ab.asteroid2.exploded = false;
+                ab.asteroid2.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                ab.asteroid2.gameObject.SetActive(false);
                 // Check if there is a planet there and move if need be
             }
         }
@@ -697,8 +704,6 @@ namespace HackedDesign
 
             int asteroids = asteroidParent.transform.childCount;
 
-            // float angle = 360.0f / asteroids;
-            // float offset = Random.Range(0, angle);
 
             for (int i = 0; i < asteroids; i++)
             {
@@ -782,13 +787,9 @@ namespace HackedDesign
                 float randomAngle = Random.Range(-45, 45);
 
                 cargo.transform.Rotate(new Vector3(0, 0, randomAngle));
-
                 cargo.patrol = new Vector2[2];
                 cargo.patrol[0] = cargo.transform.up * magnitude;
                 cargo.patrol[1] = cargo.transform.position;
-
-
-
                 cargo.gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
             }
@@ -1191,6 +1192,17 @@ namespace HackedDesign
                     //world.gameObject.SetActive(false);
                     break;
 
+                case GameState.GAMEOVERSUCCESS:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    //world.gameObject.SetActive(false);
+                    break;
+
+
                 case GameState.GAMEOVERCOLLISION:
                     Time.timeScale = 0;
                     Cursor.visible = true;
@@ -1239,6 +1251,7 @@ namespace HackedDesign
 
         public void NextMission()
         {
+            Debug.Log(this.name + ": next mission " + currentMission);
             currentMission++;
             switch (currentMission)
             {
@@ -1421,7 +1434,12 @@ namespace HackedDesign
 
         bool CheckMission10()
         {
-            return false;
+            if (!gameFinished && (player.transform.position - new Vector3(0, 0, 0)).sqrMagnitude <= 25.0f)
+            {
+                gameFinished = true;
+                state = GameState.GAMEOVERSUCCESS; // Show the success dialogue
+            }
+            return (player.transform.position - new Vector3(0, 0, 0)).sqrMagnitude <= 25.0f;
         }
 
         void UpdateMission1()
@@ -1612,6 +1630,7 @@ namespace HackedDesign
         GAMEOVERMINE,
         GAMEOVERFUEL,
         GAMEOVERMISSILE,
-        GAMEOVERCARGOSHIP // Don't blow up the cargo ship!
+        GAMEOVERCARGOSHIP, // Don't blow up the cargo ship!
+        GAMEOVERSUCCESS
     }
 }

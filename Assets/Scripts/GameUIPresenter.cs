@@ -163,7 +163,7 @@ namespace HackedDesign
                 this.gameObject.SetActive(true);
             }
 
-            missionText.text = Game.Instance.missionDescriptions[Game.Instance.currentMission].shortDescription;
+            //missionText.text = Game.Instance.missionDescriptions[Game.Instance.currentMission].shortDescription;
             xcoord.text = ((int)Game.Instance.player.transform.position.x).ToString();
             ycoord.text = ((int)Game.Instance.player.transform.position.y).ToString();
             velocity.text = ((int)(Game.Instance.player.Velocity * 100.0f / Game.Instance.player.MaxThrust)).ToString() + "%";

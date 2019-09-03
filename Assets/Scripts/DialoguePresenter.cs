@@ -44,6 +44,12 @@ namespace HackedDesign
         [SerializeField]
         [TextArea]
         private string dialogue5 = "";
+        [SerializeField]
+        [TextArea]
+        private string dialogueTitleSuccess = "";        
+        [SerializeField]
+        [TextArea]
+        private string dialogueSuccess = "";        
 
         void Start()
         {
@@ -53,8 +59,12 @@ namespace HackedDesign
             }
             if (dialogueText == null)
             {
-                Debug.LogError(this.name + ": game over text not set");
+                Debug.LogError(this.name + ": dialogue text not set");
             }
+            if (dialogueTitleText == null)
+            {
+                Debug.LogError(this.name + ": dialogue title text not set");
+            }            
         }
 
         public void UpdateUI()
@@ -125,7 +135,20 @@ namespace HackedDesign
                     EventSystem.current.SetSelectedGameObject(null);
                     EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
                 }
-            }            
+            }     
+            else if (Game.Instance.state == GameState.GAMEOVERSUCCESS)
+            {
+                dialogueText.text = dialogueSuccess;
+                dialogueTitleText.text = dialogueTitleSuccess;
+                if (!this.gameObject.activeInHierarchy)
+                {
+
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
+            }                
             else
             {
                 this.gameObject.SetActive(false);
@@ -136,6 +159,12 @@ namespace HackedDesign
         public void EndButtonEvent()
         {
             Debug.Log(this.name + ": dialogue continue");
+            // This code makes me cry
+            if (Game.Instance.state == GameState.GAMEOVERSUCCESS)
+            {
+                Game.Instance.ContinueGame();
+            }   
+
             if (Game.Instance.state == GameState.DIALOGUE5)
             {
                 Game.Instance.ContinueGame();
