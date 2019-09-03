@@ -105,10 +105,6 @@ namespace HackedDesign
         [SerializeField]
         public float heatGainPerSecond;
         [SerializeField]
-        public float maxFuelIncrease;
-        [SerializeField]
-        public float minCrossSectionReduction;
-        [SerializeField]
         public float bayDoorsCrossSection = 30.0f;
 
         [SerializeField]
@@ -150,6 +146,9 @@ namespace HackedDesign
         [SerializeField]
         public float marketRefreshRate = 120;
 
+        [SerializeField]
+        private float radarPulseSpeed = 3.0f;
+
         [Header("State")]
         public GameState state;
 
@@ -185,9 +184,6 @@ namespace HackedDesign
 
         [SerializeField]
         public int currentMission = 0;
-
-
-
 
         [SerializeField]
         public float fuel;
@@ -234,14 +230,25 @@ namespace HackedDesign
         [SerializeField]
         public Vector3? radarTarget = null;
 
-        public float highestRadarPulse;
-        public Radar highestRadar;
-
+        [SerializeField]
         public List<GameObject> currentTargets;
 
+        [SerializeField]
+        private GameObject currentTarget = null;
+
+        [SerializeField]
         public int mission7targetCount = 0;
 
-        private GameObject currentTarget = null;
+        [SerializeField]
+        public float highestRadarPulse;
+
+        [SerializeField]
+        public Radar highestRadar;
+
+        [SerializeField]
+        private float lastPulseTime = 0;
+
+
 
         public GameObject CurrentTarget
         {
@@ -269,7 +276,7 @@ namespace HackedDesign
         {
             get
             {
-                return (int)(startingMaxFuel + maxFuelIncrease);
+                return (int)(startingMaxFuel);
             }
         }
 
@@ -277,7 +284,7 @@ namespace HackedDesign
         {
             get
             {
-                return (int)Mathf.Clamp(minCrossSection + minCrossSectionReduction + heat + (bayDoorsOpen ? bayDoorsCrossSection : 0), 0, 100);
+                return (int)Mathf.Clamp(minCrossSection + heat + (bayDoorsOpen ? bayDoorsCrossSection : 0), 0, 100);
             }
         }
 
@@ -287,8 +294,8 @@ namespace HackedDesign
 
         }
 
-        private float lastPulse = 0;
-        private float pulseSpeed = 3.0f;
+
+
 
 
         Game()
@@ -436,7 +443,7 @@ namespace HackedDesign
         public void NewGame()
         {
             //player.gameObject.SetActive(true);
-            ResetState();
+            Reset();
             state = GameState.INTRO;
             gameStarted = true;
         }
@@ -590,31 +597,37 @@ namespace HackedDesign
             return null;
         }
 
-        void ResetState()
+        void Reset()
         {
-            Debug.Log(this.name + ": reset state");
+            Debug.Log(this.name + ": reset");
             gameStarted = false;
-            player.transform.position = Vector2.zero;
-            player.transform.rotation = Quaternion.Euler(0, 0, 45.0f);
-            fuel = startingFuel;
-            maxFuelIncrease = 0;
-            heat = startingHeat;
-            credits = startingCredits;
-            minCrossSectionReduction = 0;
+            gameFinished = false;
+            player.Reset();
             bayDoorsOpen = false;
-
             bay[0] = "AS-07 Swallow";
             bay[1] = "AS-07 Swallow";
             bay[2] = "AS-07 Swallow";
             bay[3] = "AS-07 Swallow";
-            // bay[2] = "";
-            // bay[3] = "";
 
+            currentBay = 0;
+            cargo = 0;
+            currentExplosionIndex = 0;
+            currentEMPIndex = 0;
+            lastMarketRefresh = 0;
+            currentMission = 0;
+            fuel = startingFuel;
+            heat = startingHeat;
+            credits = startingCredits;
+            radarTarget = null;
             CurrentTarget = null;
+            currentTargets.Clear();
+            mission7targetCount = 0;
+            highestRadarPulse = 0;
+            highestRadar = null;
+            lastPulseTime = 0;
+
             RefreshPrices();
-            //SpawnPlanets();
             SpawnAsteroidsBig();
-            //SpawnAsteroids();
             SpawnRadarSatellites();
             SpawnProxMines();
             SpawnCargoShips();
@@ -622,44 +635,8 @@ namespace HackedDesign
             SpawnPirateShips();
             SpawnMissiles();
             SpawnLasers();
-            SpawnExplosions();
-            SpawnEMPExplosions();
             SpawnStoryChars();
         }
-
-        void SpawnStoryChars()
-        {
-            //float magnitude = Random.Range(10, 20);
-            float magnitude = Random.Range(500, 600);
-            float angle = Random.Range(0, 360.0f);
-            Vector3 position = Quaternion.Euler(0, 0, angle) * (Vector2.up * magnitude);
-
-            sparrow.transform.position = position;
-            sparrow.transform.up = new Vector3(0, 0, 0) - position;
-            sparrow.gameObject.SetActive(false);
-            hawke.gameObject.SetActive(false);
-            hawke.transform.position = position + (position.normalized * 5.0f);
-
-            //hawke.transform.position = sparrow.transform.up - ;
-
-            //planetParent.transform.GetChild(i).transform.position = position;
-            //planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later            
-        }
-
-        // void SpawnPlanets()
-        // {
-        //     int planets = planetParent.transform.childCount;
-
-        //     float angle = 360.0f / planets;
-        //     for (int i = 0; i < planets; i++)
-        //     {
-        //         float magnitude = Random.Range(100, 1000);
-        //         Vector2 position = Quaternion.Euler(0, 0, (i * angle)) * (Vector2.up * magnitude);
-
-        //         planetParent.transform.GetChild(i).transform.position = position;
-        //         planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later
-        //     }
-        // }
 
         void SpawnAsteroidsBig()
         {
@@ -678,45 +655,45 @@ namespace HackedDesign
                     magnitude = 25.0f;
                 }
                 AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
+                if (ab != null)
+                {
 
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+                    Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
 
-                ab.exploded = false;
-                ab.transform.position = position;
-                ab.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
-                ab.gameObject.SetActive(true);
-                ab.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
-                ab.asteroid1.parent = ab; // FIXME: is this circular reference an issue?
-                ab.asteroid1.exploded = false;
-                ab.asteroid1.gameObject.SetActive(false);
-                ab.asteroid1.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
-                ab.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
-                ab.asteroid2.parent = ab;
-                ab.asteroid2.exploded = false;
-                ab.asteroid2.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
-                ab.asteroid2.gameObject.SetActive(false);
-                // Check if there is a planet there and move if need be
+                    ab.exploded = false;
+                    ab.transform.position = position;
+                    ab.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                    ab.gameObject.SetActive(true);
+                    ab.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
+                    ab.asteroid1.parent = ab; // FIXME: is this circular reference an issue?
+                    ab.asteroid1.exploded = false;
+                    ab.asteroid1.gameObject.SetActive(false);
+                    ab.asteroid1.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                    ab.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
+                    ab.asteroid2.parent = ab;
+                    ab.asteroid2.exploded = false;
+                    ab.asteroid2.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                    ab.asteroid2.gameObject.SetActive(false);
+                    // Check if there is a planet there and move if need be
+                }
             }
         }
 
-        void SpawnAsteroids()
+        void SpawnStoryChars()
         {
+            //float magnitude = Random.Range(10, 20);
+            float magnitude = Random.Range(500, 600);
+            float angle = Random.Range(0, 360.0f);
+            Vector3 position = Quaternion.Euler(0, 0, angle) * (Vector2.up * magnitude);
 
-            int asteroids = asteroidParent.transform.childCount;
+            sparrow.transform.position = position;
+            sparrow.transform.up = new Vector3(0, 0, 0) - position;
+            sparrow.gameObject.SetActive(false);
+            hawke.gameObject.SetActive(false);
+            hawke.transform.position = position + (position.normalized * 5.0f);
 
-
-            for (int i = 0; i < asteroids; i++)
-            {
-                // float magnitude = Random.Range(50, 1000);
-                // Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-
-                float rotation = Random.Range(0, 360);
-                // asteroidBigParent.transform.GetChild(i).transform.position = position;
-                asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
-                asteroidParent.transform.GetChild(i).gameObject.SetActive(false);
-                // Check if there is a planet there and move if need be
-            }
         }
+
 
         void SpawnRadarSatellites()
         {
@@ -827,7 +804,7 @@ namespace HackedDesign
                 fighter.patrol[1] = fighter.transform.position;
 
                 fighter.gameObject.SetActive(true);
-                
+
                 // Check if there is a planet there and move if need be
             }
         }
@@ -865,7 +842,7 @@ namespace HackedDesign
                 fighter.patrol[1] = fighter.transform.position;
 
                 fighter.gameObject.SetActive(true);
-                
+
                 //fighter.disabled = true;
                 // Check if there is a planet there and move if need be
             }
@@ -881,7 +858,7 @@ namespace HackedDesign
                 {
                     m.Reset();
                     m.gameObject.SetActive(false);
-                    
+
                 }
             }
         }
@@ -900,39 +877,18 @@ namespace HackedDesign
             }
         }
 
-        void SpawnExplosions()
-        {
-
-            // int explosions = explosionsParent.transform.childCount;
-            // for (int i = 0; i < explosions; i++)
-            // {
-            //     Explosion e = explosionsParent.transform.GetChild(i).GetComponent<Explosion>();
-            //     if (e != null)
-            //     {
-
-            //         e.gameObject.SetActive(false);
-            //         //e.Reset();
-            //     }
-            // }
-        }
-
-        void SpawnEMPExplosions()
-        {
-
-        }
-
         void UpdateRadars()
         {
-            if ((Time.time - lastPulse) > 1)
+            if ((Time.time - lastPulseTime) > 1)
             {
                 highestRadar = null;
             }
 
-            if ((Time.time - lastPulse) > pulseSpeed)
+            if ((Time.time - lastPulseTime) > radarPulseSpeed)
             {
                 Debug.Log(this.name + ": radar pulse");
                 highestRadarPulse = 0;
-                lastPulse = Time.time;
+                lastPulseTime = Time.time;
                 int radars = radarParent.transform.childCount;
 
                 for (int i = 0; i < radars; i++)
@@ -1096,7 +1052,6 @@ namespace HackedDesign
                     Cursor.visible = false;
                     Time.timeScale = 1;
                     player.gameObject.SetActive(true);
-                    //targetingSquare.gameObject.SetActive(true);
                     radarArrow.gameObject.SetActive(true);
                     missionArrow.gameObject.SetActive(true);
                     world.gameObject.SetActive(true);
@@ -1140,7 +1095,6 @@ namespace HackedDesign
                 case GameState.MARKET:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
@@ -1150,61 +1104,48 @@ namespace HackedDesign
                 case GameState.DIALOGUE1:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
-                    //world.gameObject.SetActive(false);
                     break;
 
                 case GameState.DIALOGUE2:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
-                    //world.gameObject.SetActive(false);
                     break;
 
                 case GameState.DIALOGUE3:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
-                    //world.gameObject.SetActive(false);
                     break;
                 case GameState.DIALOGUE4:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
-                    //world.gameObject.SetActive(false);
                     break;
                 case GameState.DIALOGUE5:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
-                    //world.gameObject.SetActive(false);
                     break;
 
                 case GameState.GAMEOVERSUCCESS:
                     Time.timeScale = 0;
                     Cursor.visible = true;
-                    //player.gameObject.SetActive(false);
                     targetingSquare.gameObject.SetActive(false);
                     radarArrow.gameObject.SetActive(false);
                     missionArrow.gameObject.SetActive(false);
-                    //world.gameObject.SetActive(false);
                     break;
-
 
                 case GameState.GAMEOVERCOLLISION:
                     Time.timeScale = 0;
@@ -1294,7 +1235,7 @@ namespace HackedDesign
                 case 9:
                     sparrow.gameObject.SetActive(false);
                     hawke.gameObject.SetActive(true);
-                    fuel = 10;
+                    fuel = 20;
                     cargo = 0;
                     credits = 0;
                     state = GameState.DIALOGUE4;
@@ -1404,8 +1345,6 @@ namespace HackedDesign
             }
 
             return c.disabled;
-            //return (credits > 30000);
-            //return false;
         }
 
         bool CheckMission7()

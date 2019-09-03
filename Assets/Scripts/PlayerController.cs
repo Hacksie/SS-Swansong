@@ -32,8 +32,6 @@ namespace HackedDesign
         private float brakeTimer = 0;
 
 
-
-
         public float Velocity
         {
             get
@@ -69,6 +67,20 @@ namespace HackedDesign
             }
 
             animator.SetBool("Thrust", false);
+        }
+
+        public void Reset()
+        {
+            health = 3;
+            lastLaser = 0;
+            brakeTimer = 0;
+            transform.position = Vector2.zero;
+            transform.rotation = Quaternion.Euler(0, 0, 45.0f);            
+            if(rigidBody != null)
+            {
+                rigidBody.velocity = Vector2.zero;
+            }
+
         }
 
         public void UpdateActions()
