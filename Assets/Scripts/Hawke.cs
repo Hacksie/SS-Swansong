@@ -84,23 +84,26 @@ namespace HackedDesign
 
         public void UpdateMovement()
         {
-            if (!disabled)
+            if (gameObject.activeInHierarchy)
             {
-                // Do some collision avoidance
-
-                rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-                Vector3 targetVector = Game.Instance.player.transform.position - transform.position;
-                float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-                rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
-                UpdateAnimations(true);
-            }
-            else
-            {
-                if (gameObject.activeInHierarchy)
+                if (!disabled)
                 {
-                    rigidbody.velocity = Vector2.zero;
+                    // Do some collision avoidance
+
+                    rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                    Vector3 targetVector = Game.Instance.player.transform.position - transform.position;
+                    float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
+                    rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
+                    UpdateAnimations(true);
                 }
-                UpdateAnimations(false);
+                else
+                {
+                    if (gameObject.activeInHierarchy)
+                    {
+                        rigidbody.velocity = Vector2.zero;
+                    }
+                    UpdateAnimations(false);
+                }
             }
         }
 

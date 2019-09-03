@@ -88,49 +88,51 @@ namespace HackedDesign
 
         public void UpdateMovement()
         {
-            if (!disabled)
+            if (gameObject.activeInHierarchy)
             {
-                switch (state)
+                if (!disabled)
                 {
-                    case FighterState.PATROL:
-                        Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
+                    switch (state)
+                    {
+                        case FighterState.PATROL:
+                            Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 
-                        if ((transform.position - destination).sqrMagnitude < 2)
-                        {
-                            patrolIndex++;
-                            if (patrolIndex >= patrol.Length)
+                            if ((transform.position - destination).sqrMagnitude < 2)
                             {
-                                patrolIndex = 0;
+                                patrolIndex++;
+                                if (patrolIndex >= patrol.Length)
+                                {
+                                    patrolIndex = 0;
+                                }
                             }
-                        }
-                        break;
+                            break;
 
-                    case FighterState.HUNT:
-                        break;
+                        case FighterState.HUNT:
+                            break;
 
-                    case FighterState.FIGHT:
-                        destination = Game.Instance.player.transform.position;
-                        break;
+                        case FighterState.FIGHT:
+                            destination = Game.Instance.player.transform.position;
+                            break;
 
+                    }
+
+                    // Do some collision avoidance
+
+                    rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                    Vector3 targetVector = destination - transform.position;
+                    float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
+                    rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
+                    UpdateAnimations(true);
                 }
-
-                // Do some collision avoidance
-
-                rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-                Vector3 targetVector = destination - transform.position;
-                float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-                rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
-                UpdateAnimations(true);
-            }
-            else
-            {
-                if (gameObject.activeInHierarchy)
+                else
                 {
-                    rigidbody.velocity = Vector2.zero;
+                    if (gameObject.activeInHierarchy)
+                    {
+                        rigidbody.velocity = Vector2.zero;
+                    }
+                    UpdateAnimations(false);
                 }
-                UpdateAnimations(false);
             }
-
         }
 
         public void Hunt(Vector3 position)
@@ -145,7 +147,7 @@ namespace HackedDesign
             if (currentMissile != null)
             {
                 currentMissile.Explode();
-            }            
+            }
             Debug.Log(this.name + ": explode");
             Game.Instance.Explosion(this.transform.position);
             this.gameObject.SetActive(false);

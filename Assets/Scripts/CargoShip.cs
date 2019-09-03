@@ -83,36 +83,37 @@ namespace HackedDesign
 
         public void UpdateMovement()
         {
-
-
-            if (!disabled && gameObject.activeInHierarchy)
+            if (gameObject.activeInHierarchy)
             {
-                Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
-
-                if ((transform.position - target).sqrMagnitude < 2)
+                if (!disabled)
                 {
-                    patrolIndex++;
-                    if (patrolIndex >= patrol.Length)
+                    Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
+
+                    if ((transform.position - target).sqrMagnitude < 2)
                     {
-                        patrolIndex = 0;
+                        patrolIndex++;
+                        if (patrolIndex >= patrol.Length)
+                        {
+                            patrolIndex = 0;
+                        }
                     }
+
+                    // Do some collision avoidance
+
+                    rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                    Vector3 targetVector = target - transform.position;
+                    float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
+                    rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
+                    UpdateAnimations(true);
                 }
-
-                // Do some collision avoidance
-
-                rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-                Vector3 targetVector = target - transform.position;
-                float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-                rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
-                UpdateAnimations(true);
-            }
-            else
-            {
-                if (gameObject.activeInHierarchy)
+                else
                 {
-                    rigidbody.velocity = Vector2.zero;
+                    if (gameObject.activeInHierarchy)
+                    {
+                        rigidbody.velocity = Vector2.zero;
+                    }
+                    UpdateAnimations(false);
                 }
-                UpdateAnimations(false);
             }
         }
 
