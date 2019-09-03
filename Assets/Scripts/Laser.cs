@@ -80,6 +80,7 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
+            Game.Instance.EMPExplosion(this.transform.position);
             Reset();
         }
     }

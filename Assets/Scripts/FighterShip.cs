@@ -41,7 +41,7 @@ namespace HackedDesign
         public int cargo = 50;
 
         [SerializeField]
-        public int cargoExplode = 3;        
+        public int cargoExplode = 3;
 
 
         [SerializeField]
@@ -52,6 +52,9 @@ namespace HackedDesign
 
         [SerializeField]
         private Animator animator;
+
+        [SerializeField]
+        private int health = 5;
 
 
 
@@ -67,7 +70,7 @@ namespace HackedDesign
             if (animator == null)
             {
                 Debug.LogError(this.name + ": animator not set");
-            }            
+            }
 
             Reset();
         }
@@ -118,12 +121,12 @@ namespace HackedDesign
             }
             else
             {
-                if(gameObject.activeInHierarchy)
+                if (gameObject.activeInHierarchy)
                 {
                     rigidbody.velocity = Vector2.zero;
                 }
                 UpdateAnimations(false);
-            }            
+            }
 
         }
 
@@ -145,7 +148,7 @@ namespace HackedDesign
         void UpdateAnimations(bool moving)
         {
             animator.SetBool("Thrust", moving);
-        }        
+        }
 
         void OnTriggerStay2D(Collider2D other)
         {
@@ -154,8 +157,8 @@ namespace HackedDesign
                 state = FighterState.FIGHT;
                 if (missileCount > 0 && (currentMissile == null || !currentMissile.gameObject.activeInHierarchy || currentMissile.source != this.gameObject))
                 {
-                    missileCount--;
-                    currentMissile = Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.player.gameObject, "AIM-393", true);
+                    //missileCount--;
+                    currentMissile = Game.Instance.FireMissile(this.transform.position + this.transform.up, this.transform.up, this.gameObject, Game.Instance.player.gameObject, "AS-39 Gyrfalcon", true);
                 }
             }
         }
@@ -186,6 +189,11 @@ namespace HackedDesign
                 if (l != null)
                 {
                     l.Explode();
+                    health -= 1;
+                    if (health <= 0)
+                    {
+                        Explode();
+                    }
                 }
             }
         }
