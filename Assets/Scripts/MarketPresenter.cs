@@ -380,7 +380,7 @@ namespace HackedDesign
             Debug.Log(this.name + ": buy fuel all");
             float remainingFuel = Game.Instance.MaxFuel - Game.Instance.fuel;
             int price = Mathf.CeilToInt(remainingFuel * Game.Instance.currentFuelBuyPrice);
-            if (Game.Instance.currentFuelBuyPrice * price <= Game.Instance.credits)
+            if (price <= Game.Instance.credits)
             {
                 Game.Instance.credits -= price;
                 Game.Instance.fuel = Game.Instance.MaxFuel;
@@ -390,7 +390,6 @@ namespace HackedDesign
                 Game.Instance.fuel += ((float)Game.Instance.credits) / Game.Instance.currentFuelBuyPrice;
                 Game.Instance.credits = 0;
 
-                //Debug.Log(this.name + ": " + Game.Instance.credits / Game.Instance.currentFuelBuyPrice);
             }
 
         }

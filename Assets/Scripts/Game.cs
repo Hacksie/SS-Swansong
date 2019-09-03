@@ -810,6 +810,7 @@ namespace HackedDesign
                     Debug.LogError(fighter.name + ": is not set as a FighterShip");
                     continue;
                 }
+                fighter.Reset();
 
                 float magnitude = Random.Range(80, 1000);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
@@ -826,7 +827,7 @@ namespace HackedDesign
                 fighter.patrol[1] = fighter.transform.position;
 
                 fighter.gameObject.SetActive(true);
-                fighter.Reset();
+                
                 // Check if there is a planet there and move if need be
             }
         }
@@ -846,6 +847,7 @@ namespace HackedDesign
                     Debug.LogError(fighter.name + ": is not set as a FighterShip");
                     continue;
                 }
+                fighter.Reset();
 
                 float magnitude = Random.Range(200, 1000);
                 //float magnitude = Random.Range(20, 30);
@@ -863,8 +865,8 @@ namespace HackedDesign
                 fighter.patrol[1] = fighter.transform.position;
 
                 fighter.gameObject.SetActive(true);
-                fighter.Reset();
-                fighter.disabled = true;
+                
+                //fighter.disabled = true;
                 // Check if there is a planet there and move if need be
             }
         }
@@ -877,8 +879,9 @@ namespace HackedDesign
                 Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>();
                 if (m != null)
                 {
-                    m.gameObject.SetActive(false);
                     m.Reset();
+                    m.gameObject.SetActive(false);
+                    
                 }
             }
         }

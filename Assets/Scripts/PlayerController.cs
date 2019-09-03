@@ -170,7 +170,7 @@ namespace HackedDesign
                 return;
             }
 
-            if (Game.Instance.bayDoorsOpen && ((Time.time - lastLaser) > laserTimeout))
+            if (((Time.time - lastLaser) > laserTimeout))
             {
                 lastLaser = Time.time;
                 Game.Instance.FireLaser(this.transform.position + this.transform.up, this.transform.up, this.gameObject, false);

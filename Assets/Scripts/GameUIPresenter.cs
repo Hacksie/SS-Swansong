@@ -66,6 +66,9 @@ namespace HackedDesign
         private Text target = null;
 
         [SerializeField]
+        private Text missionDistance = null;
+
+        [SerializeField]
         private Color notCurrentBayColour = Color.white;
 
         [SerializeField]
@@ -73,7 +76,7 @@ namespace HackedDesign
 
         public void Start()
         {
-            if(missionText == null)
+            if (missionText == null)
             {
                 Debug.LogError(this.name + ": mission not set");
             }
@@ -145,7 +148,11 @@ namespace HackedDesign
 
             if (target == null)
             {
-                Debug.LogError(this.name = ": target not set");
+                Debug.LogError(this.name + ": target not set");
+            }
+            if (missionDistance == null)
+            {
+                Debug.LogError(this.name + ": mission distance not set");
             }
         }
 
@@ -184,6 +191,16 @@ namespace HackedDesign
             bay4.text = !string.IsNullOrWhiteSpace(Game.Instance.bay[3]) ? Game.Instance.bay[3] : "empty";
             bay4.color = Game.Instance.currentBay == 3 ? currentBayColour : notCurrentBayColour;
             target.text = (Game.Instance.CurrentTarget == null) ? "" : Game.Instance.CurrentTarget.name;
+
+
+            if (Game.Instance.currentMission < Game.Instance.missionTargets.Count && Game.Instance.missionTargets[Game.Instance.currentMission] != null)
+            {
+                missionDistance.text = "" + Mathf.CeilToInt((Game.Instance.missionTargets[Game.Instance.currentMission].transform.position - Game.Instance.player.transform.position).magnitude);
+            }
+            else
+            {
+                missionDistance.text = "";
+            }
 
             xsectionBar.sizeDelta = new Vector2((int)(Game.Instance.CrossSection * 70 / 100), 10.0f);
 
