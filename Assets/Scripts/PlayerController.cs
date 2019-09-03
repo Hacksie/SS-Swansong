@@ -75,8 +75,8 @@ namespace HackedDesign
             lastLaser = 0;
             brakeTimer = 0;
             transform.position = Vector2.zero;
-            transform.rotation = Quaternion.Euler(0, 0, 45.0f);            
-            if(rigidBody != null)
+            transform.rotation = Quaternion.Euler(0, 0, 45.0f);
+            if (rigidBody != null)
             {
                 rigidBody.velocity = Vector2.zero;
             }
@@ -95,6 +95,11 @@ namespace HackedDesign
             }
             if (Input.GetButtonUp("Bay Doors"))
             {
+                if (Game.Instance.state != GameState.MARKET && Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Home")
+                {
+                    Game.Instance.state = GameState.MARKET;
+                    return;
+                }
                 Game.Instance.bayDoorsOpen = !Game.Instance.bayDoorsOpen;
             }
             if (Input.GetButtonUp("Next Weapon"))
@@ -201,7 +206,7 @@ namespace HackedDesign
         {
             UpdateRotation();
 
-            float force = Input.GetAxis("Vertical") * maxThrust * Time.fixedDeltaTime;
+            float force = Input.GetAxis("Thrust") * maxThrust * Time.fixedDeltaTime;
 
 
             rigidBody.AddRelativeForce(new Vector2(0, force), ForceMode2D.Impulse);
