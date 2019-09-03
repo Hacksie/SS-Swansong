@@ -71,9 +71,9 @@ GameObject:
   - component: {fileID: 2600867951175175673}
   - component: {fileID: 3094618619090081878}
   - component: {fileID: 6587263826357264366}
-  - component: {fileID: 2839463263845156062}
   - component: {fileID: 9170298871528246062}
   - component: {fileID: 8451345251663767886}
+  - component: {fileID: 3105955110170402381}
   m_Layer: 0
   m_Name: Hawke
   m_TagString: Hostile
@@ -163,34 +163,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &2839463263845156062
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 691261615736881215}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68f21da74fe72b845b9c6a30ac58147e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thrust: 200
-  patrolSpeed: 0
-  huntSpeed: 0
-  fightSpeed: 0
-  rotateSpeed: 300
-  state: 0
-  destination: {x: 0, y: 0, z: 0}
-  currentMissile: {fileID: 0}
-  missileCount: 10
-  patrol: []
-  patrolIndex: 0
-  cargo: 50
-  cargoExplode: 3
-  disabled: 0
-  exploded: 0
-  animator: {fileID: 8451345251663767886}
 --- !u!50 &9170298871528246062
 Rigidbody2D:
   serializedVersion: 4
@@ -222,7 +194,7 @@ Animator:
   m_GameObject: {fileID: 691261615736881215}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 08b7e47118f8dae48abfa7554da7b091, type: 2}
+  m_Controller: {fileID: 9100000, guid: bf6f6dc1c585cbf4ea81dfd7aee068c8, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -231,6 +203,35 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &3105955110170402381
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 691261615736881215}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5ff6f917f309a9642be358f9ee217239, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thrust: 400
+  patrolSpeed: 400
+  huntSpeed: 400
+  fightSpeed: 400
+  rotateSpeed: 800
+  destination: {x: -7, y: 0, z: 0}
+  currentMissile: {fileID: 0}
+  missileCount: 10
+  patrol: []
+  patrolIndex: 0
+  cargo: 50
+  cargoExplode: 3
+  disabled: 0
+  exploded: 0
+  animator: {fileID: 8451345251663767886}
+  health: 5
+  killable: 1
 --- !u!1 &7600294924223116365
 GameObject:
   m_ObjectHideFlags: 0

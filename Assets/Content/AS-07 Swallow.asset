@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   longName: AS-07 Swallow
   description: A nimble yet cheap, anti-ship missile
-  thrust: 400
-  rotationSpeed: 400
+  thrust: 300
+  rotationSpeed: 1500
   timeOut: 10
   buyMin: 100
   buyMax: 150

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Linq;
 
 namespace HackedDesign
 {
@@ -56,6 +57,15 @@ namespace HackedDesign
         public void Launch(Vector3 start, Vector3 direction, GameObject source, GameObject target, string type, bool hostile)
         {
             Debug.Log(this.name + ": launch!");
+            MissileDescription missile = Game.Instance.missileDescriptions.FirstOrDefault(e => e.name == type);
+
+            if(missile != null)
+            {
+                this.thrust = missile.thrust;
+                this.rotateSpeed = missile.rotationSpeed;
+                this.timeOut = missile.timeOut;
+            }
+
             this.gameObject.SetActive(true);
             this.source = source;
             this.target = target;

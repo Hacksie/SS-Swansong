@@ -60,6 +60,53 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac69f307c2bc10a479cee3b074be0533, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &4518409191884958890
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4562096878714815465}
+  - component: {fileID: 8744647284108971945}
+  m_Layer: 0
+  m_Name: StoryTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4562096878714815465
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4518409191884958890}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 5211183316517222463}
+  m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!58 &8744647284108971945
+CircleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4518409191884958890}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Radius: 4
 --- !u!1 &7340355862106600953
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,8 +118,8 @@ GameObject:
   - component: {fileID: 5211183316517222463}
   - component: {fileID: 5096877676763901328}
   - component: {fileID: 3973122162663090728}
-  - component: {fileID: 5417329840721162520}
   - component: {fileID: 1372056638014799592}
+  - component: {fileID: 985494460976488687}
   - component: {fileID: 1801652848150682760}
   m_Layer: 0
   m_Name: Sparrow
@@ -94,6 +141,7 @@ Transform:
   m_Children:
   - {fileID: 1092643652579465711}
   - {fileID: 1123723672789194663}
+  - {fileID: 4562096878714815465}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -163,34 +211,6 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
---- !u!114 &5417329840721162520
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7340355862106600953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68f21da74fe72b845b9c6a30ac58147e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  thrust: 200
-  patrolSpeed: 0
-  huntSpeed: 0
-  fightSpeed: 0
-  rotateSpeed: 300
-  state: 0
-  destination: {x: 0, y: 0, z: 0}
-  currentMissile: {fileID: 0}
-  missileCount: 10
-  patrol: []
-  patrolIndex: 0
-  cargo: 50
-  cargoExplode: 3
-  disabled: 0
-  exploded: 0
-  animator: {fileID: 1801652848150682760}
 --- !u!50 &1372056638014799592
 Rigidbody2D:
   serializedVersion: 4
@@ -212,6 +232,35 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &985494460976488687
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7340355862106600953}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a87c086e1d325d84a852f877b111b338, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  thrust: 200
+  patrolSpeed: 200
+  huntSpeed: 0
+  fightSpeed: 0
+  rotateSpeed: 0
+  destination: {x: -6, y: 0, z: 0}
+  currentMissile: {fileID: 0}
+  missileCount: 0
+  patrol: []
+  patrolIndex: 0
+  cargo: 50
+  cargoExplode: 3
+  disabled: 1
+  exploded: 0
+  animator: {fileID: 1801652848150682760}
+  health: 5
+  killable: 0
 --- !u!95 &1801652848150682760
 Animator:
   serializedVersion: 3
@@ -222,7 +271,7 @@ Animator:
   m_GameObject: {fileID: 7340355862106600953}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 08b7e47118f8dae48abfa7554da7b091, type: 2}
+  m_Controller: {fileID: 9100000, guid: b48d3f5a25821414ba5825d9d608aaa0, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -247,7 +296,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1123723672789194663
 Transform:
   m_ObjectHideFlags: 0

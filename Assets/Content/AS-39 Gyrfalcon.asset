@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp:HackedDesign:MissileDescription
   longName: AS-39 Gyrfalcon
   description: A powerful ship killer missile
-  thrust: 400
-  rotationSpeed: 800
+  thrust: 500
+  rotationSpeed: 3000
   timeOut: 15
   buyMin: 400
   buyMax: 600

@@ -56,6 +56,9 @@ namespace HackedDesign
         [SerializeField]
         private int health = 5;
 
+        [SerializeField]
+        private bool killable = true;
+
 
 
         private new Rigidbody2D rigidbody = null;
@@ -139,6 +142,10 @@ namespace HackedDesign
 
         public void Explode()
         {
+            if (currentMissile != null)
+            {
+                currentMissile.Explode();
+            }            
             Debug.Log(this.name + ": explode");
             Game.Instance.Explosion(this.transform.position);
             this.gameObject.SetActive(false);
@@ -170,29 +177,36 @@ namespace HackedDesign
                 Missile m = other.gameObject.GetComponent<Missile>();
                 if (m != null)
                 {
+                    m.Explode();
 
-                    if (m.name == "ES-23 Harpoon")
+                    if (killable)
                     {
-                        m.Explode();
-                        disabled = true;
-                        Game.Instance.IncreaseCargo(cargo);
-                    }
-                    else
-                    {
-                        m.Explode();
-                        Explode();
-                        Game.Instance.IncreaseCargo(cargoExplode);
-                        Game.Instance.Explosion(this.transform.position);
+                        if (m.name == "ES-23 Harpoon")
+                        {
+
+                            disabled = true;
+                            Game.Instance.IncreaseCargo(cargo);
+                        }
+                        else
+                        {
+                            Explode();
+                            Game.Instance.IncreaseCargo(cargoExplode);
+                            Game.Instance.Explosion(this.transform.position);
+                        }
                     }
                 }
                 Laser l = other.gameObject.GetComponent<Laser>();
                 if (l != null)
                 {
                     l.Explode();
-                    health -= 1;
-                    if (health <= 0)
+
+                    if (killable)
                     {
-                        Explode();
+                        health -= 1;
+                        if (health <= 0)
+                        {
+                            Explode();
+                        }
                     }
                 }
             }

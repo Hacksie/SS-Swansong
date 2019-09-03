@@ -23,6 +23,16 @@ namespace HackedDesign
         [SerializeField]
         private float laserTimeout = 0.5f;
 
+        [SerializeField]
+        private float brakeTimeout = 0.5f;
+
+        [SerializeField]
+        private int health = 3;
+
+        private float brakeTimer = 0;
+
+
+
 
         public float Velocity
         {
@@ -138,7 +148,7 @@ namespace HackedDesign
 
         private void FireMissile()
         {
-            if (Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
+            if (Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Home")
             {
                 Game.Instance.state = GameState.MARKET;
                 return;
@@ -154,7 +164,7 @@ namespace HackedDesign
 
         private void FireLaser()
         {
-            if (Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Market")
+            if (Game.Instance.CurrentTarget != null && Game.Instance.CurrentTarget.name == "Home")
             {
                 Game.Instance.state = GameState.MARKET;
                 return;
@@ -192,8 +202,9 @@ namespace HackedDesign
             // Clamp within a circle of 0,0
             this.transform.position = Vector2.ClampMagnitude(this.transform.position, Game.Instance.worldBounds);
 
-            if (UnityEngine.Input.GetButtonUp("Brake"))
+            if (UnityEngine.Input.GetButtonUp("Brake") && (Time.time - brakeTimer) > brakeTimeout)
             {
+                brakeTimer = Time.time;
                 Velocity = 0;
                 // Take a penalty for using the brakes
                 // Fixme: remove hard coded            
@@ -237,7 +248,11 @@ namespace HackedDesign
                     }
                     else
                     {
-                        Game.Instance.GameOverMissile();
+                        health--;
+                        if (health <= 0)
+                        {
+                            Game.Instance.GameOverMissile();
+                        }
                         return;
                     }
                 }

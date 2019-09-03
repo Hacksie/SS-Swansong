@@ -15,7 +15,7 @@ MonoBehaviour:
   longName: RM-44 Rook
   description: A specialised anti-radiation missile
   thrust: 200
-  rotationSpeed: 300
+  rotationSpeed: 2000
   timeOut: 12
   buyMin: 500
   buyMax: 700

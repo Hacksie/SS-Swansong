@@ -15,9 +15,9 @@ MonoBehaviour:
   longName: ES-23 Harpoon
   description: An EMP missile for disabling ships
   thrust: 400
-  rotationSpeed: 300
+  rotationSpeed: 2500
   timeOut: 10
-  buyMin: 300
-  buyMax: 400
-  sellMin: 220
-  sellMax: 330
+  buyMin: 900
+  buyMax: 1000
+  sellMin: 500
+  sellMax: 700

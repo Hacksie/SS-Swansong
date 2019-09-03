@@ -105,6 +105,8 @@ MonoBehaviour:
   maxThrust: 5
   lastLaser: 0
   laserTimeout: 0.5
+  brakeTimeout: 0.5
+  health: 10
 --- !u!58 &2072357466699614618
 CircleCollider2D:
   m_ObjectHideFlags: 0

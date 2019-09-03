@@ -25,6 +25,8 @@ namespace HackedDesign
         private MarketPresenter marketUI = null;
         [SerializeField]
         private TutorialPresenter tutorialUI = null;
+        [SerializeField]
+        private DialoguePresenter dialogueUI = null;
 
         [SerializeField]
         private RadarArrow radarArrow = null;
@@ -64,6 +66,7 @@ namespace HackedDesign
         [SerializeField]
         private GameObject empParent = null;
 
+
         [Header("Information")]
         public List<MissileDescription> missileDescriptions = new List<MissileDescription>();
 
@@ -73,9 +76,13 @@ namespace HackedDesign
         public List<GameObject> missionTargets = new List<GameObject>();
 
         public GameObject[] mission7Targets = new GameObject[4];
-        public GameObject mission8Target = null;
-        public GameObject mission9Target = null;
+        //public GameObject mission8Target = null;
+        //public GameObject mission9Target = null;
 
+        [SerializeField]
+        private Sparrow sparrow = null;
+        [SerializeField]
+        private Hawke hawke = null;
 
 
         [Header("Limits")]
@@ -323,6 +330,10 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": market ui not set");
             }
+            if (dialogueUI == null)
+            {
+                Debug.LogError(this.name + ": dialogue ui not set");
+            }
 
             if (market == null)
             {
@@ -380,6 +391,14 @@ namespace HackedDesign
             if (empParent == null)
             {
                 Debug.LogError(this.name + ": explosion parent not set");
+            }
+            if (sparrow == null)
+            {
+                Debug.LogError(this.name + ": sparrow not set");
+            }
+            if (hawke == null)
+            {
+                Debug.LogError(this.name + ": hawke not set");
             }
 
             if (targetingSquare == null)
@@ -602,6 +621,25 @@ namespace HackedDesign
             SpawnLasers();
             SpawnExplosions();
             SpawnEMPExplosions();
+            SpawnStoryChars();
+        }
+
+        void SpawnStoryChars()
+        {
+            float magnitude = Random.Range(10, 20);
+            float angle = Random.Range(0, 360.0f);
+            Vector3 position = Quaternion.Euler(0, 0, angle) * (Vector2.up * magnitude);
+
+            sparrow.transform.position = position;
+            sparrow.transform.up = new Vector3(0, 0, 0) - position;
+            sparrow.gameObject.SetActive(false);
+            hawke.gameObject.SetActive(false);
+            hawke.transform.position = position + (position.normalized * 5.0f);
+
+            //hawke.transform.position = sparrow.transform.up - ;
+
+            //planetParent.transform.GetChild(i).transform.position = position;
+            //planetParent.transform.GetChild(i).gameObject.SetActive(false); // FIXME: deal with planets later            
         }
 
         void SpawnPlanets()
@@ -808,8 +846,8 @@ namespace HackedDesign
                     continue;
                 }
 
-                //float magnitude = Random.Range(200, 1000);
-                float magnitude = Random.Range(20, 30);
+                float magnitude = Random.Range(200, 1000);
+                //float magnitude = Random.Range(20, 30);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 fighter.transform.up = (-1 * position).normalized;
                 fighter.transform.position = position;
@@ -1105,6 +1143,53 @@ namespace HackedDesign
                     world.gameObject.SetActive(false);
                     break;
 
+                case GameState.DIALOGUE1:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    //world.gameObject.SetActive(false);
+                    break;
+
+                case GameState.DIALOGUE2:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    //world.gameObject.SetActive(false);
+                    break;
+
+                case GameState.DIALOGUE3:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    //world.gameObject.SetActive(false);
+                    break;
+                case GameState.DIALOGUE4:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    //world.gameObject.SetActive(false);
+                    break;
+                case GameState.DIALOGUE5:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    //player.gameObject.SetActive(false);
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    //world.gameObject.SetActive(false);
+                    break;
 
                 case GameState.GAMEOVERCOLLISION:
                     Time.timeScale = 0;
@@ -1178,9 +1263,25 @@ namespace HackedDesign
                         r.Reset();
                     }
                     break;
-                case 6:
-                    //ResetMission7Targets();
-                    //missionTargets[6] = mission7Targets[0];
+                case 7:
+                    sparrow.gameObject.SetActive(true);
+                    break;
+                case 8:
+
+                    hawke.gameObject.SetActive(true);
+                    var direction = hawke.transform.position - player.transform.position;
+                    hawke.transform.up = direction.normalized; // Look away from the player to give them a fair chance
+                    Debug.Log("Show dialogue");
+
+                    state = GameState.DIALOGUE1;
+                    break;
+                case 9:
+                    sparrow.gameObject.SetActive(false);
+                    hawke.gameObject.SetActive(true);
+                    fuel = 10;
+                    cargo = 0;
+                    credits = 0;
+                    state = GameState.DIALOGUE4;
                     break;
 
             }
@@ -1286,7 +1387,7 @@ namespace HackedDesign
 
             }
 
-            return c.disabled;            
+            return c.disabled;
             //return (credits > 30000);
             //return false;
         }
@@ -1309,6 +1410,12 @@ namespace HackedDesign
 
         bool CheckMission9()
         {
+            Hawke h = hawke.GetComponent<Hawke>();
+
+            if (h.exploded)
+            {
+                return true;
+            }
             return false;
         }
 
@@ -1386,11 +1493,11 @@ namespace HackedDesign
             if (pirate2.exploded)
             {
                 missionTargets[6] = pirate3.gameObject;
-            }       
+            }
             if (pirate3.exploded)
             {
                 missionTargets[6] = null;
-            }                 
+            }
 
         }
 
@@ -1471,6 +1578,8 @@ namespace HackedDesign
                     UpdateFighters();
                     UpdatePirates();
                     UpdateShips();
+                    sparrow.UpdateMovement();
+                    hawke.UpdateMovement();
                     break;
             }
         }
@@ -1483,6 +1592,7 @@ namespace HackedDesign
             gameOverUI.UpdateUI();
             tutorialUI.UpdateUI();
             marketUI.UpdateUI();
+            dialogueUI.UpdateUI();
         }
     }
 
@@ -1492,6 +1602,11 @@ namespace HackedDesign
         INTRO,
         TUTORIAL,
         MARKET,
+        DIALOGUE1,
+        DIALOGUE2,
+        DIALOGUE3,
+        DIALOGUE4,
+        DIALOGUE5,
         PLAYING,
         GAMEOVERCOLLISION,
         GAMEOVERMINE,
