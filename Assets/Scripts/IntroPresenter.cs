@@ -16,11 +16,11 @@ namespace HackedDesign
 
         [SerializeField]
         [TextArea]
-        private string intro1;
+        private string intro1 = "";
 
         [SerializeField]
         [TextArea]
-        private string intro2;
+        private string intro2 = "";
 
 
         void Start()

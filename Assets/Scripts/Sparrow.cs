@@ -48,13 +48,7 @@ namespace HackedDesign
         public bool exploded = false;
 
         [SerializeField]
-        private Animator animator;
-
-        [SerializeField]
-        private int health = 5;
-
-        [SerializeField]
-        private bool killable = true;
+        private Animator animator = null;
 
 
 
@@ -82,7 +76,6 @@ namespace HackedDesign
             //state = SparrowState.DISABLED;
             patrolIndex = 0;
             exploded = false;
-            health = 5;
             disabled = false;
             missileCount = 10;
         }

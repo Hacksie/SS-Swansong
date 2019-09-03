@@ -7,7 +7,7 @@ namespace HackedDesign
     public class TutorialPresenter : MonoBehaviour
     {
         [SerializeField]
-        private Button continueButton;
+        private Button continueButton = null;
 
         void Start()
         {

@@ -4,8 +4,8 @@ namespace HackedDesign
 {
     public class Explosion : MonoBehaviour
     {
-        Animator animator;
-        bool playing = false;
+        [SerializeField]
+        Animator animator = null;
         
 
         void Start()

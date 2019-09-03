@@ -42,7 +42,7 @@ namespace HackedDesign
         public bool exploded = false;
 
         [SerializeField]
-        private Animator animator;
+        private Animator animator = null;
 
         [SerializeField]
         private int health = 5;

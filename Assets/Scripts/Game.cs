@@ -1222,6 +1222,7 @@ namespace HackedDesign
         public void NextMission()
         {
             Debug.Log(this.name + ": next mission " + currentMission);
+            credits += (currentMission * 100); //FIXME: make this a limit
             currentMission++;
             switch (currentMission)
             {
@@ -1360,9 +1361,9 @@ namespace HackedDesign
 
             if (c.exploded)
             {
-                if (!mission6exploded)
+                if (!mission4exploded)
                 {
-                    mission6exploded = true;
+                    mission4exploded = true;
                     state = GameState.DIALOGUECARGOSHIP;
                 }
                 return true;

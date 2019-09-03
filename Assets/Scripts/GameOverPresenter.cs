@@ -24,9 +24,6 @@ namespace HackedDesign
         [SerializeField]
         [TextArea]
         private string missile = "";
-        [SerializeField]
-        [TextArea]
-        private string cargo = "";
 
         void Start()
         {
