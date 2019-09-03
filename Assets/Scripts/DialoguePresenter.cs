@@ -46,10 +46,16 @@ namespace HackedDesign
         private string dialogue5 = "";
         [SerializeField]
         [TextArea]
-        private string dialogueTitleSuccess = "";        
+        private string dialogueTitleSuccess = "";
         [SerializeField]
         [TextArea]
-        private string dialogueSuccess = "";        
+        private string dialogueSuccess = "";
+        [SerializeField]
+        [TextArea]
+        private string dialogueTitleCargo = "";
+        [SerializeField]
+        [TextArea]
+        private string dialogueCargo = "";
 
         void Start()
         {
@@ -64,7 +70,7 @@ namespace HackedDesign
             if (dialogueTitleText == null)
             {
                 Debug.LogError(this.name + ": dialogue title text not set");
-            }            
+            }
         }
 
         public void UpdateUI()
@@ -135,7 +141,7 @@ namespace HackedDesign
                     EventSystem.current.SetSelectedGameObject(null);
                     EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
                 }
-            }     
+            }
             else if (Game.Instance.state == GameState.GAMEOVERSUCCESS)
             {
                 dialogueText.text = dialogueSuccess;
@@ -148,7 +154,21 @@ namespace HackedDesign
                     EventSystem.current.SetSelectedGameObject(null);
                     EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
                 }
-            }                
+            }
+            else if (Game.Instance.state == GameState.DIALOGUECARGOSHIP)
+            {
+                dialogueText.text = dialogueCargo;
+                dialogueTitleText.text = dialogueTitleCargo;
+                if (!this.gameObject.activeInHierarchy)
+                {
+                    //gameOverText.text = cargo;
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
+            }
+
             else
             {
                 this.gameObject.SetActive(false);
@@ -163,12 +183,18 @@ namespace HackedDesign
             if (Game.Instance.state == GameState.GAMEOVERSUCCESS)
             {
                 Game.Instance.ContinueGame();
-            }   
+            }
+
+            if (Game.Instance.state == GameState.DIALOGUECARGOSHIP)
+            {
+                Game.Instance.ContinueGame();
+            }
+
 
             if (Game.Instance.state == GameState.DIALOGUE5)
             {
                 Game.Instance.ContinueGame();
-            }            
+            }
             if (Game.Instance.state == GameState.DIALOGUE4)
             {
                 Game.Instance.state = GameState.DIALOGUE5;

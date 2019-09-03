@@ -17,7 +17,7 @@ MonoBehaviour:
   thrust: 400
   rotationSpeed: 2500
   timeOut: 10
-  buyMin: 900
-  buyMax: 1000
-  sellMin: 500
-  sellMax: 700
+  buyMin: 300
+  buyMax: 400
+  sellMin: 220
+  sellMax: 330

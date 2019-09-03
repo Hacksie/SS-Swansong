@@ -80,6 +80,10 @@ namespace HackedDesign
             destination = this.transform.position;
             patrolIndex = 0;
             exploded = false;
+            disabled = false;
+            health = 5;
+            currentMissile = null;
+
         }
 
         public void UpdateMovement()

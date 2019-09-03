@@ -40,7 +40,6 @@ namespace HackedDesign
         public void Reset()
         {
             this.exploded = false;
-            this.gameObject.SetActive(true);
         }
 
         public void Explode()

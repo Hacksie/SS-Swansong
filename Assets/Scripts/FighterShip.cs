@@ -8,15 +8,6 @@ namespace HackedDesign
         public float thrust;
 
         [SerializeField]
-        public float patrolSpeed;
-
-        [SerializeField]
-        public float huntSpeed;
-
-        [SerializeField]
-        public float fightSpeed;
-
-        [SerializeField]
         public float rotateSpeed;
 
         [SerializeField]
@@ -80,10 +71,14 @@ namespace HackedDesign
 
         public void Reset()
         {
+            currentMissile = null;
             destination = this.transform.position;
             state = FighterState.PATROL;
             patrolIndex = 0;
             exploded = false;
+            health = 5;
+            disabled = false;
+            missileCount = 10;
         }
 
         public void UpdateMovement()

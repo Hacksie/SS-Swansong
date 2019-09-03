@@ -248,6 +248,12 @@ namespace HackedDesign
         [SerializeField]
         private float lastPulseTime = 0;
 
+        [SerializeField]
+        private bool mission4exploded = false;
+
+        [SerializeField]
+        private bool mission6exploded = false;
+
 
 
         public GameObject CurrentTarget
@@ -614,7 +620,7 @@ namespace HackedDesign
             currentExplosionIndex = 0;
             currentEMPIndex = 0;
             lastMarketRefresh = 0;
-            currentMission = 0;
+            //currentMission = 0;
             fuel = startingFuel;
             heat = startingHeat;
             credits = startingCredits;
@@ -625,6 +631,9 @@ namespace HackedDesign
             highestRadarPulse = 0;
             highestRadar = null;
             lastPulseTime = 0;
+            mission4exploded = false;
+
+            mission6exploded = false;
 
             RefreshPrices();
             SpawnAsteroidsBig();
@@ -633,9 +642,9 @@ namespace HackedDesign
             SpawnCargoShips();
             SpawnFighterShips();
             SpawnPirateShips();
+            SpawnStoryChars();
             SpawnMissiles();
             SpawnLasers();
-            SpawnStoryChars();
         }
 
         void SpawnAsteroidsBig()
@@ -654,46 +663,37 @@ namespace HackedDesign
                 {
                     magnitude = 25.0f;
                 }
-                AsteroidBig ab = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
-                if (ab != null)
+                AsteroidBig asteroidBig = asteroidBigParent.transform.GetChild(i).GetComponent<AsteroidBig>();
+                if (asteroidBig == null)
                 {
-
-                    Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-
-                    ab.exploded = false;
-                    ab.transform.position = position;
-                    ab.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
-                    ab.gameObject.SetActive(true);
-                    ab.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
-                    ab.asteroid1.parent = ab; // FIXME: is this circular reference an issue?
-                    ab.asteroid1.exploded = false;
-                    ab.asteroid1.gameObject.SetActive(false);
-                    ab.asteroid1.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
-                    ab.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
-                    ab.asteroid2.parent = ab;
-                    ab.asteroid2.exploded = false;
-                    ab.asteroid2.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
-                    ab.asteroid2.gameObject.SetActive(false);
-                    // Check if there is a planet there and move if need be
+                    Debug.LogError(asteroidBigParent.transform.GetChild(i) + ": is not set as a big asteroid");
+                    continue;
                 }
+                asteroidBig.Reset();
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+
+                asteroidBig.exploded = false;
+                asteroidBig.transform.position = position;
+                asteroidBig.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                asteroidBig.gameObject.SetActive(true);
+                asteroidBig.asteroid1 = asteroidParent.transform.GetChild(2 * i).gameObject.GetComponent<Asteroid>();
+                asteroidBig.asteroid1.Reset();
+
+                asteroidBig.asteroid1.parent = asteroidBig; // FIXME: is this circular reference an issue?
+                asteroidBig.asteroid1.exploded = false;
+                asteroidBig.asteroid1.gameObject.SetActive(false);
+                asteroidBig.asteroid1.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                asteroidBig.asteroid2 = asteroidParent.transform.GetChild(2 * i + 1).gameObject.GetComponent<Asteroid>();
+                asteroidBig.asteroid2.Reset();
+
+                asteroidBig.asteroid2.parent = asteroidBig;
+                asteroidBig.asteroid2.exploded = false;
+                asteroidBig.asteroid2.transform.Rotate(0, 0, Random.Range(0, 360), Space.World);
+                asteroidBig.asteroid2.gameObject.SetActive(false);
+                // Check if there is a planet there and move if need be
+                // FIXME: check the small asteroids for component!
             }
         }
-
-        void SpawnStoryChars()
-        {
-            //float magnitude = Random.Range(10, 20);
-            float magnitude = Random.Range(500, 600);
-            float angle = Random.Range(0, 360.0f);
-            Vector3 position = Quaternion.Euler(0, 0, angle) * (Vector2.up * magnitude);
-
-            sparrow.transform.position = position;
-            sparrow.transform.up = new Vector3(0, 0, 0) - position;
-            sparrow.gameObject.SetActive(false);
-            hawke.gameObject.SetActive(false);
-            hawke.transform.position = position + (position.normalized * 5.0f);
-
-        }
-
 
         void SpawnRadarSatellites()
         {
@@ -704,14 +704,16 @@ namespace HackedDesign
 
             for (int i = 0; i < radars; i++)
             {
-                float magnitude = Random.Range(50, 1000);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+                Radar radar = radarParent.transform.GetChild(i).GetComponent<Radar>();
+                if (radar == null)
+                {
+                    Debug.LogError(radarParent.transform.GetChild(i) + ": is not set as a Prox Mine");
+                    continue;
+                }
+                radar.Reset();
+                radar.transform.position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(50, 1000));
+                radar.gameObject.SetActive(true);
 
-                //float rotation = Random.Range(0, 360);
-                radarParent.transform.GetChild(i).transform.position = position;
-                radarParent.transform.GetChild(i).gameObject.SetActive(true);
-                //asteroidParent.transform.GetChild(i).transform.Rotate(0, 0, rotation, Space.World);
-                // Check if there is a planet there and move if need be
             }
         }
 
@@ -727,16 +729,15 @@ namespace HackedDesign
                 ProxMine pm = mineParent.transform.GetChild(i).GetComponent<ProxMine>();
                 if (pm == null)
                 {
-                    Debug.LogError(pm.name + ": is not set as a Prox Mine");
+                    Debug.LogError(mineParent.transform.GetChild(i) + ": is not set as a Prox Mine");
                     continue;
                 }
                 pm.Reset();
-                float magnitude = Random.Range(30, 1000);
-                //float magnitude = Random.Range(40, 50);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-                mineParent.transform.GetChild(i).transform.position = position;
+
+                mineParent.transform.GetChild(i).transform.position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(30, 1000));
                 mineParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
+
             }
         }
 
@@ -752,25 +753,23 @@ namespace HackedDesign
                 CargoShip cargo = cargoShipParent.transform.GetChild(i).GetComponent<CargoShip>();
                 if (cargo == null)
                 {
-                    Debug.LogError(cargo.name + ": is not set as a CargoShip");
+                    Debug.LogError(cargoShipParent.transform.GetChild(i) + ": is not set as a CargoShip");
                     continue;
                 }
+                cargo.Reset();
                 float magnitude = Random.Range(70, 1000);
-                //float magnitude = Random.Range(20, 50);
+                //float magnitude = Random.Range(20, 40);
                 Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
                 cargo.transform.up = (-1 * position).normalized;
                 cargo.transform.position = position;
-
-                float randomAngle = Random.Range(-45, 45);
-
-                cargo.transform.Rotate(new Vector3(0, 0, randomAngle));
+                cargo.transform.Rotate(new Vector3(0, 0, Random.Range(-45, 45)));
                 cargo.patrol = new Vector2[2];
                 cargo.patrol[0] = cargo.transform.up * magnitude;
                 cargo.patrol[1] = cargo.transform.position;
                 cargo.gameObject.SetActive(true);
-                // Check if there is a planet there and move if need be
             }
         }
+
 
         void SpawnFighterShips()
         {
@@ -784,9 +783,10 @@ namespace HackedDesign
                 FighterShip fighter = fighterParent.transform.GetChild(i).GetComponent<FighterShip>();
                 if (fighter == null)
                 {
-                    Debug.LogError(fighter.name + ": is not set as a FighterShip");
+                    Debug.LogError(fighterParent.transform.GetChild(i) + ": is not set as a FighterShip");
                     continue;
                 }
+
                 fighter.Reset();
 
                 float magnitude = Random.Range(80, 1000);
@@ -794,20 +794,14 @@ namespace HackedDesign
                 fighter.transform.up = (-1 * position).normalized;
                 fighter.transform.position = position;
                 fighter.transform.position = position;
-
-                float randomAngle = Random.Range(-45, 45);
-
-                fighter.transform.Rotate(new Vector3(0, 0, randomAngle));
-
+                fighter.transform.Rotate(new Vector3(0, 0, Random.Range(-45, 45)));
                 fighter.patrol = new Vector2[2];
                 fighter.patrol[0] = fighter.transform.up * magnitude;
                 fighter.patrol[1] = fighter.transform.position;
-
                 fighter.gameObject.SetActive(true);
-
-                // Check if there is a planet there and move if need be
             }
         }
+
 
         void SpawnPirateShips()
         {
@@ -842,11 +836,28 @@ namespace HackedDesign
                 fighter.patrol[1] = fighter.transform.position;
 
                 fighter.gameObject.SetActive(true);
-
-                //fighter.disabled = true;
-                // Check if there is a planet there and move if need be
             }
         }
+
+        void SpawnStoryChars()
+        {
+
+            float magnitude = Random.Range(500, 600);
+            float angle = Random.Range(0, 360.0f);
+            Vector3 position = Quaternion.Euler(0, 0, angle) * (Vector2.up * magnitude);
+            sparrow.Reset();
+            sparrow.transform.position = position;
+            sparrow.transform.up = new Vector3(0, 0, 0) - position;
+            sparrow.gameObject.SetActive(false);
+            hawke.Reset();
+            hawke.gameObject.SetActive(false);
+            hawke.transform.position = position + (position.normalized * 5.0f);
+
+        }
+
+
+
+
 
         void SpawnMissiles()
         {
@@ -854,12 +865,16 @@ namespace HackedDesign
             for (int i = 0; i < missiles; i++)
             {
                 Missile m = missileParent.transform.GetChild(i).GetComponent<Missile>();
-                if (m != null)
+                if (m == null)
                 {
-                    m.Reset();
-                    m.gameObject.SetActive(false);
-
+                    Debug.LogError(missileParent.transform.GetChild(i) + ": is not set as a Missile");
+                    continue;
                 }
+
+                m.Reset();
+                m.gameObject.SetActive(false);
+
+
             }
         }
 
@@ -869,11 +884,14 @@ namespace HackedDesign
             for (int i = 0; i < missiles; i++)
             {
                 Laser l = laserParent.transform.GetChild(i).GetComponent<Laser>();
-                if (l != null)
+                if (l == null)
                 {
-                    l.gameObject.SetActive(false);
-                    l.Reset();
+                    Debug.LogError(laserParent.transform.GetChild(i) + ": is not set as a Laser");
+                    continue;
                 }
+                l.gameObject.SetActive(false);
+                l.Reset();
+
             }
         }
 
@@ -1139,6 +1157,14 @@ namespace HackedDesign
                     missionArrow.gameObject.SetActive(false);
                     break;
 
+                case GameState.DIALOGUECARGOSHIP:
+                    Time.timeScale = 0;
+                    Cursor.visible = true;
+                    targetingSquare.gameObject.SetActive(false);
+                    radarArrow.gameObject.SetActive(false);
+                    missionArrow.gameObject.SetActive(false);
+                    break;
+
                 case GameState.GAMEOVERSUCCESS:
                     Time.timeScale = 0;
                     Cursor.visible = true;
@@ -1212,12 +1238,33 @@ namespace HackedDesign
                     {
                         c.Reset();
                     }
+
+                    //Did we accidentally kill it earlier?
+                    if (!c.gameObject.activeInHierarchy)
+                    {
+                        c.gameObject.SetActive(true);
+                    }
+
                     break;
+
                 case 4:
                     Radar r = missionTargets[4].GetComponent<Radar>();
                     if (r != null)
                     {
                         r.Reset();
+                    }
+                    break;
+                case 5:
+                    CargoShip c2 = missionTargets[5].GetComponent<CargoShip>();
+                    if (c2 != null)
+                    {
+                        c2.Reset();
+                    }
+
+                    //Did we accidentally kill it earlier?
+                    if (!c2.gameObject.activeInHierarchy)
+                    {
+                        c2.gameObject.SetActive(true);
                     }
                     break;
                 case 7:
@@ -1311,12 +1358,16 @@ namespace HackedDesign
         {
             CargoShip c = missionTargets[3].GetComponent<CargoShip>();
 
-            //Did we accidentally kill it earlier?
-            if (!c.gameObject.activeInHierarchy)
+            if (c.exploded)
             {
-                c.gameObject.SetActive(true);
-
+                if (!mission6exploded)
+                {
+                    mission6exploded = true;
+                    state = GameState.DIALOGUECARGOSHIP;
+                }
+                return true;
             }
+
 
             return c.disabled;
         }
@@ -1337,12 +1388,17 @@ namespace HackedDesign
         {
             CargoShip c = missionTargets[5].GetComponent<CargoShip>();
 
-            //Did we accidentally kill it earlier?
-            if (!c.gameObject.activeInHierarchy)
+            if (c.exploded)
             {
-                c.gameObject.SetActive(true);
-
+                if (!mission6exploded)
+                {
+                    mission6exploded = true;
+                    state = GameState.DIALOGUECARGOSHIP;
+                }
+                return true;
             }
+
+
 
             return c.disabled;
         }
@@ -1567,12 +1623,12 @@ namespace HackedDesign
         DIALOGUE3,
         DIALOGUE4,
         DIALOGUE5,
+        DIALOGUECARGOSHIP, // Don't blow up the cargo ship!
         PLAYING,
         GAMEOVERCOLLISION,
         GAMEOVERMINE,
         GAMEOVERFUEL,
         GAMEOVERMISSILE,
-        GAMEOVERCARGOSHIP, // Don't blow up the cargo ship!
         GAMEOVERSUCCESS
     }
 }

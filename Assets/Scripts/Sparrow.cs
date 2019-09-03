@@ -32,9 +32,6 @@ namespace HackedDesign
         public int missileCount = 10;
 
         [SerializeField]
-        public Vector2[] patrol;
-
-        [SerializeField]
         public int patrolIndex = 0;
 
         [SerializeField]
@@ -81,60 +78,26 @@ namespace HackedDesign
         public void Reset()
         {
             destination = this.transform.position;
+            currentMissile = null;
             //state = SparrowState.DISABLED;
             patrolIndex = 0;
             exploded = false;
+            health = 5;
+            disabled = false;
+            missileCount = 10;
         }
 
         public void UpdateMovement()
         {
             // Check Mission etc
 
-            if (!disabled)
+
+            if (gameObject.activeInHierarchy)
             {
-                // switch (state)
-                // {
-                //     case SparrowState.THIEF:
-                //         Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
-
-                //         if ((transform.position - destination).sqrMagnitude < 2)
-                //         {
-                //             patrolIndex++;
-                //             if (patrolIndex >= patrol.Length)
-                //             {
-                //                 patrolIndex = 0;
-                //             }
-                //         }
-                //         break;
-                // }
-
-                // Do some collision avoidance
-
-                Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
-
-                if ((transform.position - destination).sqrMagnitude < 2)
-                {
-                    patrolIndex++;
-                    if (patrolIndex >= patrol.Length)
-                    {
-                        patrolIndex = 0;
-                    }
-                }
-
-                rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
-                Vector3 targetVector = destination - transform.position;
-                float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
-                rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
-                UpdateAnimations(true);
+                rigidbody.velocity = Vector2.zero;
             }
-            else
-            {
-                if (gameObject.activeInHierarchy)
-                {
-                    rigidbody.velocity = Vector2.zero;
-                }
-                UpdateAnimations(false);
-            }
+            UpdateAnimations(false);
+
         }
 
 

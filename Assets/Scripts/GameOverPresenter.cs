@@ -87,17 +87,6 @@ namespace HackedDesign
                     EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
                 }
             }
-            else if (Game.Instance.state == GameState.GAMEOVERCARGOSHIP)
-            {
-                if (!this.gameObject.activeInHierarchy)
-                {
-                    gameOverText.text = cargo;
-                    Input.ResetInputAxes();
-                    this.gameObject.SetActive(true);
-                    EventSystem.current.SetSelectedGameObject(null);
-                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
-                }
-            }
             else
             {
                 this.gameObject.SetActive(false);

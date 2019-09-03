@@ -5,9 +5,12 @@ namespace HackedDesign
     public class Radar : MonoBehaviour
     {
         // Maybe we need an EMP missile to kill th shield?
+        [SerializeField]
         public bool exploded = false;
-        bool disabled;
-        float lastDisableTimer = 0;
+        [SerializeField]
+        public bool disabled;
+        [SerializeField]
+        public float lastDisableTimer = 0;
         public float disableTimeout = 10.0f;
 
 

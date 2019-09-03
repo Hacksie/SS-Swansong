@@ -20,6 +20,9 @@ namespace HackedDesign
         public bool disabled = false;
 
         [SerializeField]
+        public bool exploded = false;        
+
+        [SerializeField]
         public float disabledStartTime = 0;
 
         [SerializeField]
@@ -27,9 +30,10 @@ namespace HackedDesign
 
         [SerializeField]
         public int cargoExplode = 20;
+     
 
         [SerializeField]
-        private Animator animator;
+        private Animator animator = null;
 
         private new Rigidbody2D rigidbody = null;
 
@@ -61,9 +65,8 @@ namespace HackedDesign
                     {
                         m.Explode();
                         disabled = true;
+                        exploded = false;
                         Game.Instance.IncreaseCargo(cargo);
-                        cargo = 0;
-                        cargoExplode = 0;
                     }
                     else
                     {
@@ -122,17 +125,21 @@ namespace HackedDesign
             animator.SetBool("Thrust", moving);
         }
 
-
-
+   
         public void Reset()
         {
             patrolIndex = 0;
+            disabled = false;
+            exploded = false;
+            disabledStartTime = 0;
+
         }
 
         public void Explode()
         {
             Debug.Log(this.name + ": explode");
             Game.Instance.Explosion(this.transform.position);
+            exploded = true;
             this.gameObject.SetActive(false);
         }
 

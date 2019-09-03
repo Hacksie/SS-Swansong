@@ -38,6 +38,11 @@ namespace HackedDesign
             }
         }
 
+        public void Reset()
+        {
+            exploded = false;
+        }
+
         public void Explode()
         {
             Game.Instance.Explosion(this.transform.position);

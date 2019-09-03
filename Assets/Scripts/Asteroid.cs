@@ -52,6 +52,11 @@ namespace HackedDesign
             }
         }
 
+        public void Reset()
+        {
+            exploded = false;
+        }
+
         public void Update()
         {
             //FIXME: Check if we go out of bounds
