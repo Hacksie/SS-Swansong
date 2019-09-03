@@ -67,40 +67,61 @@ TextureImporter:
     second: Market_0
   - first:
       213: 7693889463952050522
-    second: Hawke_0
+    second: Hawke 0
   - first:
       213: -4433569992726170724
-    second: Hawke_1
+    second: Hawke 1
   - first:
       213: -2603785116471803128
-    second: Hawke_2
+    second: Hawke 2
   - first:
       213: 7240787786926048961
-    second: Hawke_3
+    second: Hawke 3
   - first:
       213: 6947466454544269611
-    second: Sparrow_0
+    second: Sparrow 0
   - first:
       213: -5503360533855426251
-    second: Sparrow_1
+    second: Sparrow 1
   - first:
       213: 646178579581592004
-    second: Sparrow_2
+    second: Sparrow 2
   - first:
       213: 2146959862212516682
-    second: Sparrow_3
+    second: Sparrow 3
   - first:
       213: -5383109096222793229
-    second: Pirate_0
+    second: Pirate 0
   - first:
       213: 6987737905720970089
-    second: Pirate_1
+    second: Pirate 1
   - first:
       213: -6144815405335473715
-    second: Pirate_2
+    second: Pirate 2
   - first:
       213: 2569347686931002803
-    second: Pirate_3
+    second: Pirate 3
+  - first:
+      213: 8339255452739044095
+    second: Pirate_2 0
+  - first:
+      213: -3973666995403363151
+    second: Pirate_2 1
+  - first:
+      213: 740113853470996487
+    second: Pirate_2 2
+  - first:
+      213: -2932880374005888127
+    second: Pirate_2 3
+  - first:
+      213: -6157638291382078708
+    second: Fighter_1 1
+  - first:
+      213: 1871968394066995302
+    second: Fighter_1 2
+  - first:
+      213: 8631740068134048233
+    second: Fighter_1 3
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -146,7 +167,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 16
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 0
+  spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -431,7 +452,7 @@ TextureImporter:
       name: Fighter_1 0
       rect:
         serializedVersion: 2
-        x: 16
+        x: 17
         y: 112
         width: 16
         height: 16
@@ -638,7 +659,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hawke_0
+      name: Hawke 0
       rect:
         serializedVersion: 2
         x: 32
@@ -659,7 +680,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hawke_1
+      name: Hawke 1
       rect:
         serializedVersion: 2
         x: 32
@@ -680,7 +701,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hawke_2
+      name: Hawke 2
       rect:
         serializedVersion: 2
         x: 32
@@ -701,7 +722,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Hawke_3
+      name: Hawke 3
       rect:
         serializedVersion: 2
         x: 32
@@ -722,7 +743,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sparrow_0
+      name: Sparrow 0
       rect:
         serializedVersion: 2
         x: 0
@@ -743,7 +764,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sparrow_1
+      name: Sparrow 1
       rect:
         serializedVersion: 2
         x: 0
@@ -764,7 +785,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sparrow_2
+      name: Sparrow 2
       rect:
         serializedVersion: 2
         x: 0
@@ -785,7 +806,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Sparrow_3
+      name: Sparrow 3
       rect:
         serializedVersion: 2
         x: 0
@@ -806,7 +827,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pirate_0
+      name: Pirate 0
       rect:
         serializedVersion: 2
         x: 48
@@ -827,7 +848,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pirate_1
+      name: Pirate 1
       rect:
         serializedVersion: 2
         x: 48
@@ -848,7 +869,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pirate_2
+      name: Pirate 2
       rect:
         serializedVersion: 2
         x: 48
@@ -856,7 +877,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -869,7 +890,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Pirate_3
+      name: Pirate 3
       rect:
         serializedVersion: 2
         x: 48
@@ -877,7 +898,7 @@ TextureImporter:
         width: 16
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -885,6 +906,153 @@ TextureImporter:
       bones: []
       spriteID: 2a3b92c330f9cea46a68992559ede1bf
       internalID: 2569347686931002803
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pirate_2 0
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 48
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1dad16a2700ddbe45be211c84695d213
+      internalID: 8339255452739044095
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pirate_2 1
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 32
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c42d49bb305f5c0489a8bfb5b5392032
+      internalID: -3973666995403363151
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pirate_2 2
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 16
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c3ffcfdeab588034fa59fa9d75e41583
+      internalID: 740113853470996487
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Pirate_2 3
+      rect:
+        serializedVersion: 2
+        x: 64
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 6eefa19a10e860348932d4db2b5cbeb3
+      internalID: -2932880374005888127
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fighter_1 1
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 96
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 94db0502a70900d43aaeb5faa9b15889
+      internalID: -6157638291382078708
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fighter_1 2
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 80
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2a1683c2e2acb3044a23bc5cd1c330a7
+      internalID: 1871968394066995302
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fighter_1 3
+      rect:
+        serializedVersion: 2
+        x: 16
+        y: 64
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 045a81d84d6d15548bdb5b0fdea1588d
+      internalID: 8631740068134048233
       vertices: []
       indices: 
       edges: []

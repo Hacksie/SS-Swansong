@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3d8256ffa77a438c5266b0cfbf984, type: 3}
   m_Name: Mission 6
   m_EditorClassIdentifier: 
-  shortDescription: Making bank
-  description: 'We''re doing alright. But we could be doing better. Let''s make $30,000
-    credits. I''d suggest using the funds to buy a new ship, but I could never part
-    with her. '
+  shortDescription: More filty lucre
+  description: We could use some more credits. The federation is making noise about
+    a particular cargo ship that has a particularly heafty cargo load. We should help
+    them deliver the cargo.

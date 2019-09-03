@@ -13,5 +13,4 @@ MonoBehaviour:
   m_Name: Mission 9
   m_EditorClassIdentifier: 
   shortDescription: An old friend
-  description: Turns out Capt. Hawke is hanging about in the sector. Let's go welcome
-    him with a AS-39 Gyrfalcon to the face.
+  description: Let's greet Capt Hawke with a AS-39 Gyrfalcon to the face.

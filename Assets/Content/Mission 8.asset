@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shortDescription: Distress beacon
   description: I've picked up a nearby distress beacon. Normally I wouldn't be so
-    stupid to fall into such a trap, except the signal seems to be coming from another
-    FX-2117A Aurora. I just have to check it out
+    stupid to fall into such a trap, but the signal seems to be coming from another
+    FX-2117A Aurora, which is like finding a unicorn. I can't not check it out. Still,
+    I should take some AS-39's with me

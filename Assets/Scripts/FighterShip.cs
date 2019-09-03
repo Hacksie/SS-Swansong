@@ -47,6 +47,13 @@ namespace HackedDesign
         [SerializeField]
         public bool disabled = false;
 
+        [SerializeField]
+        public bool exploded = false;
+
+        [SerializeField]
+        private Animator animator;
+
+
 
         private new Rigidbody2D rigidbody = null;
 
@@ -57,6 +64,10 @@ namespace HackedDesign
             {
                 Debug.LogError(this.name + ": rigidbody is null");
             }
+            if (animator == null)
+            {
+                Debug.LogError(this.name + ": animator not set");
+            }            
 
             Reset();
         }
@@ -66,6 +77,7 @@ namespace HackedDesign
             destination = this.transform.position;
             state = FighterState.PATROL;
             patrolIndex = 0;
+            exploded = false;
         }
 
         public void UpdateMovement()
@@ -102,7 +114,16 @@ namespace HackedDesign
                 Vector3 targetVector = destination - transform.position;
                 float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
                 rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
+                UpdateAnimations(true);
             }
+            else
+            {
+                if(gameObject.activeInHierarchy)
+                {
+                    rigidbody.velocity = Vector2.zero;
+                }
+                UpdateAnimations(false);
+            }            
 
         }
 
@@ -118,7 +139,13 @@ namespace HackedDesign
             Debug.Log(this.name + ": explode");
             Game.Instance.Explosion(this.transform.position);
             this.gameObject.SetActive(false);
+            exploded = true;
         }
+
+        void UpdateAnimations(bool moving)
+        {
+            animator.SetBool("Thrust", moving);
+        }        
 
         void OnTriggerStay2D(Collider2D other)
         {

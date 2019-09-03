@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5176345490200398760}
   - component: {fileID: 4313172509229453464}
   - component: {fileID: 7205699463636213608}
+  - component: {fileID: 4804151911569862624}
   m_Layer: 0
   m_Name: Fighter
   m_TagString: Hostile
@@ -125,6 +126,10 @@ MonoBehaviour:
   missileCount: 10
   patrol: []
   patrolIndex: 0
+  cargo: 50
+  cargoExplode: 3
+  disabled: 0
+  animator: {fileID: 4804151911569862624}
 --- !u!50 &7205699463636213608
 Rigidbody2D:
   serializedVersion: 4
@@ -146,6 +151,25 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!95 &4804151911569862624
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1525420127838082169}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 61c8c29463035d84c8eded089ec3df9b, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &2070176228444300185
 GameObject:
   m_ObjectHideFlags: 0

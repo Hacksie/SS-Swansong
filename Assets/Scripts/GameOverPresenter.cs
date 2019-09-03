@@ -8,7 +8,7 @@ namespace HackedDesign
     {
 
         [SerializeField]
-        private Button continueButton = null;   
+        private Button continueButton = null;
 
         [SerializeField]
         private Text gameOverText = null;
@@ -23,17 +23,17 @@ namespace HackedDesign
         private string fuel = "";
         [SerializeField]
         [TextArea]
-        private string missile = "";  
+        private string missile = "";
         [SerializeField]
         [TextArea]
-        private string cargo = "";               
+        private string cargo = "";
 
         void Start()
         {
-            if(continueButton == null)
+            if (continueButton == null)
             {
-                Debug.LogError(this.name +": continue button is not set");
-            }            
+                Debug.LogError(this.name + ": continue button is not set");
+            }
             if (gameOverText == null)
             {
                 Debug.LogError(this.name + ": game over text not set");
@@ -44,44 +44,60 @@ namespace HackedDesign
         {
             if (Game.Instance.state == GameState.GAMEOVERCOLLISION)
             {
-                gameOverText.text = collision;
-                Input.ResetInputAxes();
-                this.gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                if (!this.gameObject.activeInHierarchy)
+                {
+                    gameOverText.text = collision;
+
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
             }
             else if (Game.Instance.state == GameState.GAMEOVERFUEL)
             {
-                gameOverText.text = fuel;
-                Input.ResetInputAxes();
-                this.gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                if (!this.gameObject.activeInHierarchy)
+                {
+                    gameOverText.text = fuel;
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
             }
             else if (Game.Instance.state == GameState.GAMEOVERMINE)
             {
-                gameOverText.text = mine;
-                Input.ResetInputAxes();
-                this.gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                if (!this.gameObject.activeInHierarchy)
+                {
+                    gameOverText.text = mine;
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
             }
             else if (Game.Instance.state == GameState.GAMEOVERMISSILE)
             {
-                gameOverText.text = missile;
-                Input.ResetInputAxes();
-                this.gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
-            }     
+                if (!this.gameObject.activeInHierarchy)
+                {
+                    gameOverText.text = missile;
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
+            }
             else if (Game.Instance.state == GameState.GAMEOVERCARGOSHIP)
             {
-                gameOverText.text = cargo;
-                Input.ResetInputAxes();
-                this.gameObject.SetActive(true);
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
-            }                     
+                if (!this.gameObject.activeInHierarchy)
+                {
+                    gameOverText.text = cargo;
+                    Input.ResetInputAxes();
+                    this.gameObject.SetActive(true);
+                    EventSystem.current.SetSelectedGameObject(null);
+                    EventSystem.current.SetSelectedGameObject(continueButton.gameObject);
+                }
+            }
             else
             {
                 this.gameObject.SetActive(false);
@@ -91,6 +107,7 @@ namespace HackedDesign
 
         public void EndButtonEvent()
         {
+            Debug.Log(this.name + ": game over continue");
             Game.Instance.state = GameState.MENU;
         }
     }

@@ -26,7 +26,10 @@ namespace HackedDesign
         public int cargo = 130;
 
         [SerializeField]
-        public int cargoExplode = 20;        
+        public int cargoExplode = 20;
+
+        [SerializeField]
+        private Animator animator;
 
         private new Rigidbody2D rigidbody = null;
 
@@ -36,6 +39,10 @@ namespace HackedDesign
             if (rigidbody == null)
             {
                 Debug.LogError(this.name + ": rigidbody is null");
+            }
+            if (animator == null)
+            {
+                Debug.LogError(this.name + ": animator not set");
             }
 
             Reset();
@@ -77,6 +84,7 @@ namespace HackedDesign
         public void UpdateMovement()
         {
 
+
             if (!disabled && gameObject.activeInHierarchy)
             {
                 Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
@@ -96,7 +104,21 @@ namespace HackedDesign
                 Vector3 targetVector = target - transform.position;
                 float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
                 rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
+                UpdateAnimations(true);
             }
+            else
+            {
+                if (gameObject.activeInHierarchy)
+                {
+                    rigidbody.velocity = Vector2.zero;
+                }
+                UpdateAnimations(false);
+            }
+        }
+
+        void UpdateAnimations(bool moving)
+        {
+            animator.SetBool("Thrust", moving);
         }
 
 
@@ -112,6 +134,7 @@ namespace HackedDesign
             Game.Instance.Explosion(this.transform.position);
             this.gameObject.SetActive(false);
         }
+
 
 
     }

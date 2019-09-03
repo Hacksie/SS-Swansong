@@ -138,6 +138,11 @@ MonoBehaviour:
   rotateSpeed: 300
   patrol: []
   patrolIndex: 0
+  disabled: 0
+  disabledStartTime: 0
+  cargo: 130
+  cargoExplode: 20
+  animator: {fileID: 3295779653490425045}
 --- !u!50 &7042465257709058870
 Rigidbody2D:
   serializedVersion: 4

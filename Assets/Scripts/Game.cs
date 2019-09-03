@@ -54,6 +54,8 @@ namespace HackedDesign
         [SerializeField]
         private GameObject fighterParent = null;
         [SerializeField]
+        private GameObject pirateParent = null;
+        [SerializeField]
         private GameObject missileParent = null;
         [SerializeField]
         private GameObject laserParent = null;
@@ -69,6 +71,10 @@ namespace HackedDesign
         public List<MissionDescription> missionDescriptions = new List<MissionDescription>();
 
         public List<GameObject> missionTargets = new List<GameObject>();
+
+        public GameObject[] mission7Targets = new GameObject[4];
+        public GameObject mission8Target = null;
+        public GameObject mission9Target = null;
 
 
 
@@ -223,6 +229,8 @@ namespace HackedDesign
 
         public List<GameObject> currentTargets;
 
+        public int mission7targetCount = 0;
+
         private GameObject currentTarget = null;
 
         public GameObject CurrentTarget
@@ -351,7 +359,11 @@ namespace HackedDesign
             }
             if (fighterParent == null)
             {
-                Debug.LogError(this.name + ": fighters parent not set");
+                Debug.LogError(this.name + ": fighter parent not set");
+            }
+            if (pirateParent == null)
+            {
+                Debug.LogError(this.name + ": pirate parent not set");
             }
             if (missileParent == null)
             {
@@ -585,6 +597,7 @@ namespace HackedDesign
             SpawnProxMines();
             SpawnCargoShips();
             SpawnFighterShips();
+            SpawnPirateShips();
             SpawnMissiles();
             SpawnLasers();
             SpawnExplosions();
@@ -775,6 +788,44 @@ namespace HackedDesign
 
                 fighter.gameObject.SetActive(true);
                 fighter.Reset();
+                // Check if there is a planet there and move if need be
+            }
+        }
+
+        void SpawnPirateShips()
+        {
+            int ships = pirateParent.transform.childCount;
+
+            float angle = 360.0f / ships;
+            float offset = Random.Range(0, angle);
+
+            for (int i = 0; i < ships; i++)
+            {
+                FighterShip fighter = pirateParent.transform.GetChild(i).GetComponent<FighterShip>();
+                if (fighter == null)
+                {
+                    Debug.LogError(fighter.name + ": is not set as a FighterShip");
+                    continue;
+                }
+
+                //float magnitude = Random.Range(200, 1000);
+                float magnitude = Random.Range(20, 30);
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+                fighter.transform.up = (-1 * position).normalized;
+                fighter.transform.position = position;
+                fighter.transform.position = position;
+
+                float randomAngle = Random.Range(-45, 45);
+
+                fighter.transform.Rotate(new Vector3(0, 0, randomAngle));
+
+                fighter.patrol = new Vector2[2];
+                fighter.patrol[0] = fighter.transform.up * magnitude;
+                fighter.patrol[1] = fighter.transform.position;
+
+                fighter.gameObject.SetActive(true);
+                fighter.Reset();
+                fighter.disabled = true;
                 // Check if there is a planet there and move if need be
             }
         }
@@ -1089,6 +1140,18 @@ namespace HackedDesign
             }
         }
 
+        void ResetMission7Targets()
+        {
+
+            int ships = pirateParent.transform.childCount;
+
+            for (int i = 0; i < ships; i++)
+            {
+                FighterShip pirate = pirateParent.transform.GetChild(i).GetComponent<FighterShip>();
+                pirate.Reset();
+            }
+        }
+
         public void NextMission()
         {
             currentMission++;
@@ -1101,6 +1164,25 @@ namespace HackedDesign
                         m.Reset();
                     }
                     break;
+                case 3:
+                    CargoShip c = missionTargets[3].GetComponent<CargoShip>();
+                    if (c != null)
+                    {
+                        c.Reset();
+                    }
+                    break;
+                case 4:
+                    Radar r = missionTargets[4].GetComponent<Radar>();
+                    if (r != null)
+                    {
+                        r.Reset();
+                    }
+                    break;
+                case 6:
+                    //ResetMission7Targets();
+                    //missionTargets[6] = mission7Targets[0];
+                    break;
+
             }
             //In case we want to do pre mission setup
         }
@@ -1183,19 +1265,41 @@ namespace HackedDesign
 
         bool CheckMission5()
         {
-            return !missionTargets[4].gameObject.activeInHierarchy;
+            Radar r = missionTargets[4].GetComponent<Radar>();
 
+            if (r != null)
+            {
+                return r.exploded;
+            }
+
+            return false;
         }
 
         bool CheckMission6()
         {
-            return (credits > 30000);
+            CargoShip c = missionTargets[5].GetComponent<CargoShip>();
+
+            //Did we accidentally kill it earlier?
+            if (!c.gameObject.activeInHierarchy)
+            {
+                c.gameObject.SetActive(true);
+
+            }
+
+            return c.disabled;            
+            //return (credits > 30000);
             //return false;
         }
 
         bool CheckMission7()
         {
-            return false;
+            FighterShip pirate1 = mission7Targets[0].GetComponent<FighterShip>();
+            FighterShip pirate2 = mission7Targets[1].GetComponent<FighterShip>();
+            FighterShip pirate3 = mission7Targets[2].GetComponent<FighterShip>();
+            FighterShip pirate4 = mission7Targets[3].GetComponent<FighterShip>();
+
+            return (pirate1.exploded && pirate2.exploded && pirate3.exploded && pirate4.exploded);
+
         }
 
         bool CheckMission8()
@@ -1262,6 +1366,34 @@ namespace HackedDesign
             }
         }
 
+        void UpdateMission7()
+        {
+
+            FighterShip pirate1 = mission7Targets[0].GetComponent<FighterShip>();
+            FighterShip pirate2 = mission7Targets[1].GetComponent<FighterShip>();
+            FighterShip pirate3 = mission7Targets[2].GetComponent<FighterShip>();
+            FighterShip pirate4 = mission7Targets[3].GetComponent<FighterShip>();
+
+            if (!pirate1.exploded)
+            {
+                missionTargets[6] = pirate1.gameObject;
+            }
+
+            if (pirate1.exploded)
+            {
+                missionTargets[6] = pirate2.gameObject;
+            }
+            if (pirate2.exploded)
+            {
+                missionTargets[6] = pirate3.gameObject;
+            }       
+            if (pirate3.exploded)
+            {
+                missionTargets[6] = null;
+            }                 
+
+        }
+
 
         void UpdateMissiles()
         {
@@ -1302,6 +1434,19 @@ namespace HackedDesign
             }
         }
 
+        void UpdatePirates()
+        {
+            int ships = pirateParent.transform.childCount;
+            for (int i = 0; i < ships; i++)
+            {
+                FighterShip fighter = pirateParent.transform.GetChild(i).GetComponent<FighterShip>(); // FIXME: create a list at spawn
+                if (fighter != null)
+                {
+                    fighter.UpdateMovement();
+                }
+            }
+        }
+
         void UpdateShips()
         {
             int ships = cargoShipParent.transform.childCount;
@@ -1324,6 +1469,7 @@ namespace HackedDesign
                     UpdateMissiles();
                     UpdateLasers();
                     UpdateFighters();
+                    UpdatePirates();
                     UpdateShips();
                     break;
             }

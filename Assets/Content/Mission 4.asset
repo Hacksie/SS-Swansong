@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 68b3d8256ffa77a438c5266b0cfbf984, type: 3}
   m_Name: Mission 4
   m_EditorClassIdentifier: 
-  shortDescription: More lucrative cargo
+  shortDescription: Lucrative cargo
   description: Traveling around the asteroid field are cargo ships. I've gotten word
     that a particular ship has some particularly lucrative cargo. Use an ES-23 Harpoon
     missile to disable it so that we can steal their cargo.

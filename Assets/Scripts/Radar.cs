@@ -5,6 +5,7 @@ namespace HackedDesign
     public class Radar : MonoBehaviour
     {
         // Maybe we need an EMP missile to kill th shield?
+        public bool exploded = false;
         bool disabled;
         float lastDisableTimer = 0;
         public float disableTimeout = 10.0f;
@@ -38,6 +39,7 @@ namespace HackedDesign
 
         public void Reset()
         {
+            exploded = false;
             disabled = false;
             lastDisableTimer = 0;
 
@@ -83,6 +85,7 @@ namespace HackedDesign
         public void Explode()
         {
             Debug.Log(this.name + ": exploded");
+            exploded = true;
             this.gameObject.SetActive(false);
         }
 
