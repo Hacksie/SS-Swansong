@@ -90,9 +90,9 @@ namespace HackedDesign
                     switch (state)
                     {
                         case FighterState.PATROL:
-                            Vector3 destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
+                            destination = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 
-                            if ((transform.position - destination).sqrMagnitude < 2)
+                            if ((transform.position - destination).sqrMagnitude <= 2)
                             {
                                 patrolIndex++;
                                 if (patrolIndex >= patrol.Length)
@@ -113,8 +113,10 @@ namespace HackedDesign
 
                     // Do some collision avoidance
 
-                    rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                    //rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
+                    
                     Vector3 targetVector = destination - transform.position;
+                    rigidbody.velocity = transform.up * thrust * Time.fixedDeltaTime;
                     float rotatingIndex = Vector3.Cross(targetVector, transform.up).z;
                     rigidbody.angularVelocity = -1 * rotatingIndex * rotateSpeed * Time.fixedDeltaTime;
                     UpdateAnimations(true);

@@ -92,7 +92,7 @@ namespace HackedDesign
                 {
                     Vector3 target = new Vector3(patrol[patrolIndex].x, patrol[patrolIndex].y);
 
-                    if ((transform.position - target).sqrMagnitude < 2)
+                    if ((transform.position - target).sqrMagnitude <= 2)
                     {
                         patrolIndex++;
                         if (patrolIndex >= patrol.Length)

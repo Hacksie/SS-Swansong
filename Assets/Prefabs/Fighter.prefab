@@ -116,10 +116,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   thrust: 200
-  patrolSpeed: 0
-  huntSpeed: 0
-  fightSpeed: 0
-  rotateSpeed: 300
+  rotateSpeed: 100
   state: 0
   destination: {x: 0, y: 0, z: 0}
   currentMissile: {fileID: 0}

@@ -620,7 +620,7 @@ namespace HackedDesign
             currentExplosionIndex = 0;
             currentEMPIndex = 0;
             lastMarketRefresh = 0;
-            //currentMission = 0;
+            currentMission = 0;
             fuel = startingFuel;
             heat = startingHeat;
             credits = startingCredits;
@@ -734,7 +734,7 @@ namespace HackedDesign
                 }
                 pm.Reset();
 
-                mineParent.transform.GetChild(i).transform.position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(30, 1000));
+                mineParent.transform.GetChild(i).transform.position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(30, 600));
                 mineParent.transform.GetChild(i).gameObject.SetActive(true);
                 // Check if there is a planet there and move if need be
 
@@ -757,15 +757,19 @@ namespace HackedDesign
                     continue;
                 }
                 cargo.Reset();
-                float magnitude = Random.Range(70, 1000);
+                //float magnitude = Random.Range(250, 1000);
                 //float magnitude = Random.Range(20, 40);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+                //Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
+
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(150, 1000));
+                Vector2 position2 = Quaternion.Euler(0, 0, (i * angle) + Random.Range(-33, 33) + offset) * (Vector2.up * Random.Range(200, 500));
+
                 cargo.transform.up = (-1 * position).normalized;
                 cargo.transform.position = position;
                 cargo.transform.Rotate(new Vector3(0, 0, Random.Range(-45, 45)));
                 cargo.patrol = new Vector2[2];
-                cargo.patrol[0] = cargo.transform.up * magnitude;
-                cargo.patrol[1] = cargo.transform.position;
+                cargo.patrol[0] = position;
+                cargo.patrol[1] = position2;
                 cargo.gameObject.SetActive(true);
             }
         }
@@ -789,15 +793,15 @@ namespace HackedDesign
 
                 fighter.Reset();
 
-                float magnitude = Random.Range(80, 1000);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-                fighter.transform.up = (-1 * position).normalized;
+                
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(250, 800));
+                Vector2 position2 = Quaternion.Euler(0, 0, (i * angle) + Random.Range(-33, 33) + offset) * (Vector2.up * Random.Range(250, 800));
+                fighter.transform.up = (-1 * position);
                 fighter.transform.position = position;
-                fighter.transform.position = position;
-                fighter.transform.Rotate(new Vector3(0, 0, Random.Range(-45, 45)));
+                
                 fighter.patrol = new Vector2[2];
-                fighter.patrol[0] = fighter.transform.up * magnitude;
-                fighter.patrol[1] = fighter.transform.position;
+                fighter.patrol[0] = position;
+                fighter.patrol[1] = position2;
                 fighter.gameObject.SetActive(true);
             }
         }
@@ -820,20 +824,23 @@ namespace HackedDesign
                 }
                 fighter.Reset();
 
-                float magnitude = Random.Range(200, 1000);
+                //float magnitude = Random.Range(600, 1000);
                 //float magnitude = Random.Range(20, 30);
-                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * magnitude);
-                fighter.transform.up = (-1 * position).normalized;
+                Vector2 position = Quaternion.Euler(0, 0, (i * angle) + offset) * (Vector2.up * Random.Range(600, 1000));
+                Vector2 position2 = Quaternion.Euler(0, 0, (i * angle) + Random.Range(-33, 33) + offset) * (Vector2.up * Random.Range(600, 1000));
+                fighter.transform.up = (-1 * position);
                 fighter.transform.position = position;
-                fighter.transform.position = position;
+                
 
-                float randomAngle = Random.Range(-45, 45);
+                float randomAngle = Random.Range(00, 360);
 
-                fighter.transform.Rotate(new Vector3(0, 0, randomAngle));
+                //fighter.transform.Rotate(new Vector3(0, 0, randomAngle));
 
                 fighter.patrol = new Vector2[2];
-                fighter.patrol[0] = fighter.transform.up * magnitude;
-                fighter.patrol[1] = fighter.transform.position;
+                fighter.patrol[0] = position;
+                fighter.patrol[1] = position2;
+                
+                //fighter.transform.up.normalized * 150;
 
                 fighter.gameObject.SetActive(true);
             }

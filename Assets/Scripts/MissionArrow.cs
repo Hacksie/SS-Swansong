@@ -28,13 +28,19 @@ namespace HackedDesign
 
                 if (Game.Instance.CheckMissions())
                 {
-                    this.gameObject.SetActive(false);
+                    // If we've completed the mission, go home!
+                    Vector2 direction = (Vector3.zero - Game.Instance.camera.transform.position).normalized * magnitude;
+                    this.transform.position = new Vector2(Game.Instance.camera.transform.position.x, Game.Instance.camera.transform.position.y) + direction;
+                    transform.up = direction;                    
+                    //this.gameObject.SetActive(false);
                     return;
                 }
-
-                Vector2 direction = (Game.Instance.missionTargets[Game.Instance.currentMission].transform.position - Game.Instance.camera.transform.position).normalized * magnitude;
-                this.transform.position = new Vector2(Game.Instance.camera.transform.position.x, Game.Instance.camera.transform.position.y) + direction;
-                transform.up = direction;
+                else
+                {
+                    Vector2 direction = (Game.Instance.missionTargets[Game.Instance.currentMission].transform.position - Game.Instance.camera.transform.position).normalized * magnitude;
+                    this.transform.position = new Vector2(Game.Instance.camera.transform.position.x, Game.Instance.camera.transform.position.y) + direction;
+                    transform.up = direction;
+                }
             }
             else
             {
